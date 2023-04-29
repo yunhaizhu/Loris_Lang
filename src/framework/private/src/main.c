@@ -11,10 +11,10 @@
 
 #include "mod.h"
 #include "mod_bundle.h"
-//#include "mod_lang_compile.h"
-//#include "mod_lang_parse.h"
-//#include "mod_lang_vm.h"
-//#include "mod_shell.h"
+#include "mod_lang_compile.h"
+#include "mod_lang_parse.h"
+#include "mod_lang_vm.h"
+#include "mod_shell.h"
 #include "std_common.h"
 
 /**
@@ -24,7 +24,6 @@
  */
 STD_CALL std_int_t main(std_int_t argc, std_char_t *argv[])
 {
-#if 0
     // Initialize variables
     std_uint_t bundle_id = 0;
     mod_lang_parse_t *mod_lang_parse = NULL;
@@ -105,6 +104,4 @@ STD_CALL std_int_t main(std_int_t argc, std_char_t *argv[])
     STD_LOG(INFO, "exit main\n");
 
     return ret;
-#endif
-
 }
