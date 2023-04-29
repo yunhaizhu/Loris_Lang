@@ -12,14 +12,8 @@ jobs:
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
-      - name: Install xxhash-dev and google-perftools-dev
-        run: sudo apt-get install -y libunwind-dev libgoogle-perftools-dev libxxhash-dev libjson-c-dev flex yacc
-
-#      - name: Cache APT Packages
-#        uses: awalsh128/cache-apt-pkgs-action@latest
-#        with:
-#          packages: libxxhash-dev libgoogle-perftools-dev
-#          version: 1.0
+      - name: Install packages
+        run: sudo apt-get install -y libunwind-dev libgoogle-perftools-dev libxxhash-dev libjson-c-dev flex yacc libelf-dev libconfuse-dev  fuse
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
