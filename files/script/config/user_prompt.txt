@@ -1,0 +1,9 @@
+Here is the loris script(don't support function return values yet) that needs fixing:
+
+{file_with_lines}
+
+Here is the error message:
+
+{error_message}
+
+Follow the loris language programming rules, please provide your suggested changes, and remember to stick to the exact format as described above.
