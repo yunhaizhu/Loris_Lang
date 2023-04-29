@@ -12,10 +12,11 @@ jobs:
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
-      - uses: awalsh128/cache-apt-pkgs-action@latest
+      - name: Cache APT Packages
+        uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-            packages: libxxhash-dev libgoogle-perftools-dev
-            version: 1.0
+          packages: libxxhash-dev libgoogle-perftools-dev
+          version: 1.0
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
