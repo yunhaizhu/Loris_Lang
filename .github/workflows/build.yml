@@ -13,7 +13,7 @@ jobs:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
       - name: Install xxhash-dev and google-perftools-dev
-        run: sudo apt-get install -y libgoogle-perftools-dev libxxhash-dev
+        run: sudo apt-get install -y libunwind-dev libgoogle-perftools-dev libxxhash-dev
 
 #      - name: Cache APT Packages
 #        uses: awalsh128/cache-apt-pkgs-action@latest
