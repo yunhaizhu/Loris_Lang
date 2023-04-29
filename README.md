@@ -1,3 +1,5 @@
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=yunhaizhu_Loris_Lang)](https://sonarcloud.io/summary/new_code?id=yunhaizhu_Loris_Lang)
+
 # Loris_Lang
 Loris is a ownership based memory safe dynamic programming language. Safe as Rust, easy use like Python. 
 
