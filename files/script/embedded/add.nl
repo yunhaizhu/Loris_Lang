@@ -1,6 +1,8 @@
+require os
+
 def add(var x, var y, var ret)
 {
-    print(x, y)
+    os.print(x, y)
     ret = x + y
 }
 
@@ -11,6 +13,6 @@ def main()
     var ret = 0
 
     add(x, y, ret)
-    print(ret)
+    os.print(ret)
 }
-#script("embedded/add.nl")
+#script("script/embedded/add.nl")

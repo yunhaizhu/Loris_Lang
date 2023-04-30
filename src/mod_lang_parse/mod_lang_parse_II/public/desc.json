@@ -1,0 +1,14 @@
+{
+    "name":"mod_lang_parse",
+    "instance":"mod_lang_parse_II",
+    "description": "",
+    "version": "1.0.0",
+    "dependence":{
+
+    },
+    "interface":[
+        "mod_lang_parse_new_state",
+        "mod_lang_parse_load_script",
+        "mod_lang_parse_close_state"
+    ]
+}

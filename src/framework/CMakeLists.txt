@@ -21,6 +21,7 @@ set(MAX_GEN_BUFFER 128)
 set(EXEC_COMPILED_CODE 0)
 set(DUMP_EXEC_CODE 1)
 
+set(MAX_DEF_FUNC_COUNT 1024)
 
 
 # Configure a header file with preprocessor definitions

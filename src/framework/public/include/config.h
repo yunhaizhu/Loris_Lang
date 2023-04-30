@@ -15,3 +15,5 @@
 
 #define EXEC_COMPILED_CODE 0
 #define DUMP_EXEC_CODE 1
+
+#define MAX_DEF_FUNC_COUNT 1024

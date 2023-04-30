@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2021 Yunhai Zhu <yunhaia2@gmail.com>
  *
- * see COPYRIGHT file.  
+ * see COPYRIGHT file.
  */
 
 /**
@@ -9,7 +9,7 @@
  * @brief   define structure & functions
  * @version 1.0
  * @author  Yunhai Zhu
- * @date    2023-04-29
+ * @date    2021-12-22
  *
  */
 #ifndef MOD_LANG_PARSE_H
@@ -26,10 +26,6 @@
  ****************************************************/
 
 /***struct_define***/
-typedef struct loris_state_s {
-    std_void_t *global_func_compile_ast[MAX_DEF_FUNC_COUNT];
-    std_int_t global_func_compile_ast_idx;
-} loris_state_t;
 
 /***macro_define***/
 
@@ -40,20 +36,18 @@ typedef struct loris_state_s {
  ***************************************************/
 
 typedef struct mod_lang_parse_st {
-	mod_ownership_t ownership;
-	std_u64_t unique_id;
-	struct mod_lang_parse_ops_st *p_ops;
+    mod_ownership_t ownership;
+    std_u64_t unique_id;
+    struct mod_lang_parse_ops_st *p_ops;
 } mod_lang_parse_t;
 
 struct mod_lang_parse_ops_st {
-    std_rv_t(*init) (IN mod_lang_parse_t * m, IN const std_char_t * arg, IN std_int_t arg_len);
-    std_rv_t(*cleanup) (IN mod_lang_parse_t * m);
+    std_int_t (*init)(IN mod_lang_parse_t *m, IN const std_char_t *arg, IN std_int_t arg_len);
+    std_int_t (*cleanup)(IN mod_lang_parse_t *m);
 
     /***func_define***/
-	loris_state_t *(*new_state)(IN mod_lang_parse_t * m);
-    std_rv_t(*load_script) (IN mod_lang_parse_t * m, IN loris_state_t * state, IN std_char_t * script_name);
-    std_rv_t(*close_state) (IN mod_lang_parse_t * m, IN loris_state_t * state);
-
+    std_int_t (*parse)(IN mod_lang_parse_t *m, IN const std_char_t *file_name, IN std_char_t *source_buffer,
+                       IN std_int_t source_buffer_len);
 };
 
 /***************************************************
@@ -62,7 +56,7 @@ struct mod_lang_parse_ops_st {
  *                                                 *
  **************************************************/
 
-#define MOD_LANG_PARSE_IID MOD_GUID(0x0aff0e7f, 0xba6d, 0xaee3, 0x14, 0xa9, 0xbd, 0xc2, 0x2a, 0xb0, 0xb8, 0x3e)
+#define MOD_LANG_PARSE_IID MOD_GUID(0xa0bb6965, 0x8e6c, 0xf1f6, 0x5c, 0x80, 0x4a, 0x2d, 0x38, 0xde, 0x86, 0xba)
 
 /***************************************************
  *                                                 *
@@ -70,12 +64,10 @@ struct mod_lang_parse_ops_st {
  *                                                 *
  **************************************************/
 
-#define mod_lang_parse_init(m, arg, arg_len) ((m)->p_ops->init((mod_lang_parse_t *)(m), arg, arg_len))
-#define mod_lang_parse_cleanup(m) ((m)->p_ops->cleanup((mod_lang_parse_t *)(m)))
+#define mod_lang_parse_init(m, arg, arg_len) ((m)->p_ops->init((mod_lang_parse_t *) (m), arg, arg_len))
+#define mod_lang_parse_cleanup(m) ((m)->p_ops->cleanup((mod_lang_parse_t *) (m)))
 
 /***interface_define***/
-#define mod_lang_parse_new_state(m) ((m)->p_ops->new_state((mod_lang_parse_t *)(m)))
-#define mod_lang_parse_load_script(m, state, script_name) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), state, script_name))
-#define mod_lang_parse_close_state(m, state) ((m)->p_ops->close_state((mod_lang_parse_t *)(m), state))
+#define mod_lang_parse_parse(m, file_name, source_buffer, source_buffer_len) ((m)->p_ops->parse((mod_lang_parse_t *) (m), file_name, source_buffer, source_buffer_len))
 
 #endif

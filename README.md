@@ -8,3 +8,6 @@ Safe as Rust, easy use like Python!
 ## Install packages
 sudo apt-get install -y libunwind-dev libgoogle-perftools-dev libxxhash-dev libjson-c-dev flex yacc libelf-dev libconfuse-dev fuse libfl-dev
 
+## test loris language
+1. cd deploy/Debug
+2. ./Loris_Lang script/test/test_all.nl
