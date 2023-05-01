@@ -374,12 +374,12 @@ STD_CALL std_void_t print_lang_ast(IN lang_ast_t *p);
 STD_CALL std_void_t clear_lang_ast(IN lang_ast_t *p);
 
 /**
- * add_require_func
+ * add_require_package
  * @brief
- * @param   func_name
+ * @param   package_name
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t add_require_func(lang_state_t *state, const std_char_t *func_name);
+STD_CALL std_void_t add_require_package(lang_state_t *state, const std_char_t *package_name);
 
 
 

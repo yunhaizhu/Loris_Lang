@@ -1,3 +1,4 @@
+package embedded
 require os
 
 def add(var x, var y, var ret)

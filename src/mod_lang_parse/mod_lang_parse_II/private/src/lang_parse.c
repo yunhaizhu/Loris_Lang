@@ -110,7 +110,7 @@ lang_ast_t *identifier(lang_state_t *state)
             lang_expect(state, '}');
             ast->symbol->type_symbol = make_lang_ast(state, DECLARE_TUPLE_OP, lang_ast_type_symbol, make_lang_ast_list2(state, NULL, expr2, state->source_name, state->source_line), state->source_name, state->source_line);
 
-            ast->symbol->check_block = fake_type_check_ast(state->function_name, check_symbol_name);
+            ast->symbol->check_block = fake_type_check_ast(state->create_name, check_symbol_name);
         }
 
         return ast;
@@ -150,7 +150,7 @@ lang_ast_t *var_identifier(lang_state_t *state)
                 lang_expect(state, '}');
                 ast->symbol->type_symbol = make_lang_ast(state, DECLARE_TUPLE_OP, lang_ast_type_symbol, make_lang_ast_list2(state, NULL, expr2, state->source_name, state->source_line), state->source_name, state->source_line);
 
-                ast->symbol->check_block = fake_type_check_ast(state->function_name, check_symbol_name);
+                ast->symbol->check_block = fake_type_check_ast(state->create_name, check_symbol_name);
             }
             return ast;
         } else {
@@ -460,7 +460,12 @@ lang_ast_t *call_expr(lang_state_t *state)
             }
 
         } else if (lang_accept(state, '.')) {
-            if (lang_accept(state, TOKEN_ADD_ITEM)) {
+            if (lang_accept(state, TOKEN_ID)) {
+                lang_expect(state, '(');
+                expr2 = arg_list(state);
+                lang_expect(state, ')');
+                ret = make_lang_ast(state, CALL_OP, ret, expr2, state->source_name, state->source_line);
+            }else if (lang_accept(state, TOKEN_ADD_ITEM)) {
                 lang_expect(state, '(');
                 expr2 = arg_list(state);
                 lang_expect(state, ')');
@@ -927,7 +932,7 @@ lang_ast_t *def_function(lang_state_t *state)
 
     func_symbol = identifier(state);
 
-    state->function_name = func_symbol->symbol->name;
+    state->create_name = func_symbol->symbol->name;
 
     lang_expect(state, '(');
     func_parameter = parameters(state);
@@ -943,7 +948,7 @@ lang_ast_t *def_function(lang_state_t *state)
 
 //    mod_lang_compile_func(p_global_mod_compile, func_symbol, func_parameter, func_body);
 
-    state->function_name = NULL;
+    state->create_name = NULL;
     return func_symbol;
 }
 
@@ -953,8 +958,7 @@ lang_ast_t *def_function(lang_state_t *state)
  * @param   state
  * @return  lang_ast_t *
  */
-lang_ast_t *global_definition(lang_state_t *state)
-{
+lang_ast_t *global_definition(lang_state_t *state) {
     lang_ast_t *ret = NULL;
 
     while (true) {
@@ -966,17 +970,25 @@ lang_ast_t *global_definition(lang_state_t *state)
     if (lang_accept(state, TOKEN_DEF)) {
         ret = def_function(state);
         return ret;
+    } else if (lang_accept(state, TOKEN_PACKAGE)) {
+        lang_expect(state, TOKEN_ID);
+        ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
+        state->package_name = strdup(state->value.string);
+
+
+
+        return ret;
     } else if (lang_accept(state, TOKEN_REQUIRE)) {
         lang_expect(state, TOKEN_ID);
         ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
-        add_require_func(state, state->value.string);
+        add_require_package(state, state->value.string);
 
         while (lang_accept(state, ',') ) {
             lang_accept(state, TOKEN_lang);
             lang_expect(state, TOKEN_ID);
 
             ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
-            add_require_func(state, state->value.string);
+            add_require_package(state, state->value.string);
         }
 
         return ret;
