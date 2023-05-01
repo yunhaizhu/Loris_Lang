@@ -42,6 +42,8 @@ keyword_token_table_t keyword_token_table[] = {
         {"and", TOKEN_AND},
         {"or", TOKEN_OR},
         {"xor", TOKEN_XOR},
+
+        {"package", TOKEN_PACKAGE},
         {"require", TOKEN_REQUIRE},
 };
 

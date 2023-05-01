@@ -40,6 +40,7 @@ typedef enum lex_token_s {
     TOKEN_OR,
     TOKEN_XOR,
 
+    TOKEN_PACKAGE,
     TOKEN_REQUIRE,
 
     TOKEN_VAR,
@@ -81,6 +82,12 @@ typedef struct keyword_token_table_s {
     std_int_t token;
 } keyword_token_table_t;
 
+typedef enum create_type_s {
+    CREATE_TYPE_VARIABLE,
+    CREATE_TYPE_FUNCTION,
+    CREATE_TYPE_PACKAGE
+} create_type_t;
+
 typedef struct lang_state_s {
     std_void_t *global_func_compile_ast[MAX_DEF_FUNC_COUNT];
     std_int_t global_func_compile_ast_idx;
@@ -89,13 +96,14 @@ typedef struct lang_state_s {
 
     std_lock_free_key_hash_t *global_parse_error_need_clean_lang_ast_hash;
     std_lock_free_key_hash_t *global_symbol_hash;
-    std_bool_t create_id;
-    std_bool_t create_func;
-    std_char_t *function_name;
+
+    create_type_t create_type;
+    std_char_t *create_name;
+    std_char_t *package_name;
 
 #define FUNC_EXTERN_EXTERN_LEN 100
-    std_char_t *global_func_custom_extern[FUNC_EXTERN_EXTERN_LEN];
-    std_int_t global_func_custom_extern_idx;
+    std_char_t *global_package[FUNC_EXTERN_EXTERN_LEN];
+    std_int_t global_package_idx;
 
     ////////////////////////
     std_char_t *source_name;
