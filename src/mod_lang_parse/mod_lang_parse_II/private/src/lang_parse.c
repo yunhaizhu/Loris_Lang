@@ -464,10 +464,19 @@ lang_ast_t *call_expr(lang_state_t *state)
 
         } else if (lang_accept(state, '.')) {
             if (lang_accept(state, TOKEN_ID)) {
+                std_char_t *call_name = CALLOC(1, KEY_NAME_SIZE);
+
+                snprintf(call_name, KEY_NAME_SIZE, "%s__function__%s", get_lang_ast_symbol_name(ret), state->value.string);
+
+                lang_ast_t *ast = make_lang_ast_symbol(state, call_name, state->source_name, state->source_line);
+
+                FREE(state->value.string);
+                state->value.string = NULL;
+
                 lang_expect(state, '(');
                 expr2 = arg_list(state);
                 lang_expect(state, ')');
-                ret = make_lang_ast(state, CALL_OP, ret, expr2, state->source_name, state->source_line);
+                ret = make_lang_ast(state, CALL_OP, ast, expr2, state->source_name, state->source_line);
             }else if (lang_accept(state, TOKEN_ADD_ITEM)) {
                 lang_expect(state, '(');
                 expr2 = arg_list(state);
@@ -974,27 +983,63 @@ lang_ast_t *global_definition(lang_state_t *state) {
         return ret;
     } else if (lang_accept(state, TOKEN_PACKAGE)) {
         lang_expect(state, TOKEN_ID);
-        ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
-        state->package_name = strdup(state->value.string);
-
-
+        state->create_type = CREATE_TYPE_PACKAGE;
+        ret = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
+        state->package_name = get_lang_ast_symbol_name(ret);
 
         return ret;
     } else if (lang_accept(state, TOKEN_REQUIRE)) {
         lang_expect(state, TOKEN_ID);
-        ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
-        add_require_package(state, state->value.string);
+
+        state->create_type = CREATE_TYPE_PACKAGE;
+        ret = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
 
         while (lang_accept(state, ',') ) {
             lang_accept(state, TOKEN_lang);
             lang_expect(state, TOKEN_ID);
 
-            ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
-            add_require_package(state, state->value.string);
+            state->create_type = CREATE_TYPE_PACKAGE;
+            ret = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
         }
 
         return ret;
-    }else if (lang_accept(state, TOKEN_LOAD_LIB)) {
+    } else if (lang_accept(state, TOKEN_IMPORT)) {
+        std_char_t *import_name = CALLOC(1, KEY_NAME_SIZE);
+        std_char_t *import_package_ptr = NULL;
+        std_char_t *import_function_ptr = NULL;
+
+        lang_expect(state, TOKEN_ID);
+        import_package_ptr = strdup(state->value.string);
+        lang_expect(state, '.');
+        lang_expect(state, TOKEN_ID);
+        import_function_ptr = strdup(state->value.string);
+
+        snprintf(import_name, KEY_NAME_SIZE, "%s.%s", import_package_ptr, import_function_ptr);
+        FREE(import_package_ptr);
+        FREE(import_function_ptr);
+
+        state->create_type = CREATE_TYPE_IMPORT;
+        ret = make_lang_ast_symbol(state, import_name, state->source_name, state->source_line);
+
+        while (lang_accept(state, ',') ) {
+            import_name = CALLOC(1, KEY_NAME_SIZE);
+
+            lang_expect(state, TOKEN_ID);
+            import_package_ptr = strdup(state->value.string);
+            lang_expect(state, '.');
+            lang_expect(state, TOKEN_ID);
+            import_function_ptr = strdup(state->value.string);
+
+            snprintf(import_name, KEY_NAME_SIZE, "%s.%s", import_package_ptr, import_function_ptr);
+            FREE(import_package_ptr);
+            FREE(import_function_ptr);
+
+            state->create_type = CREATE_TYPE_IMPORT;
+            ret = make_lang_ast_symbol(state, import_name, state->source_name, state->source_line);
+        }
+
+        return ret;
+    } else if (lang_accept(state, TOKEN_LOAD_LIB)) {
         lang_expect(state, TOKEN_ID);
         ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
 //        lang_ast_t *expr = make_lang_ast(LOAD_LIB_OP, ret, NULL, state->source_name, state->source_line);

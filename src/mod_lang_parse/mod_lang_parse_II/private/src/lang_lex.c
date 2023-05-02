@@ -45,6 +45,7 @@ keyword_token_table_t keyword_token_table[] = {
 
         {"package", TOKEN_PACKAGE},
         {"require", TOKEN_REQUIRE},
+        {"import", TOKEN_IMPORT},
 };
 
 keyword_token_table_t token_name_table[] = {

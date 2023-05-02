@@ -42,6 +42,7 @@ typedef enum lex_token_s {
 
     TOKEN_PACKAGE,
     TOKEN_REQUIRE,
+    TOKEN_IMPORT,
 
     TOKEN_VAR,
     TOKEN_DEF,
@@ -86,6 +87,7 @@ typedef enum create_type_s {
     CREATE_TYPE_VARIABLE,
     CREATE_TYPE_FUNCTION,
     CREATE_TYPE_PACKAGE,
+    CREATE_TYPE_IMPORT,
     CREATE_TYPE_NONE
 } create_type_t;
 
@@ -103,8 +105,8 @@ typedef struct lang_state_s {
     std_char_t *package_name;
 
 #define FUNC_EXTERN_EXTERN_LEN 100
-    std_char_t *global_package[FUNC_EXTERN_EXTERN_LEN];
-    std_int_t global_package_idx;
+    std_char_t *global_package_function[FUNC_EXTERN_EXTERN_LEN];
+    std_int_t global_package_function_idx;
 
     ////////////////////////
     std_char_t *source_name;

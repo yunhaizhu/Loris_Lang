@@ -84,6 +84,7 @@ typedef enum lang_ast_code {
     XOR_OP,
 
     CALL_OP,
+    PACKAGE_CALL_OP,
     LOAD_LIB_OP,
 
     IF_STATEMENT,
@@ -374,13 +375,11 @@ STD_CALL std_void_t print_lang_ast(IN lang_ast_t *p);
 STD_CALL std_void_t clear_lang_ast(IN lang_ast_t *p);
 
 /**
- * add_require_package
+ * add_require_package_function
  * @brief
- * @param   package_name
+ * @param   package_function_name
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t add_require_package(lang_state_t *state, const std_char_t *package_name);
-
-
+STD_CALL std_void_t add_require_package_function(lang_state_t *state, const std_char_t *package_function_name);
 
 #endif//NONCLEDB_LANG_AST_H

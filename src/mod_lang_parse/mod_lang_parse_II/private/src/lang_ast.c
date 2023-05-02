@@ -17,20 +17,20 @@
 #include "std_lock_free_key_hash.h"
 
 /**
- * add_require_func
+ * add_require_package_function
  * @brief
- * @param   func_name
+ * @param   package_function_name
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t add_require_package(lang_state_t *state, const std_char_t *package_name)
+STD_CALL std_void_t add_require_package_function(lang_state_t *state, const std_char_t *package_function_name)
 {
-    std_char_t *name = strdup(package_name);
+    std_char_t *name = strdup(package_function_name);
 
     std_safe_strip_chars(name, '"');
-    if (state->global_package_idx >= FUNC_EXTERN_EXTERN_LEN - 1){
-        state->global_package_idx = 0;
+    if (state->global_package_function_idx >= FUNC_EXTERN_EXTERN_LEN - 1){
+        state->global_package_function_idx = 0;
     }
-    state->global_package[state->global_package_idx++] = name;
+    state->global_package_function[state->global_package_function_idx++] = name;
 }
 
 /**
@@ -284,15 +284,7 @@ STD_CALL lang_ast_t *make_lang_ast_char(lang_state_t *state, IN std_char_t chr, 
 STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *name, IN std_bool_t check_error)
 {
     symbol_t *symbol = NULL;
-    std_bool_t find = STD_BOOL_FALSE;
-    std_char_t new_name[KEY_NAME_SIZE];
-
-    for (std_int_t i = 0; i < state->global_package_idx; ++i) {
-        if (0 == strcmp(name, state->global_package[i]) && std_safe_strlen(name, KEY_NAME_SIZE) == std_safe_strlen(state->global_package[i], KEY_NAME_SIZE)) {
-            state->create_type = CREATE_TYPE_PACKAGE;
-            break;
-        }
-    }
+    std_char_t new_name[LINE_BUF_SIZE];
 
     if (NULL == state->global_symbol_hash) {
         state->global_symbol_hash =
@@ -300,10 +292,22 @@ STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *na
     }
 
     switch (state->create_type) {
-        case CREATE_TYPE_PACKAGE:
-            snprintf(new_name, sizeof(new_name), "%s", name);
+        case CREATE_TYPE_IMPORT:{
+            std_char_t package_name[KEY_NAME_SIZE];
+            std_char_t function_name[KEY_NAME_SIZE];
+
+            sscanf(name, "%[^.].%s", package_name, function_name);
+
+            snprintf(new_name, sizeof(new_name), "package__%s__function__%s", package_name, function_name);
+
             NEW_SYMBOL()
-            state->package_name = symbol->name;
+            state->create_type = CREATE_TYPE_NONE;
+            return symbol;
+        }
+
+        case CREATE_TYPE_PACKAGE:
+            snprintf(new_name, sizeof(new_name), "package__%s", name);
+            NEW_SYMBOL()
             state->create_type = CREATE_TYPE_NONE;
             return symbol;
 
@@ -320,7 +324,7 @@ STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *na
             state->create_type = CREATE_TYPE_NONE;
             return symbol;
 
-        case CREATE_TYPE_NONE:
+        case CREATE_TYPE_NONE:{
             snprintf(new_name, sizeof(new_name), "%s__variable__%s", state->function_name, name);
             symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
             if(symbol){
@@ -333,13 +337,19 @@ STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *na
                 return symbol;
             }
 
-            snprintf(new_name, sizeof(new_name), "%s", name);
+            snprintf(new_name, sizeof(new_name), "package__%s", name);
             symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
             if(symbol){
                 return symbol;
             }
 
+            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, name, std_safe_strlen(name, sizeof(new_name)));
+            if(symbol){
+                return symbol;
+            }
+
             break;
+        }
     }
 
     STD_LOG(ERR,
