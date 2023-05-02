@@ -339,13 +339,6 @@ STD_CALL std_int_t get_keyword_token(lang_state_t *state, IN const std_char_t *n
         if (strncmp(keyword_token_table[i].name, name, name_len) == 0 &&
             std_safe_strlen(keyword_token_table[i].name, 32) == name_len) {
 
-            if (keyword_token_table[i].token == TOKEN_DEF) {
-                state->create_id = STD_BOOL_TRUE;
-                state->create_func = STD_BOOL_TRUE;
-            } else if (keyword_token_table[i].token == TOKEN_VAR) {
-                state->create_id = STD_BOOL_TRUE;
-            }
-
             return keyword_token_table[i].token;
         }
     }

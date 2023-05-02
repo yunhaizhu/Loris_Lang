@@ -85,7 +85,8 @@ typedef struct keyword_token_table_s {
 typedef enum create_type_s {
     CREATE_TYPE_VARIABLE,
     CREATE_TYPE_FUNCTION,
-    CREATE_TYPE_PACKAGE
+    CREATE_TYPE_PACKAGE,
+    CREATE_TYPE_NONE
 } create_type_t;
 
 typedef struct lang_state_s {
@@ -98,7 +99,7 @@ typedef struct lang_state_s {
     std_lock_free_key_hash_t *global_symbol_hash;
 
     create_type_t create_type;
-    std_char_t *create_name;
+    std_char_t *function_name;
     std_char_t *package_name;
 
 #define FUNC_EXTERN_EXTERN_LEN 100

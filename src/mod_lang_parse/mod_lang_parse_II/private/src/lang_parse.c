@@ -103,14 +103,15 @@ lang_ast_t *identifier(lang_state_t *state)
             lang_ast_t *lang_ast_type_symbol = NULL;
             lang_ast_t *expr2 = NULL;
 
-            state->create_id = STD_BOOL_TRUE;
+            state->create_type = CREATE_TYPE_VARIABLE;
+
             lang_ast_type_symbol = make_lang_ast_symbol(state, strdup(type_symbol_name), state->source_name, state->source_line);
             lang_expect(state, '{');
             expr2 = vals_list(state);
             lang_expect(state, '}');
             ast->symbol->type_symbol = make_lang_ast(state, DECLARE_TUPLE_OP, lang_ast_type_symbol, make_lang_ast_list2(state, NULL, expr2, state->source_name, state->source_line), state->source_name, state->source_line);
 
-            ast->symbol->check_block = fake_type_check_ast(state->create_name, check_symbol_name);
+            ast->symbol->check_block = fake_type_check_ast(state->function_name, check_symbol_name);
         }
 
         return ast;
@@ -139,18 +140,19 @@ lang_ast_t *var_identifier(lang_state_t *state)
         if (lang_accept(state, TOKEN_ID)) {
             snprintf(check_symbol_name, sizeof(type_symbol_name), "%s", state->value.string);
             snprintf(type_symbol_name, sizeof(type_symbol_name), "%s__type", state->value.string);
+            state->create_type = CREATE_TYPE_VARIABLE;
             ast = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
             state->value.string = NULL;
 
             if (lang_accept(state, ':')) {
-                state->create_id = STD_BOOL_TRUE;
+                state->create_type = CREATE_TYPE_VARIABLE;
                 lang_ast_type_symbol = make_lang_ast_symbol(state, strdup(type_symbol_name), state->source_name, state->source_line);
                 lang_expect(state, '{');
                 expr2 = vals_list(state);
                 lang_expect(state, '}');
                 ast->symbol->type_symbol = make_lang_ast(state, DECLARE_TUPLE_OP, lang_ast_type_symbol, make_lang_ast_list2(state, NULL, expr2, state->source_name, state->source_line), state->source_name, state->source_line);
 
-                ast->symbol->check_block = fake_type_check_ast(state->create_name, check_symbol_name);
+                ast->symbol->check_block = fake_type_check_ast(state->function_name, check_symbol_name);
             }
             return ast;
         } else {
@@ -294,6 +296,7 @@ lang_ast_t *local_var(lang_state_t *state)
     lang_ast_t *expr2;
 
     if (lang_accept(state, TOKEN_VAR)) {
+        state->create_type = CREATE_TYPE_VARIABLE;
         symbol = identifier(state);
 
         if (lang_accept(state, TOKEN_lang)) {
@@ -930,9 +933,9 @@ lang_ast_t *def_function(lang_state_t *state)
     state->global_func_compile_ast[state->global_func_compile_ast_idx] = (def_func_compile_ast_t *)CALLOC(1, sizeof(def_func_compile_ast_t));
     def_func_compile_ast = state->global_func_compile_ast[state->global_func_compile_ast_idx];
 
-    func_symbol = identifier(state);
+    state->create_type = CREATE_TYPE_FUNCTION;
 
-    state->create_name = func_symbol->symbol->name;
+    func_symbol = identifier(state);
 
     lang_expect(state, '(');
     func_parameter = parameters(state);
@@ -948,7 +951,6 @@ lang_ast_t *def_function(lang_state_t *state)
 
 //    mod_lang_compile_func(p_global_mod_compile, func_symbol, func_parameter, func_body);
 
-    state->create_name = NULL;
     return func_symbol;
 }
 
