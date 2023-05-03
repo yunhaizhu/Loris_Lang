@@ -1,0 +1,9 @@
+#define VERSION "1.0.0"
+#define MODULE "mod_lang_compile"
+#define INSTANCE "mod_lang_compile_II"
+
+typedef struct loris_state_s {
+} loris_state_t;
+
+
+std_char_t *compile_bytecode(IN loris_state_t *state);

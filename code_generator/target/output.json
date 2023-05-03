@@ -1,0 +1,32 @@
+{
+  "version":"1.0.0",
+  "module":"mod_lang_compile",
+  "instance":"mod_lang_compile_II",
+  "defines":[
+  ],
+  "structs":[
+    {
+      "name":"loris_state_s",
+      "typedef_name":"loris_state_t",
+      "fields":[
+      ]
+    }
+  ],
+  "methods":[
+    {
+      "ret":{
+        "type":"TYPE_PTR_CHAR",
+        "ptr_struct":""
+      },
+      "name":"compile_bytecode",
+      "args":[
+        {
+          "direction":"IN",
+          "type":"TYPE_PTR_TYPEDEF",
+          "name":"state",
+          "ptr_struct":"loris_state_t"
+        }
+      ]
+    }
+  ]
+}

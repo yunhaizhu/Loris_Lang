@@ -466,7 +466,11 @@ lang_ast_t *call_expr(lang_state_t *state)
             if (lang_accept(state, TOKEN_ID)) {
                 std_char_t *call_name = CALLOC(1, KEY_NAME_SIZE);
 
-                snprintf(call_name, KEY_NAME_SIZE, "%s__function__%s", get_lang_ast_symbol_name(ret), state->value.string);
+
+
+
+
+             snprintf(call_name, KEY_NAME_SIZE, "%s__function__%s", get_lang_ast_symbol_name(ret), state->value.string);
 
                 lang_ast_t *ast = make_lang_ast_symbol(state, call_name, state->source_name, state->source_line);
 
