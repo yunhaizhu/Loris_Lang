@@ -275,89 +275,7 @@ STD_CALL lang_ast_t *make_lang_ast_char(lang_state_t *state, IN std_char_t chr, 
         STD_LOG(DEBUG, "new symbol name:%s %p\n", new_name, symbol);                                                        \
     }
 
-/**
- * lookup_lang_ast_symbol
- * @brief
- * @param   name
- * @return  STD_CALL symbol_t *
- */
-STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *name, IN std_bool_t check_error)
-{
-    symbol_t *symbol = NULL;
-    std_char_t new_name[LINE_BUF_SIZE];
 
-    if (NULL == state->global_symbol_hash) {
-        state->global_symbol_hash =
-                std_lock_free_key_hash_create(KEY_NAME_SIZE);
-    }
-
-    switch (state->create_type) {
-        case CREATE_TYPE_IMPORT:{
-            std_char_t package_name[KEY_NAME_SIZE];
-            std_char_t function_name[KEY_NAME_SIZE];
-
-            sscanf(name, "%[^.].%s", package_name, function_name);
-
-            snprintf(new_name, sizeof(new_name), "package__%s__function__%s", package_name, function_name);
-
-            NEW_SYMBOL()
-            state->create_type = CREATE_TYPE_NONE;
-            return symbol;
-        }
-
-        case CREATE_TYPE_PACKAGE:
-            snprintf(new_name, sizeof(new_name), "package__%s", name);
-            NEW_SYMBOL()
-            state->create_type = CREATE_TYPE_NONE;
-            return symbol;
-
-        case CREATE_TYPE_FUNCTION:
-            snprintf(new_name, sizeof(new_name), "%s__function__%s", state->package_name, name);
-            NEW_SYMBOL()
-            state->function_name = symbol->name;
-            state->create_type = CREATE_TYPE_NONE;
-            return symbol;
-
-        case CREATE_TYPE_VARIABLE:
-            snprintf(new_name, sizeof(new_name), "%s__variable__%s", state->function_name, name);
-            NEW_SYMBOL()
-            state->create_type = CREATE_TYPE_NONE;
-            return symbol;
-
-        case CREATE_TYPE_NONE:{
-            snprintf(new_name, sizeof(new_name), "%s__variable__%s", state->function_name, name);
-            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
-            if(symbol){
-                return symbol;
-            }
-
-            snprintf(new_name, sizeof(new_name), "%s__function__%s", state->package_name, name);
-            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
-            if(symbol){
-                return symbol;
-            }
-
-            snprintf(new_name, sizeof(new_name), "package__%s", name);
-            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
-            if(symbol){
-                return symbol;
-            }
-
-            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, name, std_safe_strlen(name, sizeof(new_name)));
-            if(symbol){
-                return symbol;
-            }
-
-            break;
-        }
-    }
-
-    STD_LOG(ERR,
-            "PARSE FAILED! You should declare '%s' first, please check source codes line[%s:%d].\n",
-            name, state->source_name, state->source_line);
-
-    return symbol;
-}
 
 
 /**
@@ -787,4 +705,88 @@ STD_CALL std_void_t clear_lang_ast(IN lang_ast_t *p)
             STD_LOG(DEBUG, "FREE %p\n", p);
             FREE(p);
     }
+}
+
+/**
+ * lookup_lang_ast_symbol
+ * @brief
+ * @param   name
+ * @return  STD_CALL symbol_t *
+ */
+STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *name, IN std_bool_t check_error)
+{
+    symbol_t *symbol = NULL;
+    std_char_t new_name[LINE_BUF_SIZE];
+
+    if (NULL == state->global_symbol_hash) {
+        state->global_symbol_hash =
+                std_lock_free_key_hash_create(KEY_NAME_SIZE);
+    }
+
+    switch (state->create_type) {
+        case CREATE_TYPE_IMPORT:{
+            std_char_t package_name[KEY_NAME_SIZE];
+            std_char_t function_name[KEY_NAME_SIZE];
+
+            sscanf(name, "%[^.].%s", package_name, function_name);
+
+            snprintf(new_name, sizeof(new_name), "package__%s__function__%s", package_name, function_name);
+
+            NEW_SYMBOL()
+            state->create_type = CREATE_TYPE_NONE;
+            return symbol;
+        }
+
+        case CREATE_TYPE_PACKAGE:
+            snprintf(new_name, sizeof(new_name), "package__%s", name);
+            NEW_SYMBOL()
+            state->create_type = CREATE_TYPE_NONE;
+            return symbol;
+
+        case CREATE_TYPE_FUNCTION:
+            snprintf(new_name, sizeof(new_name), "%s__function__%s", state->package_name, name);
+            NEW_SYMBOL()
+            state->function_name = symbol->name;
+            state->create_type = CREATE_TYPE_NONE;
+            return symbol;
+
+        case CREATE_TYPE_VARIABLE:
+            snprintf(new_name, sizeof(new_name), "%s__variable__%s", state->function_name, name);
+            NEW_SYMBOL()
+            state->create_type = CREATE_TYPE_NONE;
+            return symbol;
+
+        case CREATE_TYPE_NONE:{
+            snprintf(new_name, sizeof(new_name), "%s__variable__%s", state->function_name, name);
+            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
+            if(symbol){
+                return symbol;
+            }
+
+            snprintf(new_name, sizeof(new_name), "%s__function__%s", state->package_name, name);
+            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
+            if(symbol){
+                return symbol;
+            }
+
+            snprintf(new_name, sizeof(new_name), "package__%s", name);
+            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, new_name, std_safe_strlen(new_name, sizeof(new_name)));
+            if(symbol){
+                return symbol;
+            }
+
+            symbol = std_lock_free_key_hash_find(state->global_symbol_hash, name, std_safe_strlen(name, sizeof(new_name)));
+            if(symbol){
+                return symbol;
+            }
+
+            break;
+        }
+    }
+
+    STD_LOG(ERR,
+            "PARSE FAILED! You should declare '%s' first, please check source codes line[%s:%d].\n",
+            name, state->source_name, state->source_line);
+
+    return symbol;
 }

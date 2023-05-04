@@ -81,7 +81,6 @@ typedef enum lang_ast_code {
     XOR_OP,
 
     CALL_OP,
-    PACKAGE_CALL_OP,
     LOAD_LIB_OP,
 
     IF_STATEMENT,

@@ -17,7 +17,7 @@ def main()
 
     add(x, y, ret)
 
-    os.print(ret)
+    os.print("ret = ", ret)
 }
 
 #script("script/embedded/add.nl")
