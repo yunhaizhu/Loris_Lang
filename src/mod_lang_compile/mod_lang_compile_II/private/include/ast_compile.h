@@ -53,6 +53,8 @@ typedef struct lang_compile_environment_s {
    std_int_t continue_env[10];
    std_int_t continue_envp_save[10];
    std_int_t continue_env_index;
+
+   generate_code_env_t *generate_code_env;
 } lang_compile_environment_t;
 
 
@@ -65,7 +67,7 @@ typedef struct lang_compile_environment_s {
 * @param   body
 * @return  std_void_t
 */
-STD_CALL std_void_t define_function(IN lang_ast_t *func_name, IN lang_ast_t *params, IN lang_ast_t *body);
+STD_CALL std_void_t define_function(lang_compile_environment_t *compile_env, IN lang_ast_t *func_name, IN lang_ast_t *params, IN lang_ast_t *body);
 
 
 /**
@@ -74,7 +76,7 @@ STD_CALL std_void_t define_function(IN lang_ast_t *func_name, IN lang_ast_t *par
 * @param   statements
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_command_statements(IN lang_ast_t *statements);
+STD_CALL std_void_t compile_command_statements(lang_compile_environment_t *compile_env, IN lang_ast_t *statements);
 
 /**
 * compile_declare_var
@@ -83,7 +85,7 @@ STD_CALL std_void_t compile_command_statements(IN lang_ast_t *statements);
 * @param   v
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_declare_var(IN symbol_t *var, IN lang_ast_t *v, std_int_t line);
+STD_CALL std_void_t compile_declare_var(lang_compile_environment_t *compile_env, IN symbol_t *var, IN lang_ast_t *v, std_int_t line);
 
 
 /**
@@ -94,7 +96,7 @@ STD_CALL std_void_t compile_declare_var(IN symbol_t *var, IN lang_ast_t *v, std_
 * @param   init_value_ast
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_declare_array_var(IN symbol_t *var, IN const lang_ast_t *size_ast, IN lang_ast_t *init_value_ast, std_int_t line);
+STD_CALL std_void_t compile_declare_array_var(lang_compile_environment_t *compile_env, IN symbol_t *var, IN const lang_ast_t *size_ast, IN lang_ast_t *init_value_ast, std_int_t line);
 
 
 /**
@@ -104,7 +106,7 @@ STD_CALL std_void_t compile_declare_array_var(IN symbol_t *var, IN const lang_as
 * @param   init_value_ast
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_declare_tuple_var(IN symbol_t *var, const lang_ast_t *enable_key, IN lang_ast_t *init_value_ast, std_int_t line);
+STD_CALL std_void_t compile_declare_tuple_var(lang_compile_environment_t *compile_env, IN symbol_t *var, const lang_ast_t *enable_key, IN lang_ast_t *init_value_ast, std_int_t line);
 
 
 /**
@@ -114,7 +116,7 @@ STD_CALL std_void_t compile_declare_tuple_var(IN symbol_t *var, const lang_ast_t
 * @param   init_value_ast
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_declare_hash_var(IN symbol_t *var, IN lang_ast_t *init_value_ast, std_int_t line);
+STD_CALL std_void_t compile_declare_hash_var(lang_compile_environment_t *compile_env, IN symbol_t *var, IN lang_ast_t *init_value_ast, std_int_t line);
 
 
 /**
@@ -124,7 +126,7 @@ STD_CALL std_void_t compile_declare_hash_var(IN symbol_t *var, IN lang_ast_t *in
 * @param   v
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_store_var(IN symbol_t *var, IN lang_ast_t *v, std_int_t line);
+STD_CALL std_void_t compile_store_var(lang_compile_environment_t *compile_env, IN symbol_t *var, IN lang_ast_t *v, std_int_t line);
 
 
 /**
@@ -133,7 +135,7 @@ STD_CALL std_void_t compile_store_var(IN symbol_t *var, IN lang_ast_t *v, std_in
 * @param   var
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_load_var(IN symbol_t *var, std_int_t line);
+STD_CALL std_void_t compile_load_var(lang_compile_environment_t *compile_env, IN symbol_t *var, std_int_t line);
 
 
 /**
@@ -142,7 +144,7 @@ STD_CALL std_void_t compile_load_var(IN symbol_t *var, std_int_t line);
 * @param   p
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_statement(IN lang_ast_t *p);
+STD_CALL std_void_t compile_statement(lang_compile_environment_t *compile_env, IN lang_ast_t *p);
 
 
 /**
@@ -152,7 +154,7 @@ STD_CALL std_void_t compile_statement(IN lang_ast_t *p);
 * @param   statements
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_block(IN lang_ast_t *local_vars, IN lang_ast_t *statements);
+STD_CALL std_void_t compile_block(lang_compile_environment_t *compile_env, IN lang_ast_t *local_vars, IN lang_ast_t *statements);
 
 
 /**
@@ -161,7 +163,7 @@ STD_CALL std_void_t compile_block(IN lang_ast_t *local_vars, IN lang_ast_t *stat
 * @param   expr
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_return(IN lang_ast_t *expr);
+STD_CALL std_void_t compile_return(lang_compile_environment_t *compile_env, IN lang_ast_t *expr);
 
 
 /**
@@ -170,7 +172,7 @@ STD_CALL std_void_t compile_return(IN lang_ast_t *expr);
 * @param   expr
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_break(IN const lang_ast_t *expr);
+STD_CALL std_void_t compile_break(lang_compile_environment_t *compile_env, IN const lang_ast_t *expr);
 
 /**
 * compile_continue
@@ -178,7 +180,7 @@ STD_CALL std_void_t compile_break(IN const lang_ast_t *expr);
 * @param   expr
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_continue(const lang_ast_t *expr);
+STD_CALL std_void_t compile_continue(lang_compile_environment_t *compile_env, const lang_ast_t *expr);
 
 /**
 * compile_call_func
@@ -188,7 +190,7 @@ STD_CALL std_void_t compile_continue(const lang_ast_t *expr);
 * @param   line
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_call_func(lang_ast_t *f_ast, IN lang_ast_t *args, IN std_int_t line);
+STD_CALL std_void_t compile_call_func(lang_compile_environment_t *compile_env, lang_ast_t *f_ast, IN lang_ast_t *args, IN std_int_t line);
 
 
 /**
@@ -197,7 +199,7 @@ STD_CALL std_void_t compile_call_func(lang_ast_t *f_ast, IN lang_ast_t *args, IN
 * @param   args
 * @return  std_int_t
 */
-STD_CALL std_int_t compile_args(IN lang_ast_t *args);
+STD_CALL std_int_t compile_args(lang_compile_environment_t *compile_env, IN lang_ast_t *args);
 
 
 /**
@@ -208,7 +210,7 @@ STD_CALL std_int_t compile_args(IN lang_ast_t *args);
 * @param   else_part
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_if(IN lang_ast_t *cond, IN lang_ast_t *then_part, IN lang_ast_t *else_part);
+STD_CALL std_void_t compile_if(lang_compile_environment_t *compile_env, IN lang_ast_t *cond, IN lang_ast_t *then_part, IN lang_ast_t *else_part);
 
 
 /**
@@ -218,7 +220,7 @@ STD_CALL std_void_t compile_if(IN lang_ast_t *cond, IN lang_ast_t *then_part, IN
 * @param   body
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_while(IN lang_ast_t *cond, IN lang_ast_t *body);
+STD_CALL std_void_t compile_while(lang_compile_environment_t *compile_env, IN lang_ast_t *cond, IN lang_ast_t *body);
 
 
 /**
@@ -230,7 +232,7 @@ STD_CALL std_void_t compile_while(IN lang_ast_t *cond, IN lang_ast_t *body);
 * @param   body
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_for(IN lang_ast_t *init, IN lang_ast_t *cond, IN lang_ast_t *iter, IN lang_ast_t *body);
+STD_CALL std_void_t compile_for(lang_compile_environment_t *compile_env, IN lang_ast_t *init, IN lang_ast_t *cond, IN lang_ast_t *iter, IN lang_ast_t *body);
 
 
 /**
@@ -239,7 +241,7 @@ STD_CALL std_void_t compile_for(IN lang_ast_t *init, IN lang_ast_t *cond, IN lan
 * @param   p
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_expr(IN lang_ast_t *p);
+STD_CALL std_void_t compile_expr(lang_compile_environment_t *compile_env, IN lang_ast_t *p);
 
 
 /**
@@ -248,7 +250,7 @@ STD_CALL std_void_t compile_expr(IN lang_ast_t *p);
 * @param   var
 * @return  std_void_t
 */
-STD_CALL std_void_t compile_sym(IN symbol_t *var, std_int_t line);
+STD_CALL std_void_t compile_sym(lang_compile_environment_t *compile_env, IN symbol_t *var, std_int_t line);
 
 /**
 * compile_expr_sym
@@ -256,7 +258,7 @@ STD_CALL std_void_t compile_sym(IN symbol_t *var, std_int_t line);
 * @param   p
 * @return  STD_CALL std_void_t
 */
-STD_CALL std_void_t compile_expr_sym(lang_ast_t *p);
+STD_CALL std_void_t compile_expr_sym(lang_compile_environment_t *compile_env, lang_ast_t *p);
 
 /**
 * compile_reset
@@ -264,6 +266,6 @@ STD_CALL std_void_t compile_expr_sym(lang_ast_t *p);
 * @param   p
 * @return  STD_CALL std_void_t
 */
-STD_CALL std_void_t compile_reset();
+STD_CALL std_void_t compile_reset(lang_compile_environment_t *compile_env);
 
 #endif

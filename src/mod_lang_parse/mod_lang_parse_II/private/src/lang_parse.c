@@ -470,7 +470,7 @@ lang_ast_t *call_expr(lang_state_t *state)
 
 
 
-             snprintf(call_name, KEY_NAME_SIZE, "%s__function__%s", get_lang_ast_symbol_name(ret), state->value.string);
+            snprintf(call_name, KEY_NAME_SIZE, "%s__function__%s", get_lang_ast_symbol_name(ret), state->value.string);
 
                 lang_ast_t *ast = make_lang_ast_symbol(state, call_name, state->source_name, state->source_line);
 
