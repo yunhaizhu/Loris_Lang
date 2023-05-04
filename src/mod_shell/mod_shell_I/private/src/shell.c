@@ -316,7 +316,7 @@ STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, name) == STD_RV_SUC,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
-    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
+    std_char_t const *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
     STD_ASSERT_RV_ACTION(bytecode != NULL,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
@@ -365,12 +365,12 @@ std_rv_t cmd_script(IN std_char_t *name, const std_char_t *arg)
 }
 
 /**
- * cmd_process
+ * cmd_cmd
  * @brief   
  * @param   body
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_process(IN std_char_t *body)
+STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
 {
     std_u64_t u64_key;
     std_size_t buf_len;
@@ -380,7 +380,7 @@ STD_CALL std_rv_t cmd_process(IN std_char_t *body)
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_body(p_global_mod_lang_parse, state, body) == STD_RV_SUC,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
-    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
+    std_char_t const *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
     STD_ASSERT_RV_ACTION(bytecode != NULL,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
@@ -417,6 +417,36 @@ std_void_t execute_thread_func(std_void_t *data)
     FREE(data);
 }
 
+std_void_t cmd_thread(mod_shell_imp_t *p_imp_m, IN const std_char_t *name, IN const std_char_t *arg)
+{
+    // Initialize thread pool
+    p_mod_thread_pool = p_imp_m->p_mod_thread_pool;
+    if (p_mod_thread_pool == NULL) {
+        mod_iid_t mod_thread_pool_iid = MOD_THREAD_POOL_IID;
+
+        mod_create_instance(&mod_thread_pool_iid, (std_void_t **) &p_imp_m->p_mod_thread_pool,
+                            (mod_ownership_t *) p_imp_m);
+        mod_thread_pool_init(p_imp_m->p_mod_thread_pool, NULL, 0);
+        p_mod_thread_pool = p_imp_m->p_mod_thread_pool;
+    }
+
+    // Parse thread count and script name
+    std_int_t thread_count = 1;
+    std_char_t script_name[KEY_NAME_SIZE] = "\0";
+    sscanf(name, "%d,%s", &thread_count, script_name);
+
+    // Limit thread count to 128
+    if (thread_count > 128 || thread_count <= 0) {
+        thread_count = 1;
+    }
+
+    // Add work to thread pool
+    for (std_int_t i = 0; i < thread_count; i++) {
+        mod_thread_pool_add_work(p_mod_thread_pool,
+                                 execute_thread_func,
+                                 (std_void_t *) strdup(script_name));
+    }
+}
 
 /**
  * cmd_shell
@@ -442,13 +472,13 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
 
     // Execute init_script.nl
     cmd_script(script, NULL);
-//    if (oneshot_script){
-//        oneshot_script = oneshot_script + std_safe_strlen("script/", BUF_SIZE_32);
-//        STD_LOG(DISPLAY, "Executing %s\n", oneshot_script);
-//        ret = cmd_script(oneshot_script, NULL);
-//        cmd_exit();
-//        goto exit;
-//    }
+    if (oneshot_script){
+        oneshot_script = oneshot_script + std_safe_strlen("script/", BUF_SIZE_32);
+        STD_LOG(DISPLAY, "Executing %s\n", oneshot_script);
+        ret = cmd_script(oneshot_script, NULL);
+        cmd_exit();
+        goto exit;
+    }
     // Display help message
     cmd_help();
 
@@ -458,35 +488,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
             // Execute a compiled file in a thread
             snprintf(name, sizeof(name), "%s", cmd + std_safe_strlen("thread", BUF_SIZE_32));
             strip_name(name);
-
-            // Initialize thread pool
-            p_mod_thread_pool = p_imp_m->p_mod_thread_pool;
-            if (p_mod_thread_pool == NULL) {
-                mod_iid_t mod_thread_pool_iid = MOD_THREAD_POOL_IID;
-
-                mod_create_instance(&mod_thread_pool_iid, (std_void_t **) &p_imp_m->p_mod_thread_pool,
-                                    (mod_ownership_t *) p_imp_m);
-                mod_thread_pool_init(p_imp_m->p_mod_thread_pool, NULL, 0);
-                p_mod_thread_pool = p_imp_m->p_mod_thread_pool;
-            }
-
-            // Parse thread count and script name
-            std_int_t thread_count = 1;
-            std_char_t script_name[KEY_NAME_SIZE] = "\0";
-            sscanf(name, "%d,%s", &thread_count, script_name);
-
-            // Limit thread count to 128
-            if (thread_count > 128 || thread_count <= 0) {
-                thread_count = 1;
-            }
-
-            // Add work to thread pool
-            for (std_int_t i = 0; i < thread_count; i++) {
-                mod_thread_pool_add_work(p_mod_thread_pool,
-                                         execute_thread_func,
-                                         (std_void_t *) strdup(script_name));
-            }
-
+            cmd_thread(p_imp_m, name, NULL);
         } else if (strncmp(cmd, "script", std_safe_strlen("script", BUF_SIZE_32)) == 0) {
             std_char_t op[KEY_NAME_SIZE];
             std_char_t filename[KEY_NAME_SIZE];
@@ -505,7 +507,6 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
                 system(new_cmd);
                 cmd_script("self_heal.nl", filename);
             }
-
         } else if (strncmp(cmd, "batch", std_safe_strlen("batch", BUF_SIZE_32)) == 0) {
             // Execute a batch file
             snprintf(name, sizeof(name), "%s", cmd + std_safe_strlen("batch", BUF_SIZE_32));
@@ -513,7 +514,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
             ret = cmd_batch(name);
         }else if (std_safe_strlen(cmd, sizeof(cmd)) > 1){
             // Execute a command
-            cmd_process(cmd);
+            cmd_cmd(cmd);
         }
 
         // Clear cmd and display prompt
@@ -521,7 +522,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
         STD_LOG(DISPLAY, "$");
     }
 
-//exit:
+exit:
     // Destroy global_compiled_body
     std_lock_free_key_hash_value_destroy(global_compiled_body);
 
