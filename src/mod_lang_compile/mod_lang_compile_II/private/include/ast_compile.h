@@ -57,7 +57,11 @@ typedef struct lang_compile_environment_s {
    generate_code_env_t *generate_code_env;
 } lang_compile_environment_t;
 
-
+typedef struct def_func_compile_ast_s{
+   lang_ast_t *func_symbol;
+   lang_ast_t *func_parameter;
+   lang_ast_t *func_body;
+}def_func_compile_ast_t;
 
 /**
 * define_function

@@ -54,7 +54,7 @@ STD_CALL std_void_t STD_LOG_DEBUG(IN const std_char_t *FILE,
 {
     std_char_t *DEBUG_INFO[] = {"DEBUG", "INFO", "WARN", "ERR", ""};
     va_list arg_list;
-    std_char_t buffer[LINE_BUF_SIZE] = {0};
+    std_char_t buffer[MAX_BODY_SIZE] = {0};
 
     if (level >= debug_log_level){
         va_start(arg_list, format);

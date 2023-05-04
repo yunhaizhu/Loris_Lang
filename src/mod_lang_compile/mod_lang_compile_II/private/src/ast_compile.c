@@ -24,32 +24,32 @@
 #define nelem(a) (int) (sizeof(a) / sizeof(a)[0])
 std_void_t compile_reset(lang_compile_environment_t *compile_env)
 {
-   std_char_t *func_extern[] = {"print",
-                                "eprint",
-                                "install",
-                                "uninstall",
-                                "start",
-                                "stop",
-                                "show",
-                                "help",
-                                "exit",
-                                "run",
-                                "ps",
-                                "assert",
-                                "random_number",
-                                "random_address",
-                                "random_string",
-                                "make_json",
-                                "parse_json",
-                                "create_instance",
-                                "delete_instance",
-                                "string_to_array",
-                                "array_to_string",
-                                "debug",
-                                "convert",
-                                "check_type",
-                                "read_lines",
-                                "get_hash_keys"};
+//   std_char_t *func_extern[] = {"print",
+//                                "eprint",
+//                                "install",
+//                                "uninstall",
+//                                "start",
+//                                "stop",
+//                                "show",
+//                                "help",
+//                                "exit",
+//                                "run",
+//                                "ps",
+//                                "assert",
+//                                "random_number",
+//                                "random_address",
+//                                "random_string",
+//                                "make_json",
+//                                "parse_json",
+//                                "create_instance",
+//                                "delete_instance",
+//                                "string_to_array",
+//                                "array_to_string",
+//                                "debug",
+//                                "convert",
+//                                "check_type",
+//                                "read_lines",
+//                                "get_hash_keys"};
 
 //   compile_env->label_counter = 0;
 //
@@ -760,73 +760,7 @@ std_void_t compile_sym(lang_compile_environment_t *compile_env, symbol_t *var, s
 }
 
 
-/**
-* define_function
-* @brief
-* @param   fsym
-* @param   params
-* @param   body
-* @return  std_void_t
-*/
-std_void_t define_function(lang_compile_environment_t *compile_env, lang_ast_t *func_name, lang_ast_t *arg_params, lang_ast_t *body)
-{
-   symbol_t *fsym = get_lang_ast_symbol(func_name);
-   lang_ast_t *params = arg_params;
-   std_int_t param_pos;
-   std_int_t *envp = &compile_env->envp;
-   variable_env_t *Env = compile_env->var_env;
-   symbol_t *last_symbol;
 
-   gen_code_init(compile_env->generate_code_env);
-   *envp = 0;
-   param_pos = 0;
-   compile_env->local_var_pos = 0;
-   for (; params != NULL; params = get_lang_ast_next(params)) {
-       Env[*envp].var = get_lang_ast_symbol(get_lang_ast_first(params));
-       Env[*envp].var_kind = VAR_ARG;
-       Env[*envp].pos = param_pos++;
-       last_symbol = Env[*envp].var;
-
-
-       gen_codeIUDSE(compile_env->generate_code_env,VAR_A, Env[*envp].pos, 0, 0, NULL, 0, get_lang_ast_first(params)->debug_info.line);
-       (*envp)++;
-
-       if (last_symbol->type_symbol) {
-           Env[*envp].var = get_lang_ast_symbol(last_symbol->type_symbol->left);
-           Env[*envp].var_kind = VAR_LOCAL;
-           Env[*envp].pos = compile_env->local_var_pos++;
-
-           gen_codeIUDSE(compile_env->generate_code_env,VAR_L, Env[*envp].pos, 0, 0, NULL, 0, get_lang_ast_first(params)->debug_info.line);
-           (*envp)++;
-           compile_expr(compile_env, last_symbol->type_symbol);
-       }
-
-       if (last_symbol->check_block) {
-           compile_statement(compile_env, last_symbol->check_block);
-       }
-   }
-
-   compile_statement(compile_env, body);
-
-   for (std_int_t i = 0; i < *envp; i++) {
-       if (Env[i].var) {
-           switch (Env[i].var_kind) {
-               case VAR_ARG:
-                   gen_codeIUDSE(compile_env->generate_code_env,VAR_A_CLEAN, Env[i].pos, 0, 0, NULL, 0, 0);
-                   break;
-               case VAR_LOCAL:
-                   gen_codeIUDSE(compile_env->generate_code_env,VAR_L_CLEAN, Env[i].pos, 0, 0, NULL, 0, 0);
-                   break;
-               default:
-                   break;
-           }
-       }
-   }
-
-   gen_code_func(compile_env->generate_code_env, fsym->name, compile_env->local_var_pos, param_pos);
-
-   *envp = 0; /* reset */
-}
 
 /**
 * compile_statement
@@ -1664,4 +1598,73 @@ std_void_t compile_expr(lang_compile_environment_t *compile_env, lang_ast_t *p)
        default:
            STD_LOG(DEBUG, "UNKNOWN OP\n");
    }
+}
+
+
+/**
+* define_function
+* @brief
+* @param   fsym
+* @param   params
+* @param   body
+* @return  std_void_t
+*/
+std_void_t define_function(lang_compile_environment_t *compile_env, lang_ast_t *func_name, lang_ast_t *arg_params, lang_ast_t *body)
+{
+   symbol_t *fsym = get_lang_ast_symbol(func_name);
+   lang_ast_t *params = arg_params;
+   std_int_t param_pos;
+   std_int_t *envp = &compile_env->envp;
+   variable_env_t *Env = compile_env->var_env;
+   symbol_t *last_symbol;
+
+   gen_code_init(compile_env->generate_code_env);
+   *envp = 0;
+   param_pos = 0;
+   compile_env->local_var_pos = 0;
+   for (; params != NULL; params = get_lang_ast_next(params)) {
+       Env[*envp].var = get_lang_ast_symbol(get_lang_ast_first(params));
+       Env[*envp].var_kind = VAR_ARG;
+       Env[*envp].pos = param_pos++;
+       last_symbol = Env[*envp].var;
+
+
+       gen_codeIUDSE(compile_env->generate_code_env,VAR_A, Env[*envp].pos, 0, 0, NULL, 0, get_lang_ast_first(params)->debug_info.line);
+       (*envp)++;
+
+       if (last_symbol->type_symbol) {
+           Env[*envp].var = get_lang_ast_symbol(last_symbol->type_symbol->left);
+           Env[*envp].var_kind = VAR_LOCAL;
+           Env[*envp].pos = compile_env->local_var_pos++;
+
+           gen_codeIUDSE(compile_env->generate_code_env,VAR_L, Env[*envp].pos, 0, 0, NULL, 0, get_lang_ast_first(params)->debug_info.line);
+           (*envp)++;
+           compile_expr(compile_env, last_symbol->type_symbol);
+       }
+
+       if (last_symbol->check_block) {
+           compile_statement(compile_env, last_symbol->check_block);
+       }
+   }
+
+   compile_statement(compile_env, body);
+
+   for (std_int_t i = 0; i < *envp; i++) {
+       if (Env[i].var) {
+           switch (Env[i].var_kind) {
+               case VAR_ARG:
+                   gen_codeIUDSE(compile_env->generate_code_env,VAR_A_CLEAN, Env[i].pos, 0, 0, NULL, 0, 0);
+                   break;
+               case VAR_LOCAL:
+                   gen_codeIUDSE(compile_env->generate_code_env,VAR_L_CLEAN, Env[i].pos, 0, 0, NULL, 0, 0);
+                   break;
+               default:
+                   break;
+           }
+       }
+   }
+
+   gen_code_func(compile_env->generate_code_env, fsym->name, compile_env->local_var_pos, param_pos);
+
+   *envp = 0; /* reset */
 }

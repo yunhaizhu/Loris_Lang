@@ -18,6 +18,7 @@
 #include "mod.h"
 #include "mod_ownership.h"
 #include "std_common.h"
+#include "mod_lang_parse.h"
 
 /*****************************************************
  *                                                   *
@@ -26,10 +27,7 @@
  ****************************************************/
 
 /***struct_define***/
-typedef struct loris_state_s {
-    std_void_t *global_func_compile_ast[MAX_DEF_FUNC_COUNT];
-    std_int_t global_func_compile_ast_idx;
-} loris_state_t;
+
 
 /***macro_define***/
 
