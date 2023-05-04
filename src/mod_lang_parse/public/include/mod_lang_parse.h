@@ -80,7 +80,7 @@ struct mod_lang_parse_ops_st {
 /***interface_define***/
 #define mod_lang_parse_new_state(m) ((m)->p_ops->new_state((mod_lang_parse_t *)(m)))
 #define mod_lang_parse_load_script(m, state, script_name) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), state, script_name))
-#define mod_lang_parse_load_body(m, state, script_body) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), state, script_body))
+#define mod_lang_parse_load_body(m, state, script_body) ((m)->p_ops->load_body((mod_lang_parse_t *)(m), state, script_body))
 #define mod_lang_parse_close_state(m, state) ((m)->p_ops->close_state((mod_lang_parse_t *)(m), state))
 
 #endif

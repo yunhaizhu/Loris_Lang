@@ -75,8 +75,8 @@ STD_CALL std_rv_t cmd_debug(IN std_char_t *debug_level)
  */
 STD_CALL std_rv_t cmd_help()
 {
-    STD_LOG(DISPLAY, "help(), ps(), install(\"bundle_name\"), uninstall(id), start(id), stop(id), show(id), run(), exit() \n");
-    STD_LOG(DISPLAY, " thread(1, \"script_name\"), script(\"script_name\") \n");
+    STD_LOG(DISPLAY, "shell.help(), shell.ps(), shell.install(\"bundle_name\"), shell.uninstall(id), shell.start(id), shell.stop(id), shell.show(id), shell.run(), shell.exit() \n");
+    STD_LOG(DISPLAY, "thread(1, \"script_name\"), script(\"script_name\") \n");
     STD_LOG(DISPLAY, "$");
 
     return STD_RV_SUC;

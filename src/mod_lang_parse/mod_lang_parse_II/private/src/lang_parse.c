@@ -1054,7 +1054,10 @@ lang_ast_t *global_definition(lang_state_t *state) {
     } else {
         lang_ast_t *cmd;
         cmd = command_statements(state);
-        state->cmd_ast = cmd;
+        if (cmd){
+            state->cmd_ast = cmd;
+        }
+
         ret = cmd;
     }
 
