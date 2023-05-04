@@ -29,6 +29,8 @@
 typedef struct loris_state_s {
     std_void_t *global_func_compile_ast[MAX_DEF_FUNC_COUNT];
     std_int_t global_func_compile_ast_idx;
+    std_void_t *load_lib_ast[MAX_LOAD_LIB_COUNT];
+    std_int_t load_lib_ast_idx;
 } loris_state_t;
 
 /***macro_define***/

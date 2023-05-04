@@ -22,7 +22,7 @@ set(EXEC_COMPILED_CODE 0)
 set(DUMP_EXEC_CODE 1)
 
 set(MAX_DEF_FUNC_COUNT 1024)
-
+set(MAX_LOAD_LIB_COUNT 128)
 
 # Configure a header file with preprocessor definitions
 configure_file(config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/public/include/config.h)

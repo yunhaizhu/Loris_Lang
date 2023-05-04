@@ -1,3 +1,4 @@
+package init
 load_lib shell_lib
 
 def init()

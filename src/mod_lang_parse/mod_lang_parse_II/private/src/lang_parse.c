@@ -1046,9 +1046,11 @@ lang_ast_t *global_definition(lang_state_t *state) {
     } else if (lang_accept(state, TOKEN_LOAD_LIB)) {
         lang_expect(state, TOKEN_ID);
         ret = make_lang_ast_string(state, state->value.string, state->source_name, state->source_line);
-//        lang_ast_t *expr = make_lang_ast(LOAD_LIB_OP, ret, NULL, state->source_name, state->source_line);
-//        mod_lang_compile_expr(p_global_mod_compile, expr);
-        return ret;
+        lang_ast_t *expr = make_lang_ast(state, LOAD_LIB_OP, ret, NULL, state->source_name, state->source_line);
+        state->load_lib_ast[state->load_lib_ast_idx++] = expr;
+
+        return expr;
+
     } else {
         lang_ast_t *cmd;
         cmd = command_statements(state);

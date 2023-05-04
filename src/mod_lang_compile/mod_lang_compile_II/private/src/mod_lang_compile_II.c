@@ -54,6 +54,10 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
     def_func_compile_ast_t *def_func_compile_ast = NULL;
     std_char_t *bytecode_buffer = (std_char_t *)CALLOC(1, MAX_CODE_SIZE);
 
+    for (int i = 0; i < state->load_lib_ast_idx; ++i) {
+        compile_expr(&compile_env, (lang_ast_t *)(state->load_lib_ast[i]));
+    }
+
     compile_env.generate_code_env = (generate_code_env_t *)CALLOC(1, sizeof(generate_code_env_t));
 
     for (std_int_t i = 0; i < state->global_func_compile_ast_idx; ++i) {
