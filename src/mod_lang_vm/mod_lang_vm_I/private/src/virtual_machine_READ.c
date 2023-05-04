@@ -283,7 +283,7 @@ STD_CALL static inline std_void_t read_CALL(IN code_st *Codes,
     if (!strcmp(s, "package__os__function__print") ||
         !strcmp(s, "package__os__function__eprint") ||
         !strcmp(s, "package__os__function__assert") ||
-        !strcmp(s, "package__os__function__start")) {
+        !strcmp(s, "package__shell__function__start")) {
         snprintf(alter_name, sizeof(alter_name), "%s_%d", s, ex);
     } else if (strstr(s, "--")) {
         snprintf(alter_name, sizeof(alter_name), "%s", strstr(s, "--") + 2);

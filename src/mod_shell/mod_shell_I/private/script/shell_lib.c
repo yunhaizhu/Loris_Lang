@@ -268,15 +268,15 @@ STD_CALL std_void_t library_init(environment_vm_t *vm, std_int_t *register_id)
 {
     std_int_t thread_id = get_std_thread_id();
 
-    library_func_register(vm, &register_id[thread_id], "run", 4, library_run);
-    library_func_register(vm,&register_id[thread_id], "install", 1, library_install);
-    library_func_register(vm,&register_id[thread_id], "uninstall", 1, library_uninstall);
-    library_func_register(vm,&register_id[thread_id], "start_1", 1, library_start);
-    library_func_register(vm,&register_id[thread_id], "start_2", 2, library_start);
-    library_func_register(vm,&register_id[thread_id], "stop", 1, library_stop);
-    library_func_register(vm,&register_id[thread_id], "ps", 0, library_ps);
-    library_func_register(vm,&register_id[thread_id], "show", 1, library_show);
-    library_func_register(vm,&register_id[thread_id], "help", 0, library_help);
-    library_func_register(vm,&register_id[thread_id], "debug", 1, library_debug);
-    library_func_register(vm,&register_id[thread_id], "exit", 0, library_exit);
+    library_func_register(vm, &register_id[thread_id], "package__shell__function__run", 4, library_run);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__install", 1, library_install);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__uninstall", 1, library_uninstall);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__start_1", 1, library_start);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__start_2", 2, library_start);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__stop", 1, library_stop);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__ps", 0, library_ps);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__show", 1, library_show);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__help", 0, library_help);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__debug", 1, library_debug);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__exit", 0, library_exit);
 }

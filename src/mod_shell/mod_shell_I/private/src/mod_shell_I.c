@@ -179,12 +179,13 @@ std_rv_t mod_shell_I_compile_script(IN mod_shell_t *m, IN const std_char_t *scri
 
 std_rv_t mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_char_t *script_name)
 {
-    const std_char_t *compiled_body;
-    std_char_t *script_path = strdup(script_name);
-    compiled_body = mod_lang_compile_generated_bytecode(p_global_mod_lang_compile, script_path);
-    FREE(script_path);
-
-    return mod_lang_vm_run_func_init(p_global_mod_lang_vm, script_name, compiled_body);
+   return STD_RV_SUC;
+//    const std_char_t *compiled_body;
+//    std_char_t *script_path = strdup(script_name);
+//    compiled_body = mod_lang_compile_generated_bytecode(p_global_mod_lang_compile, script_path);
+//    FREE(script_path);
+//
+//    return mod_lang_vm_run_func_init(p_global_mod_lang_vm, script_name, compiled_body);
 }
 
 std_rv_t mod_shell_I_call_script_func(IN mod_shell_t *m, IN const std_char_t *script_name, IN const std_char_t *func_name, IN std_int_t arg_num)

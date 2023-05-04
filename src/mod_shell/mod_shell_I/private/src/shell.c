@@ -308,7 +308,6 @@ STD_CALL std_rv_t cmd_delete_instance(IN const std_char_t *iid_string, IN std_si
  */
 STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
 {
-    const std_char_t *compiled_body;
     std_u64_t u64_key;
     std_size_t buf_len;
     std_rv_t ret;
@@ -402,7 +401,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
 {
     std_char_t cmd[CMD_LINE_SIZE] = "\0";
     std_char_t name[KEY_NAME_SIZE] = "\0";
-    std_char_t script[KEY_NAME_SIZE] = "init_script.nl";
+    std_char_t script[KEY_NAME_SIZE] = "script/init_script.nl";
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
     std_rv_t ret = STD_RV_SUC;
 
