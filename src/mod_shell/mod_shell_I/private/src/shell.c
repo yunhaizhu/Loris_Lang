@@ -372,7 +372,34 @@ std_rv_t cmd_script(IN std_char_t *name, const std_char_t *arg)
  */
 STD_CALL std_rv_t cmd_process(IN std_char_t *body)
 {
-    return STD_RV_SUC;
+    std_u64_t u64_key;
+    std_size_t buf_len;
+    std_rv_t ret;
+
+    loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
+    STD_ASSERT_RV_ACTION(mod_lang_parse_load_body(p_global_mod_lang_parse, state, body) == STD_RV_SUC,
+                         STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+
+    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
+
+    STD_ASSERT_RV_ACTION(bytecode != NULL,
+                         STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+
+    buf_len = std_safe_strlen(bytecode, MAX_BODY_SIZE);
+    u64_key = XXH64(bytecode, sizeof(char) * buf_len, 0);
+    u64_key += VERSION_NUMBER;
+
+    STD_ASSERT_RV_ACTION(mod_lang_vm_run_init(p_global_mod_lang_vm, "terminal", bytecode) == STD_RV_SUC, STD_RV_ERR_FAIL,
+                         mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
+                         mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, "terminal", u64_key, NULL);
+    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
+
+    mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+    STD_LOG(INFO, "%s EXECUTE SUCCESS\n", "terminal");
+    STD_LOG(DISPLAY, "$");
+
+    return ret;
 }
 
 /**
@@ -405,6 +432,9 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
     std_rv_t ret = STD_RV_SUC;
 
+    setvbuf(stdin, NULL, _IONBF, 0);
+
+
     global_compiled_body = std_lock_free_key_hash_create(128);
 
     // Set p_mod_shell to p_m
@@ -412,13 +442,13 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
 
     // Execute init_script.nl
     cmd_script(script, NULL);
-    if (oneshot_script){
-        oneshot_script = oneshot_script + std_safe_strlen("script/", BUF_SIZE_32);
-        STD_LOG(DISPLAY, "Executing %s\n", oneshot_script);
-        ret = cmd_script(oneshot_script, NULL);
-        cmd_exit();
-        goto exit;
-    }
+//    if (oneshot_script){
+//        oneshot_script = oneshot_script + std_safe_strlen("script/", BUF_SIZE_32);
+//        STD_LOG(DISPLAY, "Executing %s\n", oneshot_script);
+//        ret = cmd_script(oneshot_script, NULL);
+//        cmd_exit();
+//        goto exit;
+//    }
     // Display help message
     cmd_help();
 
@@ -491,7 +521,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
         STD_LOG(DISPLAY, "$");
     }
 
-exit:
+//exit:
     // Destroy global_compiled_body
     std_lock_free_key_hash_value_destroy(global_compiled_body);
 

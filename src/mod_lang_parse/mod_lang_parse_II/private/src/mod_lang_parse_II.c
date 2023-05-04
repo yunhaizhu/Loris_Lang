@@ -83,6 +83,26 @@ STD_CALL std_rv_t mod_lang_parse_II_load_script(IN mod_lang_parse_t * p_m,
 }
 
 /**
+ * mod_lang_parse_II_load_script
+ * @brief
+ * @param   p_m
+ * @param   state
+ * @param   script_name
+ * @return  STD_CALL             std_rv_t
+ */
+STD_CALL std_rv_t mod_lang_parse_II_load_body(IN mod_lang_parse_t * p_m,
+                                                IN loris_state_t * state,
+                                                IN std_char_t * script_body)
+{
+    std_char_t terminal_buffer[MAX_BODY_SIZE] = "require shell\n"
+                                                "import shell.run, shell.install, shell.uninstall, shell.start, shell.stop, shell.ps, shell.show, shell.help, shell.debug, shell.exit\n\n";
+
+    std_strcat_s(terminal_buffer, sizeof(terminal_buffer), script_body, MAX_BODY_SIZE);
+    return lang_parse((lang_state_t *)state, "terminal", terminal_buffer,
+                      (std_int_t)std_safe_strlen(terminal_buffer, MAX_BODY_SIZE));
+}
+
+/**
  * mod_lang_parse_II_close_state
  * @brief   
  * @param   p_m
@@ -111,6 +131,7 @@ struct mod_lang_parse_ops_st mod_lang_parse_II_ops = {
     /***func_ops***/
 	mod_lang_parse_II_new_state,
 	mod_lang_parse_II_load_script,
+    mod_lang_parse_II_load_body,
 	mod_lang_parse_II_close_state,
 
 };

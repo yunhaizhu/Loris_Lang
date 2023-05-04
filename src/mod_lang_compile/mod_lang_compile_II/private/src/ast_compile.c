@@ -1163,31 +1163,7 @@ std_void_t compile_for(lang_compile_environment_t *compile_env, lang_ast_t *init
 }
 
 
-/**
-* compile_command_statements
-* @brief
-* @param   statements
-* @return  std_void_t
-*/
-std_void_t compile_command_statements(lang_compile_environment_t *compile_env, lang_ast_t *statements)
-{
-   for (lang_ast_t *statement = statements; statement != NULL;) {
-       gen_code_init(compile_env->generate_code_env);
 
-       gen_codeIUDSE(compile_env->generate_code_env,LOAD_LIB, 0, 0, 0, "shell_lib", 0, 0);
-       gen_code_expr(compile_env->generate_code_env);
-
-       gen_code_init(compile_env->generate_code_env);
-       compile_expr(compile_env, get_lang_ast_first(statement));
-
-       gen_codeIUDSE(compile_env->generate_code_env,POP, 0, 0, 0, NULL, 0, 0);
-
-       if (get_lang_ast_first(statement)) {
-           gen_code_func(compile_env->generate_code_env, "function__main", 0, 0);
-       }
-       statement = get_lang_ast_next(statement);
-   }
-}
 
 /**
 * check_call_function_assign
@@ -1667,4 +1643,30 @@ std_void_t define_function(lang_compile_environment_t *compile_env, lang_ast_t *
    gen_code_func(compile_env->generate_code_env, fsym->name, compile_env->local_var_pos, param_pos);
 
    *envp = 0; /* reset */
+}
+
+/**
+* compile_command_statements
+* @brief
+* @param   statements
+* @return  std_void_t
+*/
+std_void_t compile_command_statements(lang_compile_environment_t *compile_env, lang_ast_t *statements)
+{
+   for (lang_ast_t *statement = statements; statement != NULL;) {
+       gen_code_init(compile_env->generate_code_env);
+
+       gen_codeIUDSE(compile_env->generate_code_env,LOAD_LIB, 0, 0, 0, "shell_lib", 0, 0);
+       gen_code_expr(compile_env->generate_code_env);
+
+       gen_code_init(compile_env->generate_code_env);
+       compile_expr(compile_env, get_lang_ast_first(statement));
+
+       gen_codeIUDSE(compile_env->generate_code_env,POP, 0, 0, 0, NULL, 0, 0);
+
+       if (get_lang_ast_first(statement)) {
+           gen_code_func(compile_env->generate_code_env, "function__main", 0, 0);
+       }
+       statement = get_lang_ast_next(statement);
+   }
 }

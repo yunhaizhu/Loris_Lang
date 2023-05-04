@@ -96,6 +96,7 @@ typedef struct lang_state_s {
     std_int_t global_func_compile_ast_idx;
     std_void_t *load_lib_ast[MAX_LOAD_LIB_COUNT];
     std_int_t load_lib_ast_idx;
+    std_void_t *cmd_ast;
 
     jmp_buf error_jump_buf;
     /////////////////////////////

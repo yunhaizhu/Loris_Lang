@@ -69,6 +69,10 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
                         def_func_compile_ast->func_body);
     }
 
+    if (state->cmd_ast){
+        compile_command_statements(&compile_env, state->cmd_ast);
+    }
+
     gen_buffer_output(compile_env.generate_code_env, bytecode_buffer, MAX_CODE_SIZE);
 
     FREE(compile_env.generate_code_env);

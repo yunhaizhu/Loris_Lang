@@ -31,6 +31,7 @@ typedef struct loris_state_s {
     std_int_t global_func_compile_ast_idx;
     std_void_t *load_lib_ast[MAX_LOAD_LIB_COUNT];
     std_int_t load_lib_ast_idx;
+    std_void_t *cmd_ast;
 } loris_state_t;
 
 /***macro_define***/
@@ -54,6 +55,7 @@ struct mod_lang_parse_ops_st {
     /***func_define***/
 	loris_state_t *(*new_state)(IN mod_lang_parse_t * m);
     std_rv_t(*load_script) (IN mod_lang_parse_t * m, IN loris_state_t * state, IN std_char_t * script_name);
+    std_rv_t(*load_body) (IN mod_lang_parse_t * m, IN loris_state_t * state, IN std_char_t * script_body);
     std_rv_t(*close_state) (IN mod_lang_parse_t * m, IN loris_state_t * state);
 
 };
@@ -78,6 +80,7 @@ struct mod_lang_parse_ops_st {
 /***interface_define***/
 #define mod_lang_parse_new_state(m) ((m)->p_ops->new_state((mod_lang_parse_t *)(m)))
 #define mod_lang_parse_load_script(m, state, script_name) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), state, script_name))
+#define mod_lang_parse_load_body(m, state, script_body) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), state, script_body))
 #define mod_lang_parse_close_state(m, state) ((m)->p_ops->close_state((mod_lang_parse_t *)(m), state))
 
 #endif
