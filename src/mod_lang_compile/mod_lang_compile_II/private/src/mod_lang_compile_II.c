@@ -40,15 +40,7 @@ STD_CALL std_rv_t mod_lang_compile_II_cleanup(mod_lang_compile_t * p_m)
 }
 
 /***func_implementation***/
-
-/**
- * mod_lang_compile_II_compile_bytecode
- * @brief   
- * @param   p_m
- * @param   state
- * @return  STD_CALL             std_char_t  *
- */
-STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t * p_m, IN loris_state_t * state)
+std_char_t *compile_bytecode(loris_state_t *state, std_bool_t do_next)
 {
     lang_compile_environment_t compile_env;
     def_func_compile_ast_t *def_func_compile_ast = NULL;
@@ -61,8 +53,8 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
     compile_env.generate_code_env = (generate_code_env_t *)CALLOC(1, sizeof(generate_code_env_t));
     struct loris_state_s *next_state = state->next_required_state;
 
-    while(next_state != NULL){
-        std_char_t *required_bytecode = mod_lang_compile_II_compile_bytecode(p_m, next_state);
+    while(do_next && next_state != NULL){
+        std_char_t *required_bytecode = compile_bytecode( next_state, STD_BOOL_FALSE);
 
         std_safe_strip_chars(required_bytecode, '[');
         std_safe_strip_chars(required_bytecode, ']');
@@ -103,7 +95,18 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
 
     FREE(compile_env.generate_code_env);
 
-	return bytecode_buffer;
+    return bytecode_buffer;
+}
+/**
+ * mod_lang_compile_II_compile_bytecode
+ * @brief   
+ * @param   p_m
+ * @param   state
+ * @return  STD_CALL             std_char_t  *
+ */
+STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t * p_m, IN loris_state_t * state)
+{
+    return compile_bytecode( state, STD_BOOL_TRUE);
 }
 
 struct mod_lang_compile_ops_st mod_lang_compile_II_ops = {

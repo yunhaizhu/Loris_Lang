@@ -1,7 +1,7 @@
 package test
 require "os"
 import os.print, os.assert
-
+import test.test_key_class_data
 
 def test_key_class_data(var key, var data, var ret)
 {

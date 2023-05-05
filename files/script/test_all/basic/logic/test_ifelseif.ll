@@ -1,4 +1,4 @@
-package test
+package test7
 require "os"
 import os.print, os.assert
 
@@ -49,4 +49,4 @@ def test_ifelseif()
 #    test_ifelseif()
 #}
 
-#script("test/basic/logic/test_ifelseif.nl")
+#script("script/test_all/basic/logic/test_ifelseif.ll")
