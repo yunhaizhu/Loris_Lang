@@ -1,4 +1,4 @@
-package test
+package test19
 require "os"
 import os.print, os.assert, os.check_type
 

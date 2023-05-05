@@ -20,7 +20,10 @@ require "script/test_all/basic/variable/var/test_var.ll",
  "script/test_all/basic/function/test_func_return.ll",
  "script/test_all/basic/function/test_def.ll",
  "script/test_all/basic/lifetime/test_lifetime.ll",
- "script/test_all/basic/convert/test_convert.ll"
+ "script/test_all/basic/convert/test_convert.ll",
+ "script/test_all/basic/type_check/test_type_check.ll",
+ "script/test_all/basic/json/test_make_parse_json.ll",
+ "script/test_all/advanced/test_fib.ll"
 
 import test1.test_var,
  test2.test_var_char,
@@ -39,7 +42,10 @@ import test1.test_var,
  test15.test_func_return,
  test16.test_def,
  test17.test_lifetime,
- test18.test_convert
+ test18.test_convert,
+ test19.test_type_check,
+ test20.test_make_parse_json,
+ test21.test_fib
 
 def main()
 {
@@ -68,6 +74,9 @@ def main()
 
     test17.test_lifetime()
     test18.test_convert()
+    test19.test_type_check()
+    test20.test_make_parse_json()
+    test21.test_fib()
 }
 
 #script("script/test_all/basic/test_all.ll")

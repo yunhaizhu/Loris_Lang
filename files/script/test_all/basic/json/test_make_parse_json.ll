@@ -1,4 +1,4 @@
-package test
+package test20
 require "os"
 import os.print, os.assert, os.eprint, os.random_string, os.random_number, os.random_address, os.make_json, os.parse_json
 
