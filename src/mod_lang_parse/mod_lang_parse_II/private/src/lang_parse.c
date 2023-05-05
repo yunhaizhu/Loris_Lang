@@ -1075,6 +1075,7 @@ lang_ast_t *global_definition(lang_state_t *state) {
         ret = handle_import(state);
 
         while (lang_accept(state, ',') ) {
+            lang_accept(state, TOKEN_lang);
             ret = handle_import(state);
         }
 

@@ -12,4 +12,4 @@ Safe as Rust, easy use like Python!
 
 ## test loris language
 1. cd deploy/Debug
-2. ./Loris_Lang script/test/test_all.nl
+2. ./Loris_Lang script/embedded/test_var.ll
