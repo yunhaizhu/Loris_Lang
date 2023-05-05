@@ -141,7 +141,9 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
     headers = curl_slist_append(headers, auth_header);
 
     /* Initialize CURL */
+    curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2); // Compliant; enables TLSv1.2 / TLSv1.3 version only
     if (!curl) {
         fprintf(stderr, "Error initializing CURL.\n");
         return 1;
@@ -153,7 +155,7 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-    curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+
 
     /* Make HTTP request */
     res = curl_easy_perform(curl);

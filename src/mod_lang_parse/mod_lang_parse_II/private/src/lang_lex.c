@@ -567,7 +567,7 @@ STD_CALL static inline std_int_t lex_handle_char(lang_state_t *state)
 
         case '\'':
             inline_handle_string(state, STD_BOOL_FALSE);
-            if (strlen(state->value.string) == 1) {
+            if (std_safe_strlen(state->value.string, MAX_STRING_SIZE) == 1) {
                 std_int_t chr = (std_int_t) state->value.string[0];
                 FREE( state->value.string);
                 state->value.u64 = chr;
