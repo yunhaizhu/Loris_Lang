@@ -16,9 +16,11 @@ require "script/test_all/basic/variable/var/test_var.ll",
  "script/test_all/basic/loop/test_while_break.ll",
  "script/test_all/basic/loop/test_while_continue.ll",
  "script/test_all/basic/function/test_func_arg.ll",
-  "script/test_all/basic/function/test_func_arg2.ll",
+ "script/test_all/basic/function/test_func_arg2.ll",
  "script/test_all/basic/function/test_func_return.ll",
- "script/test_all/basic/function/test_def.ll"
+ "script/test_all/basic/function/test_def.ll",
+ "script/test_all/basic/lifetime/test_lifetime.ll",
+ "script/test_all/basic/convert/test_convert.ll"
 
 import test1.test_var,
  test2.test_var_char,
@@ -35,8 +37,9 @@ import test1.test_var,
  test13.test_func_arg,
  test14.test_func_arg2,
  test15.test_func_return,
- test16.test_def
-
+ test16.test_def,
+ test17.test_lifetime,
+ test18.test_convert
 
 def main()
 {
@@ -62,6 +65,9 @@ def main()
     test14.test_func_arg2()
     test15.test_func_return()
     test16.test_def()
+
+    test17.test_lifetime()
+    test18.test_convert()
 }
 
 #script("script/test_all/basic/test_all.ll")
