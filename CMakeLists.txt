@@ -3,11 +3,13 @@ set(PROJECT_CUSTOM_NAME "Loris_Lang")
 project(${PROJECT_CUSTOM_NAME} C)
 
 set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     message(" ")
     message("CMAKE IN DEBUG MODE")
-#    set(CMAKE_VERBOSE_MAKEFILE ON)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -O0 -D_USE_JIT_ -DSOFT_FPU -g -Wall -D_DEBUG -Werror -fPIC -fno-stack-protector -fno-common -march=native")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-enum-compare -DDEBUG_JIT -fsanitize=address -fno-omit-frame-pointer")
     message(" ")
