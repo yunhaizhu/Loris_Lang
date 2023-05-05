@@ -94,7 +94,7 @@ STD_CALL std_rv_t mod_lang_parse_II_load_body(IN mod_lang_parse_t * p_m,
                                                 IN loris_state_t * state,
                                                 IN std_char_t * script_body)
 {
-    std_char_t terminal_buffer[MAX_BODY_SIZE] = "require shell\n"
+    std_char_t terminal_buffer[MAX_BODY_SIZE] = "require \"shell\"\n"
                                                 "import shell.run, shell.install, shell.uninstall, shell.start, shell.stop, shell.ps, shell.show, shell.help, shell.debug, shell.exit\n\n";
 
     std_strcat_s(terminal_buffer, sizeof(terminal_buffer), script_body, MAX_BODY_SIZE);

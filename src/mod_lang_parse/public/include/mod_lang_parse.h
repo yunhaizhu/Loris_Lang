@@ -32,6 +32,8 @@ typedef struct loris_state_s {
     std_void_t *load_lib_ast[MAX_LOAD_LIB_COUNT];
     std_int_t load_lib_ast_idx;
     std_void_t *cmd_ast;
+
+    struct loris_state_s *next_required_state;
 } loris_state_t;
 
 /***macro_define***/

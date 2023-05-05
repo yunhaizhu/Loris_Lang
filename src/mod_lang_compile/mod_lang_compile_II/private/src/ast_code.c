@@ -240,8 +240,8 @@ STD_CALL std_rv_t gen_buffer_output(generate_code_env_t *generate_code_env, IN s
    std_char_t *output_buffer = ptr_output_buffer;
 
    memset(output_buffer, 0, output_buffer_len);
-   output_buffer[0] = '[';
-   output_buffer += 1;
+//   output_buffer[0] = '[';
+//   output_buffer += 1;
 
    for (int i = 0; i < generate_code_env->gen_buffer_idx; ++i) {
        out_buf_len += std_safe_strlen(generate_code_env->gen_buffer[i].buf, MAX_BODY_SIZE);
@@ -259,7 +259,7 @@ STD_CALL std_rv_t gen_buffer_output(generate_code_env_t *generate_code_env, IN s
            break;
        }
    }
-   *(output_buffer - 1) = ']';
+//   *(output_buffer - 1) = ']';
 
    STD_LOG(DISPLAY, "%s: %s\n", __FUNCTION__, ptr_output_buffer);
 

@@ -470,7 +470,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
     // Set p_mod_shell to p_m
     p_mod_shell = p_m;
 
-    // Execute init_script.nl
+    // Execute init_script.ll
     cmd_script(script, NULL);
     if (oneshot_script){
         oneshot_script = oneshot_script + std_safe_strlen("script/", BUF_SIZE_32);
@@ -501,11 +501,11 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
             }
             ret = cmd_script(filename, p_arg);
             if (ret != STD_RV_SUC && ENABLE_SELF_HEAL) {
-                //launch self_heal.nl
+                //launch self_heal.ll
                 std_char_t new_cmd[CMD_LINE_SIZE];
                 snprintf(new_cmd, sizeof(new_cmd), "mv test.log debug_%s.log", filename);
                 system(new_cmd);
-                cmd_script("self_heal.nl", filename);
+                cmd_script("self_heal.ll", filename);
             }
         } else if (strncmp(cmd, "batch", std_safe_strlen("batch", BUF_SIZE_32)) == 0) {
             // Execute a batch file

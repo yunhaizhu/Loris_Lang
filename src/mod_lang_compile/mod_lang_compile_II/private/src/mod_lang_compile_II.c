@@ -53,8 +53,31 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
     lang_compile_environment_t compile_env;
     def_func_compile_ast_t *def_func_compile_ast = NULL;
     std_char_t *bytecode_buffer = (std_char_t *)CALLOC(1, MAX_CODE_SIZE);
+    std_char_t *bytecode_buffer_start = bytecode_buffer;
+
+    bytecode_buffer_start[0] = '[';
+    bytecode_buffer_start += 1;
 
     compile_env.generate_code_env = (generate_code_env_t *)CALLOC(1, sizeof(generate_code_env_t));
+    struct loris_state_s *next_state = state->next_required_state;
+
+    while(next_state != NULL){
+        std_char_t *required_bytecode = mod_lang_compile_II_compile_bytecode(p_m, next_state);
+
+        std_safe_strip_chars(required_bytecode, '[');
+        std_safe_strip_chars(required_bytecode, ']');
+
+        std_int_t required_bytecode_len = strlen(required_bytecode);
+        std_strcat_s(bytecode_buffer_start, MAX_CODE_SIZE, required_bytecode, required_bytecode_len);
+
+        FREE(required_bytecode);
+        bytecode_buffer_start += required_bytecode_len;
+
+        std_strcat_s(bytecode_buffer_start, MAX_CODE_SIZE, ",", 1);
+        bytecode_buffer_start += 1;
+
+        next_state = next_state->next_required_state;
+    }
 
     for (int i = 0; i < state->load_lib_ast_idx; ++i) {
         compile_expr(&compile_env, (lang_ast_t *)(state->load_lib_ast[i]));
@@ -73,7 +96,10 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
         compile_command_statements(&compile_env, state->cmd_ast);
     }
 
-    gen_buffer_output(compile_env.generate_code_env, bytecode_buffer, MAX_CODE_SIZE);
+    gen_buffer_output(compile_env.generate_code_env, bytecode_buffer_start, MAX_CODE_SIZE - (bytecode_buffer_start - bytecode_buffer));
+
+    std_char_t *output_buffer = bytecode_buffer_start + strlen(bytecode_buffer_start);
+    *(output_buffer - 1) = ']';
 
     FREE(compile_env.generate_code_env);
 

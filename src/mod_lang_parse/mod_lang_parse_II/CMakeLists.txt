@@ -13,7 +13,7 @@ target_include_directories(mod_lang_parse_II PRIVATE
 
 target_link_libraries(mod_lang_parse_II PRIVATE pthread ${LINK_PROFILER})
 
-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/private/script/mod_lang_parse_II_test.nl
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/private/script/mod_lang_parse_II_test.ll
         DESTINATION ${${PROJECT_CUSTOM_NAME}_SOURCE_DIR}/deploy/${CMAKE_BUILD_TYPE}/script/ )
 
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/public/desc.json
