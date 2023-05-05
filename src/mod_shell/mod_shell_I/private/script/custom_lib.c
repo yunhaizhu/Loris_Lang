@@ -153,6 +153,7 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+    curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
 
     /* Make HTTP request */
     res = curl_easy_perform(curl);
