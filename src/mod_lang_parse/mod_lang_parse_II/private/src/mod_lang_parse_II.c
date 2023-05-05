@@ -112,14 +112,21 @@ STD_CALL std_rv_t mod_lang_parse_II_load_body(IN mod_lang_parse_t * p_m,
 STD_CALL std_rv_t mod_lang_parse_II_close_state(IN mod_lang_parse_t * p_m, IN loris_state_t * state)
 {
 
-    lang_lex_cleanup((lang_state_t *)state);
-    cleanup_lang_ast_symbol((lang_state_t *)state);
+    struct loris_state_s *next_state = (loris_state_t *)state;
 
-    for(std_int_t i = 0; i < state->global_func_compile_ast_idx; i++){
-        FREE(state->global_func_compile_ast[i]);
+    while(next_state != NULL){
+        lang_lex_cleanup((lang_state_t *)next_state);
+        cleanup_lang_ast_symbol((lang_state_t *)next_state);
+
+        for(std_int_t i = 0; i < next_state->global_func_compile_ast_idx; i++){
+            FREE(next_state->global_func_compile_ast[i]);
+        }
+
+        loris_state_t *tmp_next_state = next_state->next_required_state;
+        FREE(next_state);
+
+        next_state = tmp_next_state;
     }
-
-    FREE(state);
 
 	return STD_RV_SUC;
 }

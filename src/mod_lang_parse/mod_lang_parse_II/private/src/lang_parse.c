@@ -968,6 +968,75 @@ lang_ast_t *def_function(lang_state_t *state)
     return func_symbol;
 }
 
+lang_ast_t *handle_require(lang_state_t *state)
+{
+    lang_ast_t *ret = NULL;
+    std_char_t require_script_name[KEY_NAME_SIZE] = {0};
+    lang_expect(state, TOKEN_STR);
+
+    snprintf(require_script_name, KEY_NAME_SIZE, "%s", state->value.string);
+    state->create_type = CREATE_TYPE_PACKAGE;
+    ret = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
+
+    if (strcmp(require_script_name, "os") && strcmp(require_script_name, "shell")){
+
+        lang_state_t *p_new_state = NULL;
+        p_new_state = (lang_state_t *) CALLOC(1, sizeof(lang_state_t));
+
+        FILE *fp;
+        std_char_t source_buffer[MAX_BODY_SIZE] = {0};
+
+        fp = fopen(require_script_name, "r");
+        STD_ASSERT_RV(fp != NULL, NULL);
+
+        STD_ASSERT_RV_ACTION(fread(source_buffer, 1, MAX_BODY_SIZE, fp) > 0, NULL, fclose(fp));
+        fclose(fp);
+
+        lang_parse((lang_state_t *)p_new_state, require_script_name, source_buffer,
+                   (std_int_t)std_safe_strlen(source_buffer, sizeof(source_buffer)));
+
+        struct loris_state_s *next_state = (loris_state_t *)state;
+
+        while(next_state != NULL){
+            if (next_state->next_required_state == NULL){
+                next_state->next_required_state = (loris_state_t *)p_new_state;
+                break;
+            }
+            next_state = next_state->next_required_state;
+        }
+
+    }
+    return ret;
+}
+
+lang_ast_t *handle_import(lang_state_t *state)
+{
+    std_char_t *import_name = CALLOC(1, KEY_NAME_SIZE);
+    std_char_t *import_package_ptr = NULL;
+    std_char_t *import_function_ptr = NULL;
+    lang_ast_t *ret = NULL;
+
+    lang_expect(state, TOKEN_ID);
+    import_package_ptr = strdup(state->value.string);
+
+    state->create_type = CREATE_TYPE_PACKAGE;
+    make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
+
+    lang_expect(state, '.');
+    lang_expect(state, TOKEN_ID);
+    import_function_ptr = strdup(state->value.string);
+
+    FREE(state->value.string);
+
+    snprintf(import_name, KEY_NAME_SIZE, "%s.%s", import_package_ptr, import_function_ptr);
+    FREE(import_package_ptr);
+    FREE(import_function_ptr);
+
+    state->create_type = CREATE_TYPE_IMPORT;
+    ret = make_lang_ast_symbol(state, import_name, state->source_name, state->source_line);
+
+    return ret;
+}
 /**
  * global_definition
  * @brief   
@@ -994,92 +1063,19 @@ lang_ast_t *global_definition(lang_state_t *state) {
 
         return ret;
     } else if (lang_accept(state, TOKEN_REQUIRE)) {
-        std_char_t require_script_name[KEY_NAME_SIZE] = {0};
-        lang_expect(state, TOKEN_STR);
-
-        snprintf(require_script_name, KEY_NAME_SIZE, "%s", state->value.string);
-        state->create_type = CREATE_TYPE_PACKAGE;
-        ret = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
-
-        if (strcmp(require_script_name, "os") && strcmp(require_script_name, "shell")){
-
-            lang_state_t *p_new_state = NULL;
-            p_new_state = (lang_state_t *) CALLOC(1, sizeof(lang_state_t));
-
-            FILE *fp;
-            std_char_t source_buffer[MAX_BODY_SIZE] = {0};
-
-            fp = fopen(require_script_name, "r");
-            STD_ASSERT_RV(fp != NULL, NULL);
-
-            STD_ASSERT_RV_ACTION(fread(source_buffer, 1, MAX_BODY_SIZE, fp) > 0, NULL, fclose(fp));
-            fclose(fp);
-
-            lang_parse((lang_state_t *)p_new_state, require_script_name, source_buffer,
-                              (std_int_t)std_safe_strlen(source_buffer, sizeof(source_buffer)));
-
-            struct loris_state_s *next_state = (loris_state_t *)state;
-
-            while(next_state != NULL){
-                if (next_state->next_required_state == NULL){
-                    next_state->next_required_state = (loris_state_t *)p_new_state;
-                    break;
-                }
-                next_state = next_state->next_required_state;
-            }
-
-        }
+        ret = handle_require(state);
 
         while (lang_accept(state, ',') ) {
             lang_accept(state, TOKEN_lang);
-            lang_expect(state, TOKEN_STR);
-
-            state->create_type = CREATE_TYPE_PACKAGE;
-            ret = make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
+            ret = handle_require(state);
         }
 
         return ret;
     } else if (lang_accept(state, TOKEN_IMPORT)) {
-        std_char_t *import_name = CALLOC(1, KEY_NAME_SIZE);
-        std_char_t *import_package_ptr = NULL;
-        std_char_t *import_function_ptr = NULL;
-
-        lang_expect(state, TOKEN_ID);
-        import_package_ptr = strdup(state->value.string);
-
-        state->create_type = CREATE_TYPE_PACKAGE;
-        make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
-
-        lang_expect(state, '.');
-        lang_expect(state, TOKEN_ID);
-        import_function_ptr = strdup(state->value.string);
-
-        snprintf(import_name, KEY_NAME_SIZE, "%s.%s", import_package_ptr, import_function_ptr);
-        FREE(import_package_ptr);
-        FREE(import_function_ptr);
-
-        state->create_type = CREATE_TYPE_IMPORT;
-        ret = make_lang_ast_symbol(state, import_name, state->source_name, state->source_line);
+        ret = handle_import(state);
 
         while (lang_accept(state, ',') ) {
-            import_name = CALLOC(1, KEY_NAME_SIZE);
-
-            lang_expect(state, TOKEN_ID);
-            import_package_ptr = strdup(state->value.string);
-
-            state->create_type = CREATE_TYPE_PACKAGE;
-            make_lang_ast_symbol(state, state->value.string, state->source_name, state->source_line);
-
-            lang_expect(state, '.');
-            lang_expect(state, TOKEN_ID);
-            import_function_ptr = strdup(state->value.string);
-
-            snprintf(import_name, KEY_NAME_SIZE, "%s.%s", import_package_ptr, import_function_ptr);
-            FREE(import_package_ptr);
-            FREE(import_function_ptr);
-
-            state->create_type = CREATE_TYPE_IMPORT;
-            ret = make_lang_ast_symbol(state, import_name, state->source_name, state->source_line);
+            ret = handle_import(state);
         }
 
         return ret;

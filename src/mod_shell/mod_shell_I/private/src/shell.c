@@ -316,7 +316,7 @@ STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, name) == STD_RV_SUC,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
-    std_char_t const *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
+    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
     STD_ASSERT_RV_ACTION(bytecode != NULL,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
@@ -327,11 +327,14 @@ STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
 
     STD_ASSERT_RV_ACTION(mod_lang_vm_run_init(p_global_mod_lang_vm, name, bytecode) == STD_RV_SUC, STD_RV_ERR_FAIL,
                          mod_lang_vm_run_cleanup(p_global_mod_lang_vm, name);
-                         mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+                         mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+                         FREE(bytecode););
     ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, name, u64_key, arg);
     mod_lang_vm_run_cleanup(p_global_mod_lang_vm, name);
 
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+    FREE(bytecode);
+
     STD_LOG(INFO, "%s EXECUTE SUCCESS\n", name);
     STD_LOG(DISPLAY, "$");
 
@@ -380,7 +383,7 @@ STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_body(p_global_mod_lang_parse, state, body) == STD_RV_SUC,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
-    std_char_t const *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
+    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
     STD_ASSERT_RV_ACTION(bytecode != NULL,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
@@ -391,11 +394,15 @@ STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
 
     STD_ASSERT_RV_ACTION(mod_lang_vm_run_init(p_global_mod_lang_vm, "terminal", bytecode) == STD_RV_SUC, STD_RV_ERR_FAIL,
                          mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
-                         mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+                         mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+                         FREE(bytecode););
     ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, "terminal", u64_key, NULL);
     mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
 
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+
+    FREE(bytecode);
+
     STD_LOG(INFO, "%s EXECUTE SUCCESS\n", "terminal");
     STD_LOG(DISPLAY, "$");
 
