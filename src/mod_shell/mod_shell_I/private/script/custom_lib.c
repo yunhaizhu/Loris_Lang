@@ -94,9 +94,9 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, char **response)
         memcpy(*response, ptr, len);
         (*response)[len] = '\0';
     } else {
-        *response = realloc(*response, strlen(*response) + len + 1);
-        memcpy(*response + strlen(*response), ptr, len);
-        (*response)[strlen(*response) + len] = '\0';
+        *response = realloc(*response, std_safe_strlen(*response, len) + len + 1);
+        memcpy(*response + std_safe_strlen(*response, len), ptr, len);
+        (*response)[std_safe_strlen(*response, len) + len] = '\0';
     }
 
     return len;
@@ -121,7 +121,7 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
     cJSON_AddStringToObject(message_obj, "content", message);
     cJSON_AddItemToArray(messages, message_obj);
 
-    if (prompt != NULL && strlen(prompt) > 0) {
+    if (prompt != NULL && std_safe_strlen(prompt, 8192) > 0) {
         message_obj = cJSON_CreateObject();
         cJSON_AddStringToObject(message_obj, "role", "system");
         cJSON_AddStringToObject(message_obj, "content", prompt);
@@ -137,7 +137,7 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
     /* Set HTTP request headers */
     headers = curl_slist_append(headers, "Content-Type: application/json");
     char auth_header[128];
-    sprintf(auth_header, "Authorization: Bearer %s", API_KEY);
+    snprintf(auth_header, sizeof(auth_header), "Authorization: Bearer %s", API_KEY);
     headers = curl_slist_append(headers, auth_header);
 
     /* Initialize CURL */

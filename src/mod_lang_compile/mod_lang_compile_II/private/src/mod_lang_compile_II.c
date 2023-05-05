@@ -67,7 +67,7 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
         std_safe_strip_chars(required_bytecode, '[');
         std_safe_strip_chars(required_bytecode, ']');
 
-        std_int_t required_bytecode_len = strlen(required_bytecode);
+        std_int_t required_bytecode_len = std_safe_strlen(required_bytecode, MAX_CODE_SIZE);
         std_strcat_s(bytecode_buffer_start, MAX_CODE_SIZE, required_bytecode, required_bytecode_len);
 
         FREE(required_bytecode);
@@ -98,7 +98,7 @@ STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t 
 
     gen_buffer_output(compile_env.generate_code_env, bytecode_buffer_start, MAX_CODE_SIZE - (bytecode_buffer_start - bytecode_buffer));
 
-    std_char_t *output_buffer = bytecode_buffer_start + strlen(bytecode_buffer_start);
+    std_char_t *output_buffer = bytecode_buffer_start + std_safe_strlen(bytecode_buffer_start, MAX_CODE_SIZE);
     *(output_buffer - 1) = ']';
 
     FREE(compile_env.generate_code_env);
