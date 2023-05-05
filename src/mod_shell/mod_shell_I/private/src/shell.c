@@ -480,7 +480,6 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
     // Execute init_script.ll
     cmd_script(script, NULL);
     if (oneshot_script){
-        oneshot_script = oneshot_script + std_safe_strlen("script/", BUF_SIZE_32);
         STD_LOG(DISPLAY, "Executing %s\n", oneshot_script);
         ret = cmd_script(oneshot_script, NULL);
         cmd_exit();

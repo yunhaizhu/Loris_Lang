@@ -61,7 +61,7 @@ STD_CALL own_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t *s
         const std_char_t *string = get_own_value_object_string(value);
         STD_ASSERT_RV_WARN(string != NULL, NAN_BOX_Null);
         STD_ASSERT_RV_WARN(index >= 0, NAN_BOX_Null);
-        STD_ASSERT_RV_WARN(index < (std_int_t)strlen(string), NAN_BOX_Null);
+        STD_ASSERT_RV_WARN(index < (std_int_t)std_safe_strlen(string, MAX_STRING_SIZE), NAN_BOX_Null);
         value = make_own_value_char(string[index]);
     }
 

@@ -237,9 +237,9 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         std_char_t *sy = get_own_value_object_string(obj_y);
 
         if (type == Inp_ADD) {
-            std_char_t *new_string = CALLOC(strlen(sx) + strlen(sy) + 1, sizeof(char));
+            std_char_t *new_string = CALLOC(std_safe_strlen(sx, MAX_STRING_SIZE) + std_safe_strlen(sy, MAX_STRING_SIZE) + 1, sizeof(char));
 
-            sprintf(new_string, "%s%s", sx, sy);
+            snprintf(new_string, std_safe_strlen(sx, MAX_STRING_SIZE) + std_safe_strlen(sy, MAX_STRING_SIZE) + 1, "%s%s", sx, sy);
 
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
@@ -256,9 +256,9 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         std_char_t *sy = get_own_value_object_string(obj_y);
 
         if (type == Inp_ADD) {
-            std_char_t *new_string = CALLOC(strlen(sy) + KEY_NAME_SIZE, sizeof(char));
+            std_char_t *new_string = CALLOC(std_safe_strlen(sy, MAX_STRING_SIZE) + KEY_NAME_SIZE, sizeof(char));
 
-            sprintf(new_string, "%ld%s", nx, sy);
+            snprintf(new_string, std_safe_strlen(sy, MAX_STRING_SIZE) + KEY_NAME_SIZE,  "%ld%s", nx, sy);
 
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
@@ -273,9 +273,9 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         ny = get_own_value_number(obj_y);
 
         if (type == Inp_ADD) {
-            std_char_t *new_string = CALLOC(strlen(sx) + KEY_NAME_SIZE, sizeof(char));
+            std_char_t *new_string = CALLOC(std_safe_strlen(sx, MAX_STRING_SIZE) + KEY_NAME_SIZE, sizeof(char));
 
-            sprintf(new_string, "%s%ld", sx, ny);
+            snprintf(new_string, std_safe_strlen(sx, MAX_STRING_SIZE) + KEY_NAME_SIZE,"%s%ld", sx, ny);
 
             ret = make_own_value_object_string(new_string);
             FREE(new_string);

@@ -239,7 +239,7 @@ STD_CALL static inline own_value_t make_own_value_object_string(IN const std_cha
 #ifdef NAN_BOX
     ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
 
-    object->value = (uint64_t) strdup(str) | NAN_BOX_SIGNATURE_ADDRESS;
+    object->value = (uint64_t) strdup(str?str:"") | NAN_BOX_SIGNATURE_ADDRESS;
     return NAN_BOX_SIGNATURE_OBJECT_STRING | (uint64_t) object;
 #else
     own_value_t value;
