@@ -1,6 +1,6 @@
 package test
 require "os"
-import os.print, os.assert, os.eprint
+import os.print, os.assert, os.eprint, os.array_to_string, os.read_lines
 
 def test_read_line()
 {
@@ -11,22 +11,22 @@ def test_read_line()
     var prompt_file = "prompt.txt"
     var log_txt = "test.log"
 
-    read_lines(file, ret)
+    os.read_lines(file, ret)
     os.print("ret.size", ret.size())
 
     for (i = 0; i < ret.size(); i+=1){
         var tmp = ret[i]
         os.eprint(i, tmp)
     }
-    array_to_string(ret, ret_string)
+    os.array_to_string(ret, ret_string)
     os.eprint("ret_string", ret_string)
 
-    read_lines(log_txt, ret)
-    array_to_string(ret, ret_string)
+    os.read_lines(log_txt, ret)
+    os.array_to_string(ret, ret_string)
     os.eprint("log_txt", ret_string)
 
-    read_lines(prompt_file, ret)
-    array_to_string(ret, ret_string)
+    os.read_lines(prompt_file, ret)
+    os.array_to_string(ret, ret_string)
     os.eprint("prompt.txt", ret_string)
 
     {

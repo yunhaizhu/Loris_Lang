@@ -1,6 +1,6 @@
 package test
 require "os"
-import os.print, os.assert
+import os.print, os.assert, os.check_type
 
 def test_random_number(var a1:{"OWN_TYPE_NUMBER"}, var a2:{"OWN_TYPE_STRING", "OWN_TYPE_BOOL"})
 {

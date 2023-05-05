@@ -1,6 +1,6 @@
 package test
 require "os"
-import os.print, os.assert
+import os.print, os.assert, os.string_to_array
 
 def test_string_to_array()
 {
@@ -12,7 +12,7 @@ def test_string_to_array()
 
     os.print("TEST STRING TO ARRAY BEGIN")
     max = ret_array.size()
-    string_to_array(string, ret_array)
+    os.string_to_array(string, ret_array)
 
     max = ret_array.size()
     os.assert(max == 11, "max is 11")

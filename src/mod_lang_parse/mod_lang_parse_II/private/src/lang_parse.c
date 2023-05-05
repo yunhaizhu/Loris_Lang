@@ -37,23 +37,32 @@ lang_ast_t *global_definitions(lang_state_t *state);
  * @param   check_name
  * @return  lang_ast_t *
  */
-lang_ast_t *fake_type_check_ast(std_char_t *func_name, std_char_t *check_name)
+lang_ast_t *fake_type_check_ast(lang_state_t *orig_state, std_char_t *func_name, std_char_t *check_name)
 {
     std_int_t jmp_ret;
     lang_state_t State;
     lang_state_t *state = &State;
     std_char_t source_template[LINE_BUF_SIZE] = " {\n"
                                                "    var %s__parameter_check_ret\n"
-                                               "    check_type(%s, %s__type, %s__parameter_check_ret)\n"
+                                               "    os.check_type(%s, %s__type, %s__parameter_check_ret)\n"
                                                "    if (%s__parameter_check_ret == false) {\n"
-                                               "        print(\"%s:%s check_type_failed\")\n"
+                                               "        os.print(\"%s:%s check_type_failed\")\n"
                                                "        return\n"
                                                "    } else {\n"
-                                               "        print(\"%s:%s check_type_success\")\n"
+                                               "        os.print(\"%s:%s check_type_success\")\n"
                                                "    }\n"
                                                "} \n";
     std_char_t source_buffer[LINE_BUF_SIZE];
     lang_ast_t *block_stms;
+
+    memset(state, 0, sizeof(lang_state_t));
+    state->function_name = func_name;
+    state->global_symbol_hash = orig_state->global_symbol_hash;
+
+    snprintf(source_buffer, sizeof(source_buffer), "%s", "require \"os\"\n import os.print, os.check_type\n");
+    lang_lex_init(state, "fake_type_check_ast", source_buffer, sizeof(source_buffer));
+    lang_next(state);
+    global_definitions(state);
 
     snprintf(source_buffer, sizeof(source_buffer), source_template,
              check_name,
@@ -62,7 +71,7 @@ lang_ast_t *fake_type_check_ast(std_char_t *func_name, std_char_t *check_name)
              func_name, check_name,
              func_name, check_name);
 
-    STD_LOG(INFO, "%s\n", source_buffer);
+    STD_LOG(DISPLAY, "%s\n", source_buffer);
     lang_lex_init(state, "fake_type_check_ast", source_buffer, sizeof(source_buffer));
 
     jmp_ret = setjmp(state->error_jump_buf);
@@ -112,7 +121,7 @@ lang_ast_t *identifier(lang_state_t *state)
             lang_expect(state, '}');
             ast->symbol->type_symbol = make_lang_ast(state, DECLARE_TUPLE_OP, lang_ast_type_symbol, make_lang_ast_list2(state, NULL, expr2, state->source_name, state->source_line), state->source_name, state->source_line);
 
-            ast->symbol->check_block = fake_type_check_ast(state->function_name, check_symbol_name);
+            ast->symbol->check_block = fake_type_check_ast(state, state->function_name, check_symbol_name);
         }
 
         return ast;
@@ -153,7 +162,7 @@ lang_ast_t *var_identifier(lang_state_t *state)
                 lang_expect(state, '}');
                 ast->symbol->type_symbol = make_lang_ast(state, DECLARE_TUPLE_OP, lang_ast_type_symbol, make_lang_ast_list2(state, NULL, expr2, state->source_name, state->source_line), state->source_name, state->source_line);
 
-                ast->symbol->check_block = fake_type_check_ast(state->function_name, check_symbol_name);
+                ast->symbol->check_block = fake_type_check_ast(state, state->function_name, check_symbol_name);
             }
             return ast;
         } else {

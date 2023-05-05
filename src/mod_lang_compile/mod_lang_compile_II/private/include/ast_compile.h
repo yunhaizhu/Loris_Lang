@@ -46,12 +46,12 @@ typedef struct lang_compile_environment_s {
    std_int_t label_counter;
    std_int_t local_var_pos;
 
-   std_int_t break_env[10];
-   std_int_t break_envp_save[10];
+   std_int_t break_env[MAX_VARIABLE];
+   std_int_t break_envp_save[MAX_VARIABLE];
    std_int_t break_env_index;
 
-   std_int_t continue_env[10];
-   std_int_t continue_envp_save[10];
+   std_int_t continue_env[MAX_VARIABLE];
+   std_int_t continue_envp_save[MAX_VARIABLE];
    std_int_t continue_env_index;
 
    generate_code_env_t *generate_code_env;

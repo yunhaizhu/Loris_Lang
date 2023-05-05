@@ -1,6 +1,6 @@
 package test
 require "os"
-import os.print, os.assert
+import os.print, os.assert, os.get_hash_keys
 
 def test_hash_add_find()
 {
@@ -95,7 +95,7 @@ def test_hash_get_keys()
                           "1323" ]
     var i
 
-    get_hash_keys(safe_hash, keys)
+    os.get_hash_keys(safe_hash, keys)
     for (i = 0; i < keys.size(); i+=1){
         os.assert(keys{i} == keys_compare[i], "keys{i} ==  keys_compare[i]")
     }
