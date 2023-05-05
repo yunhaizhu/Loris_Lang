@@ -14,7 +14,11 @@ require "script/test_all/basic/variable/var/test_var.ll",
  "script/test_all/basic/loop/test_for_break.ll",
  "script/test_all/basic/loop/test_for_continue.ll",
  "script/test_all/basic/loop/test_while_break.ll",
- "script/test_all/basic/loop/test_while_continue.ll"
+ "script/test_all/basic/loop/test_while_continue.ll",
+ "script/test_all/basic/function/test_func_arg.ll",
+  "script/test_all/basic/function/test_func_arg2.ll",
+ "script/test_all/basic/function/test_func_return.ll",
+ "script/test_all/basic/function/test_def.ll"
 
 import test1.test_var,
  test2.test_var_char,
@@ -27,8 +31,11 @@ import test1.test_var,
  test9.test_for_break,
  test10.test_for_continue,
  test11.test_while_break,
- test12.test_while_continue
-
+ test12.test_while_continue,
+ test13.test_func_arg,
+ test14.test_func_arg2,
+ test15.test_func_return,
+ test16.test_def
 
 
 def main()
@@ -50,6 +57,11 @@ def main()
     test10.test_for_continue()
     test11.test_while_break()
     test12.test_while_continue()
+
+    test13.test_func_arg()
+    test14.test_func_arg2()
+    test15.test_func_return()
+    test16.test_def()
 }
 
 #script("script/test_all/basic/test_all.ll")
