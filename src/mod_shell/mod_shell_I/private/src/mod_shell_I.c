@@ -171,9 +171,8 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
 
 std_rv_t mod_shell_I_compile_script(IN mod_shell_t *m, IN const std_char_t *script)
 {
-    std_rv_t ret;
+    std_rv_t ret = STD_RV_SUC;
 
-    ret = cmd_compile_file(script);
     return ret;
 }
 

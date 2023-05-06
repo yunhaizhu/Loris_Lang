@@ -160,7 +160,4 @@ STD_CALL std_rv_t cmd_create_instance(IN const std_char_t *iid_string, IN std_si
  */
 STD_CALL std_rv_t cmd_delete_instance(IN const std_char_t *iid_string, IN std_size_t iid_string_len, INOUT std_void_t **pp_handle);
 
-
-STD_CALL std_rv_t cmd_compile_file(IN const std_char_t *name);
-
 #endif
