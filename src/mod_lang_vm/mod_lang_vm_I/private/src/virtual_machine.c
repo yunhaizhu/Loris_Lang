@@ -270,9 +270,15 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
     std_int_t pc;
     std_u64_t tick;
     std_rv_t ret = STD_RV_SUC;
-    std_char_t func_name_with_function[KEY_NAME_SIZE] = "\0";
+    std_char_t func_name_with_function[3*KEY_NAME_SIZE] = "\0";
 
-    snprintf(func_name_with_function, sizeof(func_name_with_function), "function__%s", func_name);
+    std_char_t package_name[KEY_NAME_SIZE];
+    std_char_t function_name[KEY_NAME_SIZE];
+
+    sscanf(func_name, "%[^.].%s", package_name, function_name);
+
+    snprintf(func_name_with_function, sizeof(func_name_with_function), "package__%s__function__%s", package_name, function_name);
+
     pc = find_label_ex(vm, func_name_with_function, arg_num, 0);
 
     if (pc > 0) {

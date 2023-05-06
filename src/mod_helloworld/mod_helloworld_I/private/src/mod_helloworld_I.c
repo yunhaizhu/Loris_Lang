@@ -78,17 +78,16 @@ STD_CALL std_rv_t mod_helloworld_I_cleanup(mod_helloworld_t * p_m)
  */
 STD_CALL std_int_t mod_helloworld_I_say_hello(IN mod_helloworld_t * p_m, IN std_char_t * str)
 {
-//    mod_helloworld_imp_t *p_imp_m = (mod_helloworld_imp_t *) p_m;
+    mod_helloworld_imp_t *p_imp_m = (mod_helloworld_imp_t *) p_m;
 
     STD_LOG(DISPLAY, "%s %s\n", __FUNCTION__ , str);
 
-//    mod_shell_compile_script(p_imp_m->p_mod_shell, "script/embedded/add.nl");
-//    mod_shell_call_script_func_init(p_imp_m->p_mod_shell, "script/embedded/add.nl");
-//    mod_shell_call_script_func_push_int(p_imp_m->p_mod_shell, 87);
-//    mod_shell_call_script_func_push_int(p_imp_m->p_mod_shell, 23);
-//    mod_shell_call_script_func_push_int(p_imp_m->p_mod_shell, 0);
-//    mod_shell_call_script_func_call(p_imp_m->p_mod_shell, "embedded/add.nl", "add", 3);
-//    mod_shell_call_script_func_cleanup(p_imp_m->p_mod_shell, "embedded/add.nl");
+    mod_shell_call_script_func_init(p_imp_m->p_mod_shell, "script/embedded/add.ll");
+    mod_shell_call_script_func_push_int(p_imp_m->p_mod_shell, 87);
+    mod_shell_call_script_func_push_int(p_imp_m->p_mod_shell, 23);
+    mod_shell_call_script_func_push_int(p_imp_m->p_mod_shell, 0);
+    mod_shell_call_script_func_call(p_imp_m->p_mod_shell, "script/embedded/add.ll", "embedded.add", 3);
+    mod_shell_call_script_func_cleanup(p_imp_m->p_mod_shell, "script/embedded/add.ll");
 
 	return 0;
 

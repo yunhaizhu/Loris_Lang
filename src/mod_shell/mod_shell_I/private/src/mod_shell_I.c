@@ -169,22 +169,25 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
     return ret;
 }
 
-std_rv_t mod_shell_I_compile_script(IN mod_shell_t *m, IN const std_char_t *script)
-{
-    std_rv_t ret = STD_RV_SUC;
-
-    return ret;
-}
-
 std_rv_t mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_char_t *script_name)
 {
-   return STD_RV_SUC;
-//    const std_char_t *compiled_body;
-//    std_char_t *script_path = strdup(script_name);
-//    compiled_body = mod_lang_compile_generated_bytecode(p_global_mod_lang_compile, script_path);
-//    FREE(script_path);
-//
-//    return mod_lang_vm_run_func_init(p_global_mod_lang_vm, script_name, compiled_body);
+    std_rv_t ret;
+
+    loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
+    STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, (std_char_t *)script_name) == STD_RV_SUC,
+                        STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+
+    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
+
+    STD_ASSERT_RV_ACTION(bytecode != NULL,
+                        STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+
+    ret = mod_lang_vm_run_func_init(p_global_mod_lang_vm, script_name, bytecode);
+
+    mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+    FREE(bytecode);
+
+    return ret;
 }
 
 std_rv_t mod_shell_I_call_script_func(IN mod_shell_t *m, IN const std_char_t *script_name, IN const std_char_t *func_name, IN std_int_t arg_num)
@@ -217,7 +220,6 @@ struct mod_shell_ops_st mod_shell_I_ops = {
         mod_shell_I_unregister,
         mod_shell_I_shell,
 
-        mod_shell_I_compile_script,
         mod_shell_I_call_script_func_init,
         mod_shell_I_call_script_func_push_int,
         mod_shell_I_call_script_func,
