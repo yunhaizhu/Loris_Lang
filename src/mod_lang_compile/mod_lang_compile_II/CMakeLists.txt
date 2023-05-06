@@ -1,7 +1,6 @@
 add_library(mod_lang_compile_II SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/mod_lang_compile_II.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/mod_lang_compile_II_bundle.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/private/src/stub/stub_shell_mod_lang_compile_II.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/ast_code.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/ast_compile.c
         )
