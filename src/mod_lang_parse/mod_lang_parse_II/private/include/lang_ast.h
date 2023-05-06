@@ -16,8 +16,8 @@
 // Created by yun on 12/22/21.
 //
 
-#ifndef NONCLEDB_LANG_AST_H
-#define NONCLEDB_LANG_AST_H
+#ifndef LORIS_LANG_AST_H
+#define LORIS_LANG_AST_H
 
 #include "rsa.h"
 #include "std_common.h"
@@ -363,4 +363,4 @@ STD_CALL std_void_t clear_lang_ast(IN lang_ast_t *p);
  */
 STD_CALL std_void_t add_require_package_function(lang_state_t *state, const std_char_t *package_function_name);
 
-#endif//NONCLEDB_LANG_AST_H
+#endif//LORIS_LANG_AST_H

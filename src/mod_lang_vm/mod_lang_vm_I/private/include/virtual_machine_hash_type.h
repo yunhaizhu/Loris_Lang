@@ -12,8 +12,8 @@
  * @date    2021-10-30
  *
  */
-#ifndef NONCLEDB_VIRTUAL_MACHINE_HASH_TYPE_H
-#define NONCLEDB_VIRTUAL_MACHINE_HASH_TYPE_H
+#ifndef LORIS_VIRTUAL_MACHINE_HASH_TYPE_H
+#define LORIS_VIRTUAL_MACHINE_HASH_TYPE_H
 
 #include "std_common.h"
 #include "virtual_machine.h"
@@ -90,4 +90,4 @@ STD_CALL std_void_t walk_VAR_with_hash_type(IN const ownership_object_symbol_t *
  */
 STD_CALL std_int_t get_VAR_total_with_hash_type(IN const ownership_object_symbol_t *symbol);
 
-#endif//NONCLEDB_VIRTUAL_MACHINE_HASH_TYPE_H
+#endif//LORIS_VIRTUAL_MACHINE_HASH_TYPE_H

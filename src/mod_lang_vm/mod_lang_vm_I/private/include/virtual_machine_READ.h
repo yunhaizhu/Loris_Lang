@@ -12,8 +12,8 @@
  * @date    2021-11-04
  *
  */
-#ifndef NONCLEDB_VIRTUAL_MACHINE_READ_H
-#define NONCLEDB_VIRTUAL_MACHINE_READ_H
+#ifndef LORIS_VIRTUAL_MACHINE_READ_H
+#define LORIS_VIRTUAL_MACHINE_READ_H
 
 #include "virtual_machine.h"
 

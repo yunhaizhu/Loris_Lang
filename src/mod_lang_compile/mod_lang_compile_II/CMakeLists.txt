@@ -4,14 +4,13 @@ add_library(mod_lang_compile_II SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/stub/stub_shell_mod_lang_compile_II.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/ast_code.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/ast_compile.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/private/src/lang_ast.c
         )
 
 target_include_directories(mod_lang_compile_II PRIVATE
         ${SUB_PUBLIC_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/private/include)
 
-target_link_libraries(mod_lang_compile_II PRIVATE pthread ${LINK_PROFILER})
+target_link_libraries(mod_lang_compile_II PRIVATE pthread mod_lang_parse_II ${LINK_PROFILER})
 
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/private/script/mod_lang_compile_II_test.ll
         DESTINATION ${${PROJECT_CUSTOM_NAME}_SOURCE_DIR}/deploy/${CMAKE_BUILD_TYPE}/script/ )

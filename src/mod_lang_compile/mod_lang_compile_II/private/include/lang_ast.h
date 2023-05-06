@@ -16,16 +16,12 @@
 // Created by yun on 12/22/21.
 //
 
-#ifndef NONCLEDB_LANG_AST_H
-#define NONCLEDB_LANG_AST_H
+#ifndef LORIS_LANG_AST_H
+#define LORIS_LANG_AST_H
 
-#include "ast_code.h"
 #include "rsa.h"
 #include "std_common.h"
 #include <setjmp.h>
-
-
-#define FUNC_EXTERN_EXTERN_LEN 100
 
 typedef enum lang_ast_code {
     NUMBER_OP,

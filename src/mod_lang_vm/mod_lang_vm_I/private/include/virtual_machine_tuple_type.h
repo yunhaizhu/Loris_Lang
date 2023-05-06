@@ -12,8 +12,8 @@
  * @date    2021-10-30
  *
  */
-#ifndef NONCLEDB_VIRTUAL_MACHINE_TUPLE_TYPE_H
-#define NONCLEDB_VIRTUAL_MACHINE_TUPLE_TYPE_H
+#ifndef LORIS_VIRTUAL_MACHINE_TUPLE_TYPE_H
+#define LORIS_VIRTUAL_MACHINE_TUPLE_TYPE_H
 
 #include "std_common.h"
 #include "std_lock_free_list.h"

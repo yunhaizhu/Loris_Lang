@@ -12,8 +12,8 @@
  * @date    2021-10-22
  *
  */
-#ifndef NONCLEDB_VIRTUAL_MACHINE_SAFE_VAR_H
-#define NONCLEDB_VIRTUAL_MACHINE_SAFE_VAR_H
+#ifndef LORIS_VIRTUAL_MACHINE_SAFE_VAR_H
+#define LORIS_VIRTUAL_MACHINE_SAFE_VAR_H
 
 #include "std_common.h"
 #include "virtual_machine.h"

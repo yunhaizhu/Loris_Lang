@@ -12,8 +12,8 @@
  * @date    2021-10-30
  *
  */
-#ifndef NONCLEDB_VIRTUAL_MACHINE_OBJECT_H
-#define NONCLEDB_VIRTUAL_MACHINE_OBJECT_H
+#ifndef LORIS_VIRTUAL_MACHINE_OBJECT_H
+#define LORIS_VIRTUAL_MACHINE_OBJECT_H
 
 #include "rsa.h"
 #include "std_common.h"
