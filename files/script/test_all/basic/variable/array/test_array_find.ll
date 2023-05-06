@@ -1,4 +1,4 @@
-package test
+package test30
 require "os"
 import os.print, os.assert
 

@@ -1,4 +1,4 @@
-package test
+package test33
 require "os"
 import os.print, os.assert, os.get_hash_keys
 

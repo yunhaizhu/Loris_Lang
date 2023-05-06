@@ -1,4 +1,4 @@
-package test
+package test35
 require "os"
 import os.print, os.assert, os.random_string, os.random_number
 

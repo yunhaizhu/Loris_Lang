@@ -1,4 +1,4 @@
-package test
+package test28
 require "os"
 import os.print, os.assert, os.array_to_string
 
