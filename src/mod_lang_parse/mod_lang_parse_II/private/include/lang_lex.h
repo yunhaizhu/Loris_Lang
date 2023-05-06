@@ -97,7 +97,8 @@ typedef struct lang_state_s {
     std_void_t *load_lib_ast[MAX_LOAD_LIB_COUNT];
     std_int_t load_lib_ast_idx;
     std_void_t *cmd_ast;
-    struct loris_state_s *next_required_state;
+    struct loris_state_s *required_states[MAX_REQUIRED_STATE_COUNT];
+    std_int_t required_states_idx;
 
     jmp_buf error_jump_buf;
     /////////////////////////////

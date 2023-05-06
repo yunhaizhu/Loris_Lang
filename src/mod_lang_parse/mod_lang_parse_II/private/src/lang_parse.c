@@ -57,12 +57,14 @@ lang_ast_t *fake_type_check_ast(lang_state_t *orig_state, std_char_t *func_name,
 
     memset(state, 0, sizeof(lang_state_t));
     state->function_name = func_name;
-    state->global_symbol_hash = orig_state->global_symbol_hash;
+    state->global_symbol_hash = orig_state->global_symbol_hash; //direct use
+    state->global_parse_error_need_clean_lang_ast_hash = orig_state->global_parse_error_need_clean_lang_ast_hash;
 
     snprintf(source_buffer, sizeof(source_buffer), "%s", "require \"os\"\n import os.print, os.check_type\n");
     lang_lex_init(state, "fake_type_check_ast", source_buffer, sizeof(source_buffer));
     lang_next(state);
     global_definitions(state);
+    lang_lex_cleanup(state);
 
     snprintf(source_buffer, sizeof(source_buffer), source_template,
              check_name,
@@ -85,6 +87,7 @@ lang_ast_t *fake_type_check_ast(lang_state_t *orig_state, std_char_t *func_name,
     block_stms = block(state, STD_BOOL_FALSE);
 
     lang_lex_cleanup(state);
+
     return block_stms;
 }
 
@@ -1004,15 +1007,7 @@ lang_ast_t *handle_require(lang_state_t *state)
         lang_parse((lang_state_t *)p_new_state, require_script_name, source_buffer,
                    (std_int_t)std_safe_strlen(source_buffer, sizeof(source_buffer)));
 
-        struct loris_state_s *next_state = (loris_state_t *)state;
-
-        while(next_state != NULL){
-            if (next_state->next_required_state == NULL){
-                next_state->next_required_state = (loris_state_t *)p_new_state;
-                break;
-            }
-            next_state = next_state->next_required_state;
-        }
+        state->required_states[state->required_states_idx++] = (loris_state_t *)p_new_state;
 
     }
     return ret;

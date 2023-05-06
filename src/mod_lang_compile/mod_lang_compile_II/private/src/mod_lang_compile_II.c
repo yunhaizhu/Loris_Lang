@@ -40,7 +40,7 @@ STD_CALL std_rv_t mod_lang_compile_II_cleanup(mod_lang_compile_t * p_m)
 }
 
 /***func_implementation***/
-std_char_t *compile_bytecode(loris_state_t *state, std_bool_t do_next)
+std_char_t *compile_bytecode(loris_state_t *state)
 {
     lang_compile_environment_t compile_env;
     def_func_compile_ast_t *def_func_compile_ast = NULL;
@@ -51,10 +51,9 @@ std_char_t *compile_bytecode(loris_state_t *state, std_bool_t do_next)
     bytecode_buffer_start += 1;
 
     compile_env.generate_code_env = (generate_code_env_t *)CALLOC(1, sizeof(generate_code_env_t));
-    struct loris_state_s *next_state = state->next_required_state;
 
-    while(do_next && next_state != NULL){
-        std_char_t *required_bytecode = compile_bytecode( next_state, STD_BOOL_FALSE);
+    for (std_int_t i = 0; i < state->required_states_idx; ++i) {
+        std_char_t *required_bytecode = compile_bytecode( state->required_states[i]);
 
         std_safe_strip_chars(required_bytecode, '[');
         std_safe_strip_chars(required_bytecode, ']');
@@ -67,8 +66,6 @@ std_char_t *compile_bytecode(loris_state_t *state, std_bool_t do_next)
 
         std_strcat_s(bytecode_buffer_start, MAX_CODE_SIZE, ",", 1);
         bytecode_buffer_start += 1;
-
-        next_state = next_state->next_required_state;
     }
 
     for (int i = 0; i < state->load_lib_ast_idx; ++i) {
@@ -106,7 +103,7 @@ std_char_t *compile_bytecode(loris_state_t *state, std_bool_t do_next)
  */
 STD_CALL std_char_t *mod_lang_compile_II_compile_bytecode(IN mod_lang_compile_t * p_m, IN loris_state_t * state)
 {
-    return compile_bytecode( state, STD_BOOL_TRUE);
+    return compile_bytecode( state);
 }
 
 struct mod_lang_compile_ops_st mod_lang_compile_II_ops = {
