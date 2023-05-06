@@ -50,13 +50,6 @@ STD_CALL lang_ast_t *make_lang_ast_symbol(lang_state_t *state, IN std_char_t *na
  * @return  STD_CALL symbol_t *
  */
 STD_CALL symbol_t *lookup_lang_ast_symbol(lang_state_t *state, IN std_char_t *name, IN std_bool_t check_error);
-/**
- * get_lang_ast_symbol
- * @brief   
- * @param   ast
- * @return  STD_CALL symbol_t *
- */
-STD_CALL symbol_t *get_lang_ast_symbol(IN lang_ast_t *ast);
 
 /**
  * make_lang_ast_bool
@@ -129,66 +122,7 @@ STD_CALL std_void_t callback_destroy_lang_symbol(IN std_void_t *data, IN const s
  * @return  STD_CALL std_void_t
  */
 STD_CALL std_void_t callback_destroy_lang_ast(IN std_void_t *data, IN const std_void_t *callback_arg);
-/**
- * get_lang_ast_symbol_name
- * @brief   
- * @param   ast
- * @return  STD_CALL std_char_t *
- */
-STD_CALL std_char_t *get_lang_ast_symbol_name(IN lang_ast_t *ast);
-/**
- * get_lang_ast_bool
- * @brief   
- * @param   ast
- * @return  STD_CALL std_bool_t
- */
-STD_CALL std_bool_t get_lang_ast_bool(IN const lang_ast_t *ast);
 
-/**
- * get_lang_ast_double
- * @brief
- * @param   ast
- * @return  STD_CALL std_double_t
- */
-STD_CALL std_double_t get_lang_ast_double(IN const lang_ast_t *ast);
-
-/**
- * get_lang_ast_number
- * @brief   
- * @param   ast
- * @return  STD_CALL std_64_t
- */
-STD_CALL std_64_t get_lang_ast_number(IN const lang_ast_t *ast);
-
-/**
- * get_lang_ast_u_number
- * @brief   
- * @param   ast
- * @return  STD_CALL std_u64_t
- */
-STD_CALL std_u64_t get_lang_ast_u_number(IN const lang_ast_t *ast);
-/**
- * get_lang_ast_string
- * @brief   
- * @param   ast
- * @return  STD_CALL std_char_t *
- */
-STD_CALL std_char_t *get_lang_ast_string(IN lang_ast_t *ast);
-/**
- * get_lang_ast_address
- * @brief   
- * @param   ast
- * @return  STD_CALL std_void_t *
- */
-STD_CALL std_void_t *get_lang_ast_address(IN lang_ast_t *ast);
-
-/**
- * get_lang_ast_char
- * @brief
- * @param   ast
- * @return  STD_CALL std_char_t
- */
-STD_CALL std_char_t get_lang_ast_char(IN const lang_ast_t *ast);
 
 /**
  * make_ast
@@ -205,24 +139,7 @@ STD_CALL lang_ast_t *make_lang_ast(lang_state_t *state, IN lang_ast_code_t op, I
 #define make_lang_ast_list3(state, x1, x2, x3, s, l) make_lang_ast(state, LIST_OP, x1, make_lang_ast(state, LIST_OP, x2, make_lang_ast(state, LIST_OP, x3, NULL, s, l), s, l), s, l)
 
 #define get_lang_ast_first(ast) get_lang_ast_nth(ast, 0)
-/**
- * get_lang_ast_nth
- * @brief   
- * @param   ast
- * @param   nth
- * @return  STD_CALL lang_ast_t  *
- */
-STD_CALL lang_ast_t *get_lang_ast_nth(IN lang_ast_t *ast, IN std_int_t nth);
-/**
- * get_lang_ast_next
- * @brief   
- * @param   ast
- * @return  STD_CALL lang_ast_t  *
- */
-STD_CALL lang_ast_t *get_lang_ast_next(IN lang_ast_t *ast);
 
-
-STD_CALL std_int_t get_lang_ast_count(IN lang_ast_t *ast);
 
 /**
  * add_lang_ast_last
