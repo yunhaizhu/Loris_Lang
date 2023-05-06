@@ -559,7 +559,7 @@ STD_CALL std_rv_t cmd_batch(IN const std_char_t *batch_name)
     FILE *fp = NULL;
     std_char_t input[CMD_LINE_SIZE];
     std_char_t script_name[KEY_NAME_SIZE] = "\0";
-    std_bool_t ret;
+    std_bool_t ret = STD_RV_SUC;
 
     fp = fopen(batch_name, "r");
     STD_ASSERT_RV(fp != NULL, STD_RV_ERR_INVALIDARG);
@@ -569,10 +569,14 @@ STD_CALL std_rv_t cmd_batch(IN const std_char_t *batch_name)
         if (fgets(input, sizeof(input), fp) == NULL) {
             fclose(fp);
             return STD_RV_SUC;
-        } else {
+        } else if (strncmp(input, "script", std_safe_strlen("script", BUF_SIZE_32)) == 0){
             snprintf(script_name, sizeof(script_name), "%s", input + std_safe_strlen("script", BUF_SIZE_32));
             strip_name(script_name);
             cmd_script(script_name, NULL);
+        } else {
+            std_strcat_s(input, sizeof(input), "\n", 1);
+            cmd_cmd(input);
         }
     }
+    return ret;
 }
