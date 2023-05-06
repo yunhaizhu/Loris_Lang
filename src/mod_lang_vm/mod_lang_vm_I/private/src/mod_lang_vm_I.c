@@ -10,6 +10,8 @@
 #include "mod_lang_vm_I.h"
 #include "virtual_machine.h"
 
+std_lock_free_key_hash_t *global_symbol_hash = NULL;
+
 /**
  * @brief   Initialize the mod_lang_vm_t instance
  * @param   p_m     Pointer to the mod_lang_vm_t instance
@@ -19,9 +21,14 @@
  */
 STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t *arg, IN std_int_t arg_len)
 {
+    if (global_symbol_hash == NULL){
+        global_symbol_hash = std_lock_free_key_hash_create(128);
+    }
+
     return STD_RV_SUC;
 }
 
+STD_CALL std_void_t cleanup_symbol_object_callback(IN std_void_t *value, IN const std_void_t *callback_arg);
 /**
  * @brief   Cleanup the mod_lang_vm_t instance
  * @param   p_m     Pointer to the mod_lang_vm_t instance
@@ -29,6 +36,12 @@ STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t 
  */
 STD_CALL std_rv_t mod_lang_vm_I_cleanup(IN mod_lang_vm_t *p_m)
 {
+
+    if (global_symbol_hash){
+        std_lock_free_key_hash_value_callback_destroy(global_symbol_hash, cleanup_symbol_object_callback, NULL);
+        global_symbol_hash = NULL;
+    }
+
     return STD_RV_SUC;
 }
 

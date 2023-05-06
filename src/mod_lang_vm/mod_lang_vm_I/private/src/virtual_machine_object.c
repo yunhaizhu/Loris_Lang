@@ -20,6 +20,7 @@
 #include "virtual_machine_var_type.h"
 #include "xxh3.h"
 
+extern std_lock_free_key_hash_t *global_symbol_hash;
 /**
  * get_own_value_type_string
  * @brief   
@@ -251,7 +252,7 @@ STD_CALL own_value_t copy_ownership_object(ownership_object_t *item)
     snprintf(key, sizeof(key), "local_%p", copy_obj);
 
     //DEBUG NEED CHECK
-    //std_lock_free_key_hash_add(vm[get_std_thread_id()].symbol_hash, key, std_safe_strlen(key, sizeof(key)), copy_obj);
+    std_lock_free_key_hash_add(global_symbol_hash, key, std_safe_strlen(key, sizeof(key)), copy_obj);
 
     return copy_value;
 }

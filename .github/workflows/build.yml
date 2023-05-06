@@ -35,7 +35,7 @@ jobs:
         run: |
           cmake --install build/ --config Release
           cd ./deploy/Debug/
-          ./Loris_Lang script/embedded/test_var.ll
+          ./Loris_Lang script/test_all/basic/test_all.ll
       - name: Collect coverage into one XML report
         run: |
           gcovr --sonarqube > coverage.xml
