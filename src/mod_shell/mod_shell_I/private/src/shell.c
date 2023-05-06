@@ -490,7 +490,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_int_t shell_type, IN std_ch
         case SHELL_TYPE_BATCH:
             STD_LOG(DISPLAY, "Executing %s\n", one_shot_script);
             strip_name(one_shot_script);
-            ret = cmd_batch(one_shot_script);
+            ret = cmd_batch(p_m, one_shot_script);
             cmd_exit();
             goto exit;
         default:
@@ -529,7 +529,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_int_t shell_type, IN std_ch
             // Execute a batch file
             snprintf(name, sizeof(name), "%s", cmd + std_safe_strlen("batch", BUF_SIZE_32));
             strip_name(name);
-            ret = cmd_batch(name);
+            ret = cmd_batch(p_m, name);
         }else if (std_safe_strlen(cmd, sizeof(cmd)) > 1){
             // Execute a command
             cmd_cmd(cmd);
@@ -554,7 +554,7 @@ exit:
  * @param   name The name of the batch file to execute.
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_batch(IN const std_char_t *batch_name)
+STD_CALL std_rv_t cmd_batch(mod_shell_t *p_m, IN const std_char_t *batch_name)
 {
     FILE *fp = NULL;
     std_char_t input[CMD_LINE_SIZE];
@@ -573,7 +573,12 @@ STD_CALL std_rv_t cmd_batch(IN const std_char_t *batch_name)
             snprintf(script_name, sizeof(script_name), "%s", input + std_safe_strlen("script", BUF_SIZE_32));
             strip_name(script_name);
             cmd_script(script_name, NULL);
-        } else {
+        } else if (strncmp(input, "thread", std_safe_strlen("thread", BUF_SIZE_32)) == 0) {
+            mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
+            snprintf(script_name, sizeof(script_name), "%s", input + std_safe_strlen("thread", BUF_SIZE_32));
+            strip_name(script_name);
+            cmd_thread(p_imp_m, script_name, NULL);
+        }else {
             std_strcat_s(input, sizeof(input), "\n", 1);
             cmd_cmd(input);
         }

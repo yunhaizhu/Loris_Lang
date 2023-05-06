@@ -38,7 +38,7 @@ typedef enum cmd_id {
  * @param   name
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_batch(IN const std_char_t *name);
+STD_CALL std_rv_t cmd_batch(mod_shell_t *p_m, IN const std_char_t *name);
 
 /**
  * cmd_script
