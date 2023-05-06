@@ -630,56 +630,7 @@ STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t thr
 }
 
 
-/**
- * library_create_instance
- * @brief   
- * @param   args
- * @return  STD_CALL std_void_t
- */
-STD_CALL std_void_t library_create_instance(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
-{
-//    own_value_t obj_iid;
-//    own_value_t obj_args;
-//    const std_char_t *iid_string;
-//    const std_char_t *args_string;
-//    std_void_t *p_handle = NULL;
-//    own_value_t ret_obj;
-//
-//    ret_obj = Pop(vm, thread_id);
-//    obj_args = Pop(vm, thread_id);
-//    obj_iid = Pop(vm, thread_id);
-//
-//    iid_string = get_own_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
-//    args_string = get_own_value_object_string(get_VAR(obj_args, NAN_BOX_Null, STD_BOOL_FALSE));
-//
-////    cmd_create_instance(iid_string, std_safe_strlen(iid_string, KEY_NAME_SIZE), &p_handle, args_string, std_safe_strlen(args_string, KEY_NAME_SIZE));
-//
-//    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_address(p_handle));
-}
 
-
-/**
- * library_delete_instance
- * @brief   
- * @param   args
- * @return  STD_CALL std_void_t
- */
-STD_CALL std_void_t library_delete_instance(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
-{
-//    own_value_t obj_iid;
-//    own_value_t obj_handle;
-//    const std_char_t *iid_string;
-//    std_void_t *p_handle = NULL;
-//
-//    obj_handle = Pop(vm, thread_id);
-//    obj_iid = Pop(vm, thread_id);
-//
-//    iid_string = get_own_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
-//    p_handle = get_own_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
-//
-////    cmd_delete_instance(iid_string, std_safe_strlen(iid_string, KEY_NAME_SIZE), &p_handle);
-//    set_VAR(obj_handle, NAN_BOX_Null, NAN_BOX_Null);
-}
 
 
 /**
@@ -848,8 +799,7 @@ STD_CALL std_void_t library_register(environment_vm_t *vm, std_int_t *register_i
 
     library_func_register(vm, &register_id[thread_id], "package__os__function__check_type", 3, library_check_type);
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__create_instance", 3, library_create_instance);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__delete_instance", 2, library_delete_instance);
+
     library_func_register(vm, &register_id[thread_id], "package__os__function__string_to_array", 2, library_string_to_array);
     library_func_register(vm, &register_id[thread_id], "package__os__function__array_to_string", 2, library_array_to_string);
     library_func_register(vm, &register_id[thread_id], "package__os__function__read_lines", 2, library_read_lines);

@@ -54,6 +54,7 @@ std_char_t *compile_bytecode(loris_state_t *state)
 
     for (std_int_t i = 0; i < state->required_states_idx; ++i) {
         std_char_t *required_bytecode = compile_bytecode( state->required_states[i]);
+        STD_ASSERT_RV_ACTION(required_bytecode != NULL, NULL, FREE(bytecode_buffer); FREE(compile_env.generate_code_env););
 
         std_safe_strip_chars(required_bytecode, '[');
         std_safe_strip_chars(required_bytecode, ']');
@@ -66,6 +67,14 @@ std_char_t *compile_bytecode(loris_state_t *state)
 
         std_strcat_s(bytecode_buffer_start, MAX_CODE_SIZE, ",", 1);
         bytecode_buffer_start += 1;
+
+    }
+    std_int_t jmp_ret;
+    jmp_ret = setjmp(compile_env.error_jump_buf);
+    if (jmp_ret) {
+        FREE(bytecode_buffer);
+        FREE(compile_env.generate_code_env);
+        return NULL;
     }
 
     for (int i = 0; i < state->load_lib_ast_idx; ++i) {

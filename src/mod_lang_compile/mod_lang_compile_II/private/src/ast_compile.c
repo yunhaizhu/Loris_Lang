@@ -26,7 +26,7 @@
 */
 noreturn std_void_t compile_error(lang_compile_environment_t *compile_env)
 {
-   jmp_buf *jmp_buf = NULL; // = global_env[get_std_thread_id()].p_error_jump_buf;
+   jmp_buf *jmp_buf = &compile_env->error_jump_buf;
 
    longjmp(*jmp_buf, 1);
 }
@@ -912,7 +912,7 @@ std_void_t compile_call_func(lang_compile_environment_t *compile_env, lang_ast_t
 
    if (f_ast->op != SYMBOL_OP) {
        compile_expr(compile_env, f_ast);
-       local_arg = 2;
+       local_arg = VAR_LINK;
    }
 
    f = get_lang_ast_symbol(f_ast);
@@ -925,11 +925,11 @@ std_void_t compile_call_func(lang_compile_environment_t *compile_env, lang_ast_t
            switch (Env[i].var_kind) {
                case VAR_ARG:
                    pos = Env[i].pos;
-                   local_arg = 1;
+                   local_arg = VAR_ARG;
                    break;
                case VAR_LOCAL:
                    pos = Env[i].pos;
-                   local_arg = 0;
+                   local_arg = VAR_LOCAL;
                    break;
                default:
                    break;

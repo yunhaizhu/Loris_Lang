@@ -55,6 +55,7 @@ typedef struct lang_compile_environment_s {
    std_int_t continue_env_index;
 
    generate_code_env_t *generate_code_env;
+   jmp_buf error_jump_buf;
 } lang_compile_environment_t;
 
 typedef struct def_func_compile_ast_s{
