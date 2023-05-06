@@ -645,7 +645,7 @@ STD_CALL noreturn std_void_t lang_lex_error(lang_state_t *state, const std_char_
     vsnprintf(msg_buf, sizeof(msg_buf), fmt, ap);
     va_end(ap);
 
-    snprintf(buf, CMD_LINE_SIZE, "%s:%d: ", state->source_name, state->source_line );
+    snprintf(buf, CMD_LINE_SIZE, "[%s:%d]: ", state->source_name, state->source_line );
     std_strcat_s(buf, sizeof(buf), msg_buf, std_safe_strlen(msg_buf, sizeof(msg_buf)));
 
     STD_LOG(ERR, "%s", buf);

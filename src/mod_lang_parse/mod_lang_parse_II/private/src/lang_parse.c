@@ -956,8 +956,8 @@ lang_ast_t *def_function(lang_state_t *state)
     lang_ast_t *func_body;
     def_func_compile_ast_t *def_func_compile_ast = NULL;
 
-    state->global_func_compile_ast[state->global_func_compile_ast_idx] = (def_func_compile_ast_t *)CALLOC(1, sizeof(def_func_compile_ast_t));
-    def_func_compile_ast = state->global_func_compile_ast[state->global_func_compile_ast_idx];
+    def_func_compile_ast = (def_func_compile_ast_t *)CALLOC(1, sizeof(def_func_compile_ast_t));
+    state->global_func_compile_ast[state->global_func_compile_ast_idx++] = def_func_compile_ast;
 
     state->create_type = CREATE_TYPE_FUNCTION;
 
@@ -973,9 +973,6 @@ lang_ast_t *def_function(lang_state_t *state)
     def_func_compile_ast->func_symbol = func_symbol;
     def_func_compile_ast->func_parameter = func_parameter;
     def_func_compile_ast->func_body = func_body;
-    state->global_func_compile_ast_idx++;
-
-//    mod_lang_compile_func(p_global_mod_compile, func_symbol, func_parameter, func_body);
 
     return func_symbol;
 }

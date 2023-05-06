@@ -29,7 +29,9 @@
 typedef std_char_t *(*shell_stub_callback_t)(std_void_t *p_handle, std_char_t *params);
 
 /***macro_define***/
-
+#define SHELL_TYPE_NORMAL 0
+#define SHELL_TYPE_SCRIPT 1
+#define SHELL_TYPE_BATCH  2
 /****************************************************
  *                                                  *
  *                     MOD Define                   *
@@ -49,7 +51,7 @@ struct mod_shell_ops_st {
     /***func_define***/
     std_int_t (*regist)(IN mod_shell_t *m, IN const std_char_t *name, IN std_int_t name_len, IN shell_stub_callback_t func, IN std_void_t *p_handle);
     std_int_t (*unregister)(IN mod_shell_t *m, IN const std_char_t *name, IN std_int_t name_len);
-    std_int_t (*shell)(IN mod_shell_t *m, IN std_char_t *cmd);
+    std_int_t (*shell)(IN mod_shell_t *m, IN std_int_t shell_type, IN std_char_t *cmd);
 
 
     std_rv_t (*compile_script)(IN mod_shell_t *m, IN const std_char_t *script);
@@ -79,7 +81,7 @@ struct mod_shell_ops_st {
 
 #define mod_shell_register(m, name, name_len, func, handle) ((m)->p_ops->regist((mod_shell_t *) (m), name, name_len, func, handle))
 #define mod_shell_unregister(m, name, name_len) ((m)->p_ops->unregister((mod_shell_t *) (m), name, name_len))
-#define mod_shell_shell(m, cmd) ((m)->p_ops->shell((mod_shell_t *) (m), cmd))
+#define mod_shell_shell(m, shell_type, cmd) ((m)->p_ops->shell((mod_shell_t *) (m), shell_type, cmd))
 
 #define mod_shell_compile_script(m, script) ((m)->p_ops->compile_script((mod_shell_t *) (m), script))
 #define mod_shell_call_script_func_init(m, script_name) ((m)->p_ops->call_script_func_init((mod_shell_t *) (m), script_name))

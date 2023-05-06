@@ -461,7 +461,7 @@ std_void_t cmd_thread(mod_shell_imp_t *p_imp_m, IN const std_char_t *name, IN co
  * @param   p_m The mod_shell_t object.
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
+STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_int_t shell_type, IN std_char_t *one_shot_script)
 {
     std_char_t cmd[CMD_LINE_SIZE] = "\0";
     std_char_t name[KEY_NAME_SIZE] = "\0";
@@ -469,9 +469,7 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
     std_rv_t ret = STD_RV_SUC;
 
-    setvbuf(stdin, NULL, _IONBF, 0);
-
-
+    // Initialize global variables
     global_compiled_body = std_lock_free_key_hash_create(128);
 
     // Set p_mod_shell to p_m
@@ -479,12 +477,26 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *oneshot_script)
 
     // Execute init_script.ll
     cmd_script(script, NULL);
-    if (oneshot_script){
-        STD_LOG(DISPLAY, "Executing %s\n", oneshot_script);
-        ret = cmd_script(oneshot_script, NULL);
-        cmd_exit();
-        goto exit;
+
+    switch (shell_type) {
+        case SHELL_TYPE_NORMAL:
+            break;
+        case SHELL_TYPE_SCRIPT:
+            STD_LOG(DISPLAY, "Executing %s\n", one_shot_script);
+            strip_name(one_shot_script);
+            ret = cmd_script(one_shot_script, NULL);
+            cmd_exit();
+            goto exit;
+        case SHELL_TYPE_BATCH:
+            STD_LOG(DISPLAY, "Executing %s\n", one_shot_script);
+            strip_name(one_shot_script);
+            ret = cmd_batch(one_shot_script);
+            cmd_exit();
+            goto exit;
+        default:
+            break;
     }
+
     // Display help message
     cmd_help();
 
@@ -542,15 +554,12 @@ exit:
  * @param   name The name of the batch file to execute.
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_batch(IN const std_char_t *name)
+STD_CALL std_rv_t cmd_batch(IN const std_char_t *batch_name)
 {
     FILE *fp = NULL;
     std_char_t input[CMD_LINE_SIZE];
-    std_char_t batch_name[KEY_NAME_SIZE] = "\0";
     std_char_t script_name[KEY_NAME_SIZE] = "\0";
     std_bool_t ret;
-
-    snprintf(batch_name, sizeof(batch_name), "script/%s", name);
 
     fp = fopen(batch_name, "r");
     STD_ASSERT_RV(fp != NULL, STD_RV_ERR_INVALIDARG);

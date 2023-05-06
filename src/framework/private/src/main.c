@@ -17,7 +17,40 @@
 #include "mod_shell.h"
 #include "std_common.h"
 
+#include <argp.h>
+#include <stdbool.h>
+#include <stdio.h>
 
+// Define the command-line options
+static struct argp_option options[] = {
+        {"verbose", 'v', 0, 0, "Produce verbose output"},
+        {"script", 's', "FILE", 0, "Script Shell"},
+        {"batch", 'b', "FILE", 0, "Batch Shell"},
+        {0}};
+
+std_int_t shell_type = SHELL_TYPE_NORMAL;
+std_char_t *shell_name = NULL;
+// Function to handle the parsing of options
+static error_t parse_opt(int key, char *arg, struct argp_state *state) {
+    switch (key) {
+        case 'v':
+            break;
+        case 's':
+            shell_type = SHELL_TYPE_SCRIPT;
+            shell_name = arg;
+            break;
+        case 'b':
+            shell_type = SHELL_TYPE_BATCH;
+            shell_name = arg;
+            break;
+        default:
+            return ARGP_ERR_UNKNOWN;
+    }
+    return 0;
+}
+
+// The argp structure
+static struct argp argp = {options, parse_opt, 0, 0};
 
 /**
  * main
@@ -73,12 +106,9 @@ STD_CALL std_int_t main(std_int_t argc, std_char_t *argv[])
     mod_create_instance(&mod_shell_iid, (std_void_t **) &mod_shell, &main_ownership);
     mod_shell_init(mod_shell, NULL, 0);
 
+    argp_parse(&argp, argc, argv, 0, 0, 0);
     // Run the shell
-    if (argc > 1){
-        ret = mod_shell_shell(mod_shell, argv[1]);
-    }else {
-        ret = mod_shell_shell(mod_shell, NULL);
-    }
+    ret = mod_shell_shell(mod_shell, shell_type, shell_name);
 
     // Cleanup and delete instances
     mod_shell_cleanup(mod_shell);

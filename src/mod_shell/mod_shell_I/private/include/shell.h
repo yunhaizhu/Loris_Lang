@@ -128,7 +128,7 @@ STD_CALL std_rv_t cmd_exit();
  * @brief
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_char_t *cmd);
+STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_int_t shell_type, IN std_char_t *cmd);
 
 /**
  * cmd_debug

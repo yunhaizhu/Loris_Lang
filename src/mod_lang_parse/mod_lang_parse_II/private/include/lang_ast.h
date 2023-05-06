@@ -131,25 +131,7 @@ typedef struct symbol_s {
     lang_ast_t *check_block;
 } symbol_t;
 
-typedef struct global_env_s{
-    std_lock_free_key_hash_t *global_parse_error_need_clean_lang_ast_hash;
-    std_lock_free_key_hash_t *global_symbol_hash;
-    std_bool_t create_id;
-    std_bool_t create_func;
-    std_char_t *function_name;
 
-    jmp_buf *p_error_jump_buf;
-    std_char_t *global_func_extern[FUNC_EXTERN_EXTERN_LEN];
-    std_int_t global_func_extern_idx;
-
-    std_char_t *global_func_custom_extern[FUNC_EXTERN_EXTERN_LEN];
-    std_int_t global_func_custom_extern_idx;
-
-//    gen_code_t gen_codes[MAX_GEN_CODES];
-//    std_int_t n_code;
-//    gen_buffer_t gen_buffer[MAX_GEN_BUFFER];
-//    std_int_t gen_buffer_idx;
-}parse_env_t;
 
 typedef struct def_func_compile_ast_s{
     lang_ast_t *func_symbol;

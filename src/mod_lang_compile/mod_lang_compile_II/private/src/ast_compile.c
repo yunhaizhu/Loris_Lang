@@ -19,64 +19,6 @@
 #include "std_common.h"
 #include <stdnoreturn.h>
 
-
-
-#define nelem(a) (int) (sizeof(a) / sizeof(a)[0])
-std_void_t compile_reset(lang_compile_environment_t *compile_env)
-{
-//   std_char_t *func_extern[] = {"print",
-//                                "eprint",
-//                                "install",
-//                                "uninstall",
-//                                "start",
-//                                "stop",
-//                                "show",
-//                                "help",
-//                                "exit",
-//                                "run",
-//                                "ps",
-//                                "assert",
-//                                "random_number",
-//                                "random_address",
-//                                "random_string",
-//                                "make_json",
-//                                "parse_json",
-//                                "create_instance",
-//                                "delete_instance",
-//                                "string_to_array",
-//                                "array_to_string",
-//                                "debug",
-//                                "convert",
-//                                "check_type",
-//                                "read_lines",
-//                                "get_hash_keys"};
-
-//   compile_env->label_counter = 0;
-//
-//   for (std_int_t i = 0; i < global_env[get_std_thread_id()].global_func_custom_extern_idx; i++) {
-//       free(global_env[get_std_thread_id()].global_func_custom_extern[i]);
-//   }
-//   global_env[get_std_thread_id()].global_func_custom_extern_idx = 0;
-//
-//   global_env[get_std_thread_id()].create_id = STD_BOOL_FALSE;
-//   global_env[get_std_thread_id()].create_func = STD_BOOL_FALSE;
-//   global_env[get_std_thread_id()].function_name = NULL;
-//
-//   global_env[get_std_thread_id()].global_parse_error_need_clean_lang_ast_hash = NULL;
-//   global_env[get_std_thread_id()].global_symbol_hash = NULL;
-//
-//   for (std_int_t i = 0; i < nelem(func_extern); i++) {
-//       global_env[get_std_thread_id()].global_func_extern[i] = func_extern[i];
-//   }
-//
-//   global_env[get_std_thread_id()].global_func_extern_idx = nelem(func_extern);
-//
-//   global_env[get_std_thread_id()].global_func_custom_extern_idx = 0;
-//
-//   global_env[get_std_thread_id()].n_code = 0;
-//   global_env[get_std_thread_id()].gen_buffer_idx = 0;
-}
-
 /**
 * compile_error
 * @brief

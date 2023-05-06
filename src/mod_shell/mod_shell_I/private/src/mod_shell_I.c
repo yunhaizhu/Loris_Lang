@@ -161,11 +161,11 @@ STD_CALL std_rv_t mod_shell_I_unregister(IN mod_shell_t *p_m, IN const std_char_
  * @param   m
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_char_t *cmd)
+STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type, IN std_char_t *cmd)
 {
     std_rv_t ret;
 
-    ret = cmd_shell(p_m, cmd);
+    ret = cmd_shell(p_m, shell_type, cmd);
     return ret;
 }
 

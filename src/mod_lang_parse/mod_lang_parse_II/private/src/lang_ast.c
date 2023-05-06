@@ -16,22 +16,6 @@
 #include "lang_ast.h"
 #include "std_lock_free_key_hash.h"
 
-/**
- * add_require_package_function
- * @brief
- * @param   package_function_name
- * @return  STD_CALL std_void_t
- */
-STD_CALL std_void_t add_require_package_function(lang_state_t *state, const std_char_t *package_function_name)
-{
-    std_char_t *name = strdup(package_function_name);
-
-    std_safe_strip_chars(name, '"');
-    if (state->global_package_function_idx >= FUNC_EXTERN_EXTERN_LEN - 1){
-        state->global_package_function_idx = 0;
-    }
-    state->global_package_function[state->global_package_function_idx++] = name;
-}
 
 /**
  * parse_error_need_auto_free

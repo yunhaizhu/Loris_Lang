@@ -110,9 +110,6 @@ typedef struct lang_state_s {
     std_char_t *function_name;
     std_char_t *package_name;
 
-#define FUNC_EXTERN_EXTERN_LEN 100
-    std_char_t *global_package_function[FUNC_EXTERN_EXTERN_LEN];
-    std_int_t global_package_function_idx;
 
     ////////////////////////
     std_char_t *source_name;
