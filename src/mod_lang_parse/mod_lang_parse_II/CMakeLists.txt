@@ -3,7 +3,7 @@ add_library(mod_lang_parse_II SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/mod_lang_parse_II_bundle.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/stub/stub_shell_mod_lang_parse_II.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/lang_lex.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/private/src/lang_ast.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/private/src/public_lang_ast.c
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/lang_parse.c
         )
 

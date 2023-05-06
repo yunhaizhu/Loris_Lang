@@ -16,8 +16,8 @@
 // Created by yun on 12/22/21.
 //
 
-#ifndef LORIS_LANG_AST_H
-#define LORIS_LANG_AST_H
+#ifndef LORIS_LANG_PUBLIC_AST_H
+#define LORIS_LANG_PUBLIC_AST_H
 
 #include "rsa.h"
 #include "std_common.h"

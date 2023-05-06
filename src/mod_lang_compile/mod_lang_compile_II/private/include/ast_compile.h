@@ -15,10 +15,10 @@
 #ifndef LORIS_LANG_AST_COMPILE_H
 #define LORIS_LANG_AST_COMPILE_H
 
-#include "lang_ast.h"
+#include "ast_code.h"
+#include "public_lang_ast.h"
 #include <gsl/gsl_rng.h>
 #include <setjmp.h>
-#include "ast_code.h"
 
 typedef enum var_type_s {
    VAR_LOCAL = 0,

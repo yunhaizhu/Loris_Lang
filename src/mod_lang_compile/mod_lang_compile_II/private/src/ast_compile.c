@@ -15,7 +15,7 @@
 
 #include "ast_compile.h"
 #include "ast_code.h"
-#include "lang_ast.h"
+#include "public_lang_ast.h"
 #include "std_common.h"
 #include <stdnoreturn.h>
 
