@@ -770,6 +770,13 @@ lang_ast_t *expression(lang_state_t *state)
     return assn;
 }
 
+/**
+ * if_else_if
+ * @brief   
+ * @param   state
+ * @param   else_enable
+ * @return  lang_ast_t *
+ */
 lang_ast_t *if_else_if(lang_state_t *state, std_bool_t else_enable)
 {
     lang_ast_t *stm = NULL;
@@ -977,6 +984,12 @@ lang_ast_t *def_function(lang_state_t *state)
     return func_symbol;
 }
 
+/**
+ * handle_require
+ * @brief   
+ * @param   state
+ * @return  lang_ast_t *
+ */
 lang_ast_t *handle_require(lang_state_t *state)
 {
     lang_ast_t *ret = NULL;
@@ -1010,6 +1023,12 @@ lang_ast_t *handle_require(lang_state_t *state)
     return ret;
 }
 
+/**
+ * handle_import
+ * @brief   
+ * @param   state
+ * @return  lang_ast_t *
+ */
 lang_ast_t *handle_import(lang_state_t *state)
 {
     std_char_t *import_name = CALLOC(1, KEY_NAME_SIZE);

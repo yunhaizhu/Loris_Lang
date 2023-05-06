@@ -533,6 +533,13 @@ STD_CALL own_value_t del_VAR(own_value_t root, own_value_t index_key, std_bool_t
 }
 
 
+/**
+ * resize_VAR
+ * @brief   
+ * @param   root
+ * @param   index_key
+ * @return  STD_CALL own_value_t
+ */
 STD_CALL own_value_t resize_VAR(own_value_t root, own_value_t index_key)
 {
     own_value_type_t root_type;

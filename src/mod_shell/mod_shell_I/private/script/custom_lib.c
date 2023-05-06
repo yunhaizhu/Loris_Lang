@@ -85,6 +85,15 @@ STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t thread_id, I
     system(cmd);
 }
 
+/**
+ * write_callback
+ * @brief   
+ * @param   ptr
+ * @param   size
+ * @param   nmemb
+ * @param   response
+ * @return  size_t
+ */
 size_t write_callback(char *ptr, size_t size, size_t nmemb, char **response)
 {
     size_t len = size * nmemb;
@@ -168,6 +177,14 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
 }
 
 
+/**
+ * library_ask_gpt
+ * @brief   
+ * @param   vm
+ * @param   thread_id
+ * @param   args
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
 {
     char *response = NULL;

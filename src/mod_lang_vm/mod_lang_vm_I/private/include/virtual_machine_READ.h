@@ -40,6 +40,14 @@ STD_CALL std_void_t clean_codes(environment_vm_t *vm);
  */
 STD_CALL std_int_t find_label(environment_vm_t *vm, IN std_char_t *name, IN std_int_t line);
 
+/**
+ * wild_find_label
+ * @brief   
+ * @param   vm
+ * @param   name
+ * @param   line
+ * @return  STD_CALL std_int_t
+ */
 STD_CALL std_int_t wild_find_label(environment_vm_t *vm, IN std_char_t *name, IN std_int_t line);
 
 /**

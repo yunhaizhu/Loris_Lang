@@ -252,6 +252,13 @@ STD_CALL std_int_t get_opcode(IN const std_char_t *name)
     exit(1);
 }
 
+/**
+ * vm_push_var_int
+ * @brief   
+ * @param   vm
+ * @param   value
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t vm_push_var_int(environment_vm_t *vm, IN std_int_t value)
 {
     std_rv_t ret = STD_RV_SUC;
@@ -265,6 +272,14 @@ STD_CALL std_rv_t vm_push_var_int(environment_vm_t *vm, IN std_int_t value)
 }
 
 
+/**
+ * vm_call_func
+ * @brief   
+ * @param   vm
+ * @param   func_name
+ * @param   arg_num
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_name, IN std_int_t arg_num)
 {
     std_int_t pc;

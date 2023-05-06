@@ -424,6 +424,14 @@ std_void_t execute_thread_func(std_void_t *data)
     FREE(data);
 }
 
+/**
+ * cmd_thread
+ * @brief   
+ * @param   p_imp_m
+ * @param   name
+ * @param   arg
+ * @return  std_void_t
+ */
 std_void_t cmd_thread(mod_shell_imp_t *p_imp_m, IN const std_char_t *name, IN const std_char_t *arg)
 {
     // Initialize thread pool

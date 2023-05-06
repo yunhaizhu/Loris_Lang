@@ -10,9 +10,12 @@ Safe as Rust, Easy use like Python!
 2. pip3 install jinja2
 3. go install github.com/google/pprof@latest
 
+## Add Doxgen
+find ./src -name *.[ch] |xargs python3 add_doxygen_comment.py
+
 ## Build and Run loris language
 1. mkdir build
 2. cmake -DCMAKE_BUILD_TYPE=Debug -S . -B build
-3. cmake --install build/ --config Release
+3. cmake --install build/
 4. cd ./deploy/Debug/
 5. ./Loris_Lang -b script/test_all/selfcheck.batch

@@ -151,8 +151,22 @@ STD_CALL std_void_t get_token_name(IN std_int_t token, INOUT std_char_t *buffer,
  */
 STD_CALL noreturn std_void_t lang_lex_error(lang_state_t *state, const std_char_t *fmt, ...);
 
+/**
+ * lang_lex_error_lookahead
+ * @brief   
+ * @param   state
+ * @param   string
+ * @return  STD_CALL noreturn std_void_t
+ */
 STD_CALL noreturn std_void_t lang_lex_error_lookahead(lang_state_t *state, std_char_t *string);
 
+/**
+ * lang_lex_error_char
+ * @brief   
+ * @param   state
+ * @param   string
+ * @return  STD_CALL noreturn std_void_t
+ */
 STD_CALL noreturn std_void_t lang_lex_error_char(lang_state_t *state, std_char_t *string);
 
 /**

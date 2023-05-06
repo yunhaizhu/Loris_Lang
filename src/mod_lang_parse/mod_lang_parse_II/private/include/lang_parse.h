@@ -30,6 +30,12 @@
  */
 std_rv_t lang_parse(lang_state_t *state, IN const std_char_t *file_name, IN std_char_t *source_buffer, IN std_int_t source_buffer_len);
 
+/**
+ * cleanup_lang_ast_symbol
+ * @brief   
+ * @param   state
+ * @return  std_void_t
+ */
 std_void_t cleanup_lang_ast_symbol(lang_state_t *state);
 
 #endif

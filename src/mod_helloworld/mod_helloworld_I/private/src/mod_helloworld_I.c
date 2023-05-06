@@ -109,6 +109,12 @@ struct mod_helloworld_ops_st mod_helloworld_I_ops = {
  * @return  STD_CALL std_rv_t
  */
 
+/**
+ * mod_helloworld_I_create_instance
+ * @brief   
+ * @param   pp_handle
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t mod_helloworld_I_create_instance(INOUT std_void_t ** pp_handle)
 {
 

@@ -228,6 +228,13 @@ STD_CALL std_void_t resize_VARS_with_array_type(IN ownership_object_symbol_t *sy
     }
 }
 
+/**
+ * append_VARS_with_array_type
+ * @brief   
+ * @param   symbol
+ * @param   value
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t append_VARS_with_array_type(IN ownership_object_symbol_t *symbol, IN own_value_t value)
 {
     own_value_t *array = NULL;

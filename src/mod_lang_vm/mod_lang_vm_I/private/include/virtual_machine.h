@@ -190,8 +190,23 @@ STD_CALL std_char_t *get_opcode_name(IN std_int_t opcode);
  */
 STD_CALL std_int_t get_opcode(IN const std_char_t *name);
 
+/**
+ * vm_call_func
+ * @brief   
+ * @param   vm
+ * @param   func_name
+ * @param   arg_num
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t vm_call_func(environment_vm_t *vm,IN const std_char_t *func_name, IN std_int_t arg_num);
 
+/**
+ * vm_push_var_int
+ * @brief   
+ * @param   vm
+ * @param   value
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t vm_push_var_int(environment_vm_t *vm,IN std_int_t value);
 
 #endif

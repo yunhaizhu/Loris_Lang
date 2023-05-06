@@ -150,6 +150,12 @@ STD_CALL lang_ast_t *get_lang_ast_nth(IN lang_ast_t *ast, IN std_int_t nth);
 STD_CALL lang_ast_t *get_lang_ast_next(IN lang_ast_t *ast);
 
 
+/**
+ * get_lang_ast_count
+ * @brief   
+ * @param   ast
+ * @return  STD_CALL std_int_t
+ */
 STD_CALL std_int_t get_lang_ast_count(IN lang_ast_t *ast);
 
 /**

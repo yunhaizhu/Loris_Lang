@@ -91,6 +91,18 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 }
 
 
+/**
+ * inline_execute_code_ADD_SUB_DIV_MOD
+ * @brief   
+ * @param   vm
+ * @param   type
+ * @param   thread_id
+ * @param   Codes
+ * @param   Stack
+ * @param   Pc
+ * @param   Fp
+ * @return  STD_CALL static inline std_void_t
+ */
 STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environment_vm_t *vm, std_int_t type, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t obj_y = Pop(vm, thread_id);

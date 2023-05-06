@@ -91,18 +91,41 @@ STD_CALL std_int_t mod_lang_vm_I_run_cleanup(IN mod_lang_vm_t *p_m, IN const std
 }
 
 
+/**
+ * mod_lang_vm_I_func_init
+ * @brief   
+ * @param   p_m
+ * @param   file_name
+ * @param   bytecode_buffer
+ * @return  std_int_t
+ */
 std_int_t mod_lang_vm_I_func_init(IN mod_lang_vm_t *p_m, IN const std_char_t *file_name, IN const std_char_t *bytecode_buffer)
 {
     mod_lang_vm_imp_t *p_imp_m = (mod_lang_vm_imp_t *)p_m;
 
     return vm_init(p_imp_m->vm2, p_imp_m->register_id2,  file_name, bytecode_buffer);
 }
+/**
+ * mod_lang_vm_I_func_push_var_int
+ * @brief   
+ * @param   p_m
+ * @param   value
+ * @return  std_rv_t
+ */
 std_rv_t mod_lang_vm_I_func_push_var_int(IN mod_lang_vm_t *p_m, IN std_int_t value)
 {
     mod_lang_vm_imp_t *p_imp_m = (mod_lang_vm_imp_t *)p_m;
 
     return vm_push_var_int(p_imp_m->vm2, value);
 }
+/**
+ * mod_lang_vm_I_run_func_call
+ * @brief   
+ * @param   p_m
+ * @param   func_name
+ * @param   arg_num
+ * @return  std_rv_t
+ */
 std_rv_t mod_lang_vm_I_run_func_call(IN mod_lang_vm_t *p_m, IN const std_char_t *func_name, IN std_int_t arg_num)
 {
     mod_lang_vm_imp_t *p_imp_m = (mod_lang_vm_imp_t *)p_m;
@@ -110,6 +133,13 @@ std_rv_t mod_lang_vm_I_run_func_call(IN mod_lang_vm_t *p_m, IN const std_char_t 
     return vm_call_func(p_imp_m->vm2, func_name, arg_num);
 }
 
+/**
+ * mod_lang_vm_I_run_func_cleanup
+ * @brief   
+ * @param   p_m
+ * @param   file_name
+ * @return  std_int_t
+ */
 std_int_t mod_lang_vm_I_run_func_cleanup(IN mod_lang_vm_t *p_m, IN const std_char_t *file_name)
 {
     mod_lang_vm_imp_t *p_imp_m = (mod_lang_vm_imp_t *)p_m;

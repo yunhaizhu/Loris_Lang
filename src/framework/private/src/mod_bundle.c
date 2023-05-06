@@ -61,6 +61,11 @@ STD_CALL std_rv_t mod_bundle_cleanup()
 }
 
 
+/**
+ * mod_bundle_get_bundle_id_max
+ * @brief   
+ * @return  STD_CALL std_int_t
+ */
 STD_CALL std_int_t mod_bundle_get_bundle_id_max()
 {
     std_int_t cur_id = 1;

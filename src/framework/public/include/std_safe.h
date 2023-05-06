@@ -24,8 +24,26 @@
  */
 std_size_t std_safe_strlen(const std_char_t *str, std_size_t n);
 
+/**
+ * std_strncpy_s
+ * @brief   
+ * @param   dest
+ * @param   dest_size
+ * @param   src
+ * @param   count
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t std_strncpy_s(std_char_t* dest, std_size_t dest_size, const std_char_t* src, std_size_t count) ;
 
+/**
+ * std_strcat_s
+ * @brief   
+ * @param   dest
+ * @param   dest_size
+ * @param   src
+ * @param   count
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t std_strcat_s(std_char_t* dest, std_size_t dest_size, const std_char_t* src, std_size_t count);
 
 /**

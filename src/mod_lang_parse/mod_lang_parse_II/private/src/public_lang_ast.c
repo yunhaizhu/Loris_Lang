@@ -473,6 +473,12 @@ STD_CALL lang_ast_t *add_lang_ast_last(lang_state_t *state, IN lang_ast_t *last,
     return last;
 }
 
+/**
+ * get_lang_ast_count
+ * @brief   
+ * @param   ast
+ * @return  STD_CALL std_int_t
+ */
 STD_CALL std_int_t get_lang_ast_count(IN lang_ast_t *ast)
 {
     std_int_t index = 0;

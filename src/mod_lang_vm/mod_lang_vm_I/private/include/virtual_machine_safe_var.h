@@ -57,8 +57,21 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
  */
 STD_CALL own_value_t get_VAR(own_value_t root, own_value_t index_key, std_bool_t reenter);
 
+/**
+ * get_VAR_size
+ * @brief   
+ * @param   object
+ * @return  STD_CALL own_value_t
+ */
 STD_CALL own_value_t get_VAR_size(own_value_t object);
 
+/**
+ * resize_VAR
+ * @brief   
+ * @param   root
+ * @param   index_key
+ * @return  STD_CALL own_value_t
+ */
 STD_CALL own_value_t resize_VAR(own_value_t root, own_value_t index_key);
 /**
  * find_VAR

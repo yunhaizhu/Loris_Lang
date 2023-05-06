@@ -652,6 +652,13 @@ STD_CALL noreturn std_void_t lang_lex_error(lang_state_t *state, const std_char_
     longjmp(state->error_jump_buf, 1);
 }
 
+/**
+ * lang_lex_error_lookahead
+ * @brief   
+ * @param   state
+ * @param   string
+ * @return  STD_CALL noreturn std_void_t
+ */
 STD_CALL noreturn std_void_t lang_lex_error_lookahead(lang_state_t *state, std_char_t *string)
 {
     std_char_t buffer[KEY_NAME_SIZE] = "\0";
@@ -660,6 +667,13 @@ STD_CALL noreturn std_void_t lang_lex_error_lookahead(lang_state_t *state, std_c
     lang_lex_error(state, "%s, UNEXPECT '%s'\n", string, buffer);
 }
 
+/**
+ * lang_lex_error_char
+ * @brief   
+ * @param   state
+ * @param   string
+ * @return  STD_CALL noreturn std_void_t
+ */
 STD_CALL noreturn std_void_t lang_lex_error_char(lang_state_t *state, std_char_t *string)
 {
     std_char_t buffer[KEY_NAME_SIZE] = "\0";

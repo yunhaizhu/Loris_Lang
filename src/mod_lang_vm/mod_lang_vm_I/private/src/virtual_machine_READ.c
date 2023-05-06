@@ -84,6 +84,14 @@ STD_CALL std_int_t find_label(environment_vm_t *vm, IN std_char_t *name, IN std_
     return STD_RV_ERR_UNEXPECTED;
 }
 
+/**
+ * wild_find_label
+ * @brief   
+ * @param   vm
+ * @param   name
+ * @param   line
+ * @return  STD_CALL std_int_t
+ */
 STD_CALL std_int_t wild_find_label(environment_vm_t *vm, IN std_char_t *name, IN std_int_t line)
 {
     const label_t *Labels = vm[get_std_thread_id()].Labels;

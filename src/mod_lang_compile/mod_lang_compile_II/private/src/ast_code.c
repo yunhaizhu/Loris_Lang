@@ -144,6 +144,15 @@ STD_CALL std_void_t gen_codeIUDSE(generate_code_env_t *generate_code_env,
    dest = json_int(dest, "ex", vex);                      \
    dest = json_int(dest, "line", vline);
 
+/**
+ * gen_code_func
+ * @brief   
+ * @param   generate_code_env
+ * @param   entry_name
+ * @param   n_local
+ * @param   params_count
+ * @return  STD_CALL std_char_t *
+ */
 STD_CALL std_char_t *gen_code_func(generate_code_env_t *generate_code_env, IN const std_char_t *entry_name, IN std_int_t n_local, IN std_int_t params_count)
 {
    std_char_t *dest = NULL;
@@ -196,6 +205,12 @@ STD_CALL std_char_t *gen_code_func(generate_code_env_t *generate_code_env, IN co
    return buffer;
 }
 
+/**
+ * gen_code_expr
+ * @brief   
+ * @param   generate_code_env
+ * @return  STD_CALL std_char_t *
+ */
 STD_CALL std_char_t *gen_code_expr(generate_code_env_t *generate_code_env)
 {
    std_char_t *dest;
@@ -233,6 +248,14 @@ STD_CALL std_char_t *gen_code_expr(generate_code_env_t *generate_code_env)
    return buffer;
 }
 
+/**
+ * gen_buffer_output
+ * @brief   
+ * @param   generate_code_env
+ * @param   ptr_output_buffer
+ * @param   output_buffer_len
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t gen_buffer_output(generate_code_env_t *generate_code_env, IN std_char_t *ptr_output_buffer, IN std_int_t output_buffer_len)
 {
    std_size_t out_buf_len = 0;

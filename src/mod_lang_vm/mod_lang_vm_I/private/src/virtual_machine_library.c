@@ -107,6 +107,14 @@ STD_CALL std_void_t library_func_register(environment_vm_t *vm, IN std_int_t *re
 
 std_void_t json_create_walk_callback(const std_char_t *key, std_void_t **data, std_void_t *callback_arg);
 
+/**
+ * create_json_function
+ * @brief   
+ * @param   arg_name
+ * @param   value
+ * @param   dest
+ * @return  std_void_t
+ */
 std_void_t create_json_function(const std_char_t *arg_name, own_value_t value, std_char_t **dest)
 {
 
@@ -241,6 +249,14 @@ STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t thread_
 //    free_ownership_ownvalue(NULL, arg_value);
 //}
 
+/**
+ * library_get_hash_keys
+ * @brief   
+ * @param   vm
+ * @param   thread_id
+ * @param   args
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
 {
     own_value_t obj_name_value_hash;
@@ -258,6 +274,15 @@ STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t thr
 
 
 
+/**
+ * json_parse
+ * @brief   
+ * @param   vm
+ * @param   prop_name
+ * @param   json
+ * @param   obj_name_value_hash
+ * @return  std_void_t
+ */
 std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t const *json, own_value_t obj_name_value_hash)
 {
     STD_ASSERT_RV(json != NULL, );
@@ -429,6 +454,14 @@ STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t thread_id, 
     STD_LOG(DISPLAY, "\n");
 }
 
+/**
+ * library_eprint
+ * @brief   
+ * @param   vm
+ * @param   thread_id
+ * @param   args
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
 {
     own_value_t obj[32];
@@ -717,6 +750,14 @@ STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t t
 }
 
 
+/**
+ * library_read_lines
+ * @brief   
+ * @param   vm
+ * @param   thread_id
+ * @param   args
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
 {
     own_value_t obj_string;

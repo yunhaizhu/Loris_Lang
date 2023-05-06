@@ -303,6 +303,15 @@ std_bool_t std_lock_free_list_find_index(IN std_lock_free_list_head_t *head, std
     return STD_BOOL_TRUE;
 }
 
+/**
+ * std_lock_free_list_add_index
+ * @brief   
+ * @param   head
+ * @param   index
+ * @param   entry
+ * @param   u64_key
+ * @return  std_rv_t
+ */
 std_rv_t std_lock_free_list_add_index(IN std_lock_free_list_head_t *head, IN std_int_t index, IN std_lock_free_list_head_t *entry, IN std_u64_t u64_key)
 {
     std_lock_free_list_head_t *prev = NULL;
@@ -404,6 +413,13 @@ STD_CALL std_rv_t std_lock_free_list_del_index_flag(IN std_lock_free_list_head_t
     return result;
 }
 
+/**
+ * std_lock_free_list_next
+ * @brief   
+ * @param   head
+ * @param   next_entry
+ * @return  std_void_t
+ */
 std_void_t std_lock_free_list_next(IN std_lock_free_list_head_t *head, INOUT std_lock_free_list_head_t **next_entry)
 {
     std_lock_free_list_head_t *entry;

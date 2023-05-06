@@ -39,6 +39,16 @@ extern FILE *global_log_file;
 STD_CALL std_void_t STD_LOG_INIT(IN std_int_t log_level);
 
 
+/**
+ * STD_LOG_DEBUG
+ * @brief   
+ * @param   FILE
+ * @param   LINE
+ * @param   FUNCTION
+ * @param   level
+ * @param   format
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t STD_LOG_DEBUG(IN const std_char_t *FILE, IN std_int_t LINE, IN const std_char_t *FUNCTION, IN std_int_t level, const std_char_t *format, ...);
 
 #if 0

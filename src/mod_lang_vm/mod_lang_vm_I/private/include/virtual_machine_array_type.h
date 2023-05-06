@@ -83,6 +83,13 @@ STD_CALL std_int_t move_VAR_with_array_type(IN ownership_object_symbol_t *from_s
  */
 STD_CALL std_void_t resize_VARS_with_array_type(IN ownership_object_symbol_t *symbol, IN std_int_t count);
 
+/**
+ * append_VARS_with_array_type
+ * @brief   
+ * @param   symbol
+ * @param   value
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t append_VARS_with_array_type(IN ownership_object_symbol_t *symbol, IN own_value_t value);
 
 /**
