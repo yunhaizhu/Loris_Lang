@@ -112,9 +112,9 @@ def main()
 
     for (i = 0; i < result{"index"}; i+=1){
         display_boards(result{i})
-        print("=====================================")
+        os.print("=====================================")
     }
 }
 
-#script("leetcode/51_N_queues.nl")
+#script("script/leetcode/51_N_queues.ll")
 

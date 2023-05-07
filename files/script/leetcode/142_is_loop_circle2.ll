@@ -36,6 +36,6 @@ def main()
     single_list_loop(single_list_one)
 
     is_loop_circle2(single_list_one, ret)
-    print("is loop circle2", ret)
+    os.print("is loop circle2", ret)
 }
-#script("leetcode/142_is_loop_circle2.nl")
+#script("script/leetcode/142_is_loop_circle2.ll")

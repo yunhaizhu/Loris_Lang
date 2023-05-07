@@ -43,7 +43,7 @@ def merge_two_sorted_linked_list(var single_list_one, var single_list_two, var r
             insert_value = item_value_2
             single_list_two_first = single_list_two_first.find_item("next")
         }
-        print("insert_value", insert_value, item_value_1, item_value_2)
+        os.print("insert_value", insert_value, item_value_1, item_value_2)
 
         item_hash.add_key_item("value", insert_value)
         ret_merge_two_sorted_linked_list_first.add_key_item("next", item_hash)

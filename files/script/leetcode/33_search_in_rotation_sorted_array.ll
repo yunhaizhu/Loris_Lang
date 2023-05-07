@@ -10,7 +10,7 @@ def search_in_rotaton_sorted_array(var array, var target, var ret)
     right = max - 1
 
     while(left <= right){
-        print("left, right", left, right)
+        os.print("left, right", left, right)
         mid = (left + right)/2
 
         if (array[mid] == target){
@@ -44,5 +44,5 @@ def main()
     var ret
 
     search_in_rotaton_sorted_array(array, target, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }

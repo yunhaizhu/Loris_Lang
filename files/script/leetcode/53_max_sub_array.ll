@@ -28,6 +28,6 @@ def main()
     var ret_max
 
     max_sub_array(nums, ret_max)
-    print("max_sub_array", ret_max)
+    os.print("max_sub_array", ret_max)
 }
-#script("leetcode/53_max_sub_array.nl")
+#script("script/leetcode/53_max_sub_array.ll")

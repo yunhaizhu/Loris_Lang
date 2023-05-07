@@ -34,7 +34,7 @@ STD_CALL std_rv_t mod_lang_compile_II_init(IN mod_lang_compile_t * p_m, IN const
  * @param   p_m
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t mod_lang_compile_II_cleanup(mod_lang_compile_t * p_m)
+STD_CALL std_rv_t mod_lang_compile_II_cleanup(IN mod_lang_compile_t * p_m)
 {
 	return STD_RV_SUC;
 }

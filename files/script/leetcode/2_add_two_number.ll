@@ -50,7 +50,7 @@ def add_two_number(var single_list_one, var single_list_two, var ret_single_list
         }else {
             carry = 0
         }
-        print("add", add, item_value_1, item_value_2, carry)
+        os.print("add", add, item_value_1, item_value_2, carry)
 
         single_list_one_first = single_list_one_first.find_item("next")
         single_list_two_first = single_list_two_first.find_item("next")

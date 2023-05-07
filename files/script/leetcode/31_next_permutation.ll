@@ -12,13 +12,13 @@ def next_permutation(var array)
             break
         }
     }
-    print(i, max - 1)
+    os.print(i, max - 1)
     array_reverse_scope(array, i, max - 1)
     array_loop(array)
 
     for (j = i; j < max; j+=1){
         if (array[j] > array[i-1]){
-            print("swap", i-1, j)
+            os.print("swap", i-1, j)
             array_swap(array, j, i-1)
             break
         }

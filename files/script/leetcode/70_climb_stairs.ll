@@ -54,13 +54,13 @@ def main()
     var ret_count
 
     climb_stairs(numb, ret_count)
-    print(numb, ret_count)
+    os.print(numb, ret_count)
     climb_stairs_2(numb, ret_count)
-    print(numb, ret_count)
+    os.print(numb, ret_count)
 
     numb = 5
     climb_stairs(numb, ret_count)
-    print(numb, ret_count)
+    os.print(numb, ret_count)
     climb_stairs_2(numb, ret_count)
-    print(numb, ret_count)
+    os.print(numb, ret_count)
 }

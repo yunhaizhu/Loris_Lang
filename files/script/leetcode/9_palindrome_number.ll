@@ -27,17 +27,17 @@ def main()
     var ret
 
     palindrome_number(num, ret)
-    print(num, "is palindrome number:", ret)
+    os.print(num, "is palindrome number:", ret)
 
     num = 1221
     palindrome_number(num, ret)
-    print(num, "is palindrome number:", ret)
+    os.print(num, "is palindrome number:", ret)
 
     num = 121
     palindrome_number(num, ret)
-    print(num, "is palindrome number:", ret)
+    os.print(num, "is palindrome number:", ret)
 
     num = -121
     palindrome_number(num, ret)
-    print(num, "is palindrome number:", ret)
+    os.print(num, "is palindrome number:", ret)
 }

@@ -43,7 +43,7 @@ def insection_find(var single_list_one, var single_list_two, var ret)
         stack_pop(stack_array_one, ret_one_top)
         stack_pop(stack_array_two, ret_two_top)
 
-        print("ret_top", ret_one_top, ret_two_top)
+        os.print("ret_top", ret_one_top, ret_two_top)
         if (ret_one_top != ret_two_top){
             return
         }else {
@@ -67,6 +67,6 @@ def main()
     single_list_loop(single_list_two)
 
     insection_find(single_list_one, single_list_two, ret)
-    print("find ", ret)
+    os.print("find ", ret)
 
 }

@@ -82,13 +82,13 @@ def main()
 
     num = 3
     int_to_roman(num, ret)
-    print(num, "int to roman:", ret)
+    os.print(num, "int to roman:", ret)
 
     num = 58
     int_to_roman(num, ret)
-    print(num, "int to roman:", ret)
+    os.print(num, "int to roman:", ret)
 
     num = 1994
     int_to_roman(num, ret)
-    print(num, "int to roman:", ret)
+    os.print(num, "int to roman:", ret)
 }

@@ -44,7 +44,7 @@ def main()
     find_subsets(number)
 }
 
-#script("leetcode/78_subsets.nl")
+#script("script/leetcode/78_subsets.ll")
 
 
 

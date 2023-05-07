@@ -31,7 +31,7 @@ def max_path(var binary_tree, var ret_depth, var ret_res)
 
     max(left_depth, right_depth, ret_max)
     ret_depth = value + ret_max
-    print("ret_max value", value, ret_depth, ret_res)
+    os.print("ret_max value", value, ret_depth, ret_res)
 }
 
 def main()
@@ -53,10 +53,10 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     max_path(binary_tree_head, ret_depth, ret_res)
-    print("max path sum of binary tree", ret_res)
+    os.print("max path sum of binary tree", ret_res)
 
 }

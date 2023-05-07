@@ -60,9 +60,9 @@ def print_result(var result)
     for (i = 0; i < result.size(); i += 1) {
         var level = result{i}
         var level_size = level.size()
-        print("level ", i)
+        os.print("level ", i)
         for (j = 0; j < level_size; j += 1) {
-            print(level[j])
+            os.print(level[j])
         }
     }
 }
@@ -85,7 +85,7 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     level_order(binary_tree_head, result)
@@ -93,4 +93,4 @@ def main()
     print_result(result)
 }
 
-#script("leetcode/102_level_binary_tree.nl")
+#script("script/leetcode/102_level_binary_tree.ll")

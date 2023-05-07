@@ -17,7 +17,7 @@ def max_window_slide(var nums, var k, var ret)
     ret[idx] = win_tuple{-1}
     idx +=1
     for (left = k; left < nums.size(); left+=1){
-          print(left, "del", nums[left - k], "add", nums[left])
+          os.print(left, "del", nums[left - k], "add", nums[left])
           win_tuple.del_item(nums[left - k])
           win_tuple.add_item(nums[left])
           ret[idx] = win_tuple{-1}
@@ -36,4 +36,4 @@ def main()
     array_loop(ret)
 }
 
-#script("leetcode/239_max_window_slide.nl")
+#script("script/leetcode/239_max_window_slide.ll")

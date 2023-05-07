@@ -27,7 +27,7 @@ def can_partition(var nums, var ret)
     for (i = 0; i < nums.size(); i+=1){
         for (j = target_sum; j > nums[i] - 1; j-=1){
             dp[j] = dp[j] or dp[j - nums[i]]
-            print("j", j, "dp[j]", dp[j], dp[j - nums[i]])
+            os.print("j", j, "dp[j]", dp[j], dp[j - nums[i]])
         }
     }
 
@@ -40,8 +40,8 @@ def main()
     var ret
 
     can_partition(nums, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
 
-#script("leetcode/416_can_partition.nl")
+#script("script/leetcode/416_can_partition.ll")
 

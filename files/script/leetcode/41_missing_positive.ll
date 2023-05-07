@@ -25,7 +25,7 @@ def first_missing_positive(var nums, var ret)
         }
     }
     for (i= 0; i < nums.size(); i+=1){
-        print(i, nums[i])
+        os.print(i, nums[i])
     }
 
     for (i= 0; i < nums.size(); i+=1){
@@ -43,6 +43,6 @@ def main()
     var ret
 
     first_missing_positive(nums, ret)
-    print(ret)
+    os.print(ret)
 }
-#script("leetcode/41_missing_positive.nl")
+#script("script/leetcode/41_missing_positive.ll")

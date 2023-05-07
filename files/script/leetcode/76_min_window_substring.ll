@@ -43,7 +43,7 @@ def main()
     var ret
 
     min_window_substring(string, target, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
 
-#script("leetcode/76_min_window_substring.nl")
+#script("script/leetcode/76_min_window_substring.ll")

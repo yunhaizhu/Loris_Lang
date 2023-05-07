@@ -65,6 +65,6 @@ def main()
     var result
 
     coin_change(nums, amount, result)
-    print(result)
+    os.print(result)
 }
-#script("leetcode/322_coin_exchange.nl")
+#script("script/leetcode/322_coin_exchange.ll")

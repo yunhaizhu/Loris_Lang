@@ -34,4 +34,4 @@ def main()
     product_except_self(nums, ret)
 
 }
-#script("leetcode/238_product_except_self.nl")
+#script("script/leetcode/238_product_except_self.ll")

@@ -61,12 +61,12 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     left = binary_tree_head.find_item("left")
     right = binary_tree_head.find_item("right")
     is_symetric_tree(left, right, ret)
-    print("is symmetric tree", ret)
+    os.print("is symmetric tree", ret)
 
 }

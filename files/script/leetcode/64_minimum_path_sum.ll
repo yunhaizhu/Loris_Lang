@@ -57,8 +57,8 @@ def main()
     var ret
 
     min_path_sum(grid, ret)
-    print("min path sum", ret)
+    os.print("min path sum", ret)
 }
-#script("leetcode/64_minimum_path_sum.nl")
+#script("script/leetcode/64_minimum_path_sum.ll")
 
 

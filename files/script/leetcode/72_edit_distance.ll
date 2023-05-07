@@ -50,7 +50,7 @@ def main()
     var ret
 
     min_distance(str1, str2, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
 
-#script("leetcode/72_edit_distance.nl")
+#script("script/leetcode/72_edit_distance.ll")

@@ -38,8 +38,8 @@ def main()
     find_anagrams(string, target_string, ret_tuple)
 
     for (i = 0; i < ret_tuple.size(); i+=1){
-        print('i', i, ret_tuple{i})
+        os.print('i', i, ret_tuple{i})
     }
 }
-#script("leetcode/438_find_anagrams.nl")
+#script("script/leetcode/438_find_anagrams.ll")
 

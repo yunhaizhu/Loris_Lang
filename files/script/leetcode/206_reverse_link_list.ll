@@ -16,7 +16,7 @@ def reverse_link_list(var single_list_one)
 
         item_value_1 = single_list_one_first.find_item("value")
 
-        print("add", item_value_1)
+        os.print("add", item_value_1)
         stack_push(stack, item_value_1)
 
         single_list_one_first = single_list_one_first.find_item("next")
@@ -28,7 +28,7 @@ def reverse_link_list(var single_list_one)
         var k = 0
 
         stack_index = stack.find_item("stack_index")
-        print("stack_index", stack_index)
+        os.print("stack_index", stack_index)
         array.resize(stack_index-1)
 
         for (i = stack_index; i >= 2; i-=1){
@@ -36,7 +36,7 @@ def reverse_link_list(var single_list_one)
 
             item_value = stack.find_item(i)
             array[k] = item_value
-            print("array",k, item_value)
+            os.print("array",k, item_value)
             k += 1
         }
     }

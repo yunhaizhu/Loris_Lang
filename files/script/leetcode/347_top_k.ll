@@ -20,4 +20,4 @@ def main()
     freq_map_k(maps_freq, k)
 }
 
-#script("leetcode/347_top_k.nl")
+#script("script/leetcode/347_top_k.ll")

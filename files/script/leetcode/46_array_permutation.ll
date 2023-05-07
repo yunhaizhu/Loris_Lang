@@ -8,4 +8,4 @@ def main()
 
     combine_permutation(digit)
 }
-#script("leetcode/46_array_permutation.nl")
+#script("script/leetcode/46_array_permutation.ll")

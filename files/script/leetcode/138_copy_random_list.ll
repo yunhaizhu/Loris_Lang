@@ -63,9 +63,9 @@ def single_random_list_loop(var single_list)
         if (random_node_string != null){
             convert("STRING2OBJECT", random_node_string, random_node)
 
-            print("value: ", item_value, " random: ", random_node{"value"})
+            os.print("value: ", item_value, " random: ", random_node{"value"})
         }else {
-            print("value: ", item_value, " random: ", null)
+            os.print("value: ", item_value, " random: ", null)
         }
 
         current_node = current_node{"next"}
@@ -85,5 +85,5 @@ def main()
 
     single_random_list_loop(single_list_one)
 }
-#script("leetcode/138_copy_random_list.nl")
+#script("script/leetcode/138_copy_random_list.ll")
 

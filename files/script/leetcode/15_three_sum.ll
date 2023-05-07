@@ -22,7 +22,7 @@ def three_sum(var array, var result, var result_count)
             var sum
 
             sum = array[base] + array[left] + array[right]
-            print(sum, base, left, right)
+            os.print(sum, base, left, right)
             if (sum == 0){
                 var sum_array[3]
 
@@ -63,17 +63,17 @@ def main()
 
     bubble_sort(array)
     for (i = 0; i < array.size(); i+=1){
-        print(array[i])
+        os.print(array[i])
     }
     three_sum(array, result, result_count)
 
-    print("result_count", result_count)
+    os.print("result_count", result_count)
 
     for (i = 0; i < result_count; i+=1){
         var item
 
         item = result.find_item(i)
-        print(i, array[item[0]], array[item[1]], array[item[2]])
+        os.print(i, array[item[0]], array[item[1]], array[item[2]])
     }
 
 

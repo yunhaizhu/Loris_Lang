@@ -34,4 +34,4 @@ def main()
     array_loop(ret_array)
 }
 
-#script("leetcode/189_rotation_array.nl")
+#script("script/leetcode/189_rotation_array.ll")

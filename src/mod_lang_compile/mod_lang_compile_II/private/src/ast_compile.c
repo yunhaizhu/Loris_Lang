@@ -1536,8 +1536,6 @@ std_void_t define_function(lang_compile_environment_t *compile_env, lang_ast_t *
    param_pos = 0;
    compile_env->local_var_pos = 0;
 
-
-
    for (; params != NULL; params = get_lang_ast_next(params)) {
        Env[*envp].var = get_lang_ast_symbol(get_lang_ast_first(params));
        Env[*envp].var_kind = VAR_ARG;

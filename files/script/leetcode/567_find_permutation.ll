@@ -35,11 +35,11 @@ def main()
     var ret
 
     find_permutation(string, target_string, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 
     string = "eidboaoo"
     find_permutation(string, target_string, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
-#script("leetcode/567_find_permutation.nl")
+#script("script/leetcode/567_find_permutation.ll")
 

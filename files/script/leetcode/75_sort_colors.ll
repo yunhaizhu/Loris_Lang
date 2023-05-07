@@ -76,4 +76,4 @@ def main()
     array_loop(nums)
 }
 
-#script("leetcode/75_sort_colors.nl")
+#script("script/leetcode/75_sort_colors.ll")

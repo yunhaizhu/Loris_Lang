@@ -60,7 +60,7 @@ def dfs(var board, var word, var visited, var m, var n, var i, var j, var k, var
     if (visited[i*n+j] or board{i}[j] != word[k]){
         return
     }
-    print("i: ", i, " j: ", j, " k: ", k, " word[k]: ", word[k], " board{i}[j]: ", board{i}[j])
+    os.print("i: ", i, " j: ", j, " k: ", k, " word[k]: ", word[k], " board{i}[j]: ", board{i}[j])
 
     visited[i*n+j] = true
     dfs(board, word, visited, m, n, i-1, j, k+1, ret)
@@ -109,17 +109,17 @@ def main()
 
     string_to_array(words, word)
     exist(board, word, ret)
-    print("words: ", words, " ret: ", ret)
+    os.print("words: ", words, " ret: ", ret)
 
     words = "SEE"
     string_to_array(words, word)
     exist(board, word, ret)
-    print("words: ", words, " ret: ", ret)
+    os.print("words: ", words, " ret: ", ret)
 
     words = "ABCB"
     string_to_array(words, word)
     exist(board, word, ret)
-    print("words: ", words, " ret: ", ret)
+    os.print("words: ", words, " ret: ", ret)
 }
 
-#script("leetcode/79_word_search.nl")
+#script("script/leetcode/79_word_search.ll")

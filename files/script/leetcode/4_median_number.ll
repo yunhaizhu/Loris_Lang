@@ -38,10 +38,10 @@ def main()
     var ret
 
     median_number(num1, num2, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 
     median_number(num3, num4, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
 
-#script("leetcode/4_median_number.nl")
+#script("script/leetcode/4_median_number.ll")

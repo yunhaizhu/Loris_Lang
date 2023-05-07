@@ -37,7 +37,7 @@ def longest_common_prefix(var strs, var ret_common_prefix)
 
         item = strs[i]
         item_size = item.size()
-        print("item", item, "item_size", item_size)
+        os.print("item", item, "item_size", item_size)
 
         if (item_size < prefix_str.size()){
             prefix_str = strs[i]
@@ -45,7 +45,7 @@ def longest_common_prefix(var strs, var ret_common_prefix)
         string_to_array(item, str_array)
         strs_array_hash.add_key_item(i, str_array)
     }
-    print("prefix_str", prefix_str, "prefix_str_size", prefix_str.size())
+    os.print("prefix_str", prefix_str, "prefix_str_size", prefix_str.size())
 
     string_to_array(prefix_str, prefix_array)
 
@@ -76,9 +76,9 @@ def main()
     var ret_longest_common_prefix
 
     longest_common_prefix(strs, ret_longest_common_prefix)
-    print("ret_longest_common_prefix:", ret_longest_common_prefix)
+    os.print("ret_longest_common_prefix:", ret_longest_common_prefix)
 
 
     longest_common_prefix(strs2, ret_longest_common_prefix)
-    print("ret_longest_common_prefix:", ret_longest_common_prefix)
+    os.print("ret_longest_common_prefix:", ret_longest_common_prefix)
 }

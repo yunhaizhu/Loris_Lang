@@ -10,14 +10,14 @@ def find_duplication(var nums, var ret)
     while(slow != fast){
         fast = nums[nums[fast]]
         slow = nums[slow]
-        print("fast", fast, "slow", slow)
+        os.print("fast", fast, "slow", slow)
     }
     fast = 0
 
     while(slow != fast){
         fast = nums[fast]
         slow = nums[slow]
-        print("#fast", fast, "slow", slow)
+        os.print("#fast", fast, "slow", slow)
     }
     ret = fast
 }
@@ -28,6 +28,6 @@ def main()
     var ret
 
     find_duplication(nums, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 }
-#script("leetcode/287_duplicated_number.nl")
+#script("script/leetcode/287_duplicated_number.ll")

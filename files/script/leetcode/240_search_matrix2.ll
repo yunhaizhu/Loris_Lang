@@ -36,11 +36,11 @@ def main()
 
     target = 5
     searchMatrix(matrix, target, ret)
-    print("target: ", target, " ret: ", ret)
+    os.print("target: ", target, " ret: ", ret)
 
     target = 20
     searchMatrix(matrix, target, ret)
-    print("target: ", target, " ret: ", ret)
+    os.print("target: ", target, " ret: ", ret)
 }
 
-#script("leetcode/240_search_matrix2.nl")
+#script("script/leetcode/240_search_matrix2.ll")

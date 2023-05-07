@@ -35,7 +35,7 @@ def reverse_list(var head, var start_idx, var end_idx)
         next = next{"next"}
         j += 1
     }
-    print("prev", prev{"value"}, "end", end{"value"}, "start", start{"value"})
+    os.print("prev", prev{"value"}, "end", end{"value"}, "start", start{"value"})
 
     while (prev != end) {
         moved_hash{i} = prev
@@ -65,7 +65,7 @@ def reverse_k_link_list(var single_list, var k, var end)
         if (i % k == 0) {
             end_idx = i
             reverse_list(single_list, start_idx, end_idx)
-            print(start_idx, end_idx)
+            os.print(start_idx, end_idx)
             start_idx = end_idx
         }
     }
@@ -87,5 +87,5 @@ def main()
     reverse_k_link_list(HEAD, k, one.size())
 }
 
-#script("leetcode/25_reverse_k_list.nl")
+#script("script/leetcode/25_reverse_k_list.ll")
 

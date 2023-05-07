@@ -12,7 +12,7 @@ def find_lower_positoin(var array, var target, var ret)
     right = max
 
     while(left < right){
-        print("find_lower_positoin left, right", left, right)
+        os.print("find_lower_positoin left, right", left, right)
         mid = (left + right)/2
 
         if (array[mid] < target){
@@ -21,7 +21,7 @@ def find_lower_positoin(var array, var target, var ret)
             right = mid
         }
     }
-    print("find_lower_positoin left, right", left, right)
+    os.print("find_lower_positoin left, right", left, right)
     ret = left
 }
 
@@ -36,7 +36,7 @@ def find_upper_positoin(var array, var target, var ret)
     right = max
 
     while(left < right){
-        print("find_upper_positoin left, right", left, right)
+        os.print("find_upper_positoin left, right", left, right)
         mid = (left + right)/2
 
         if (array[mid] <= target){
@@ -45,7 +45,7 @@ def find_upper_positoin(var array, var target, var ret)
             right = mid
         }
     }
-    print("find_upper_positoin left, right", left, right)
+    os.print("find_upper_positoin left, right", left, right)
     ret = left
 }
 

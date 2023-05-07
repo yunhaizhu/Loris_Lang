@@ -28,9 +28,9 @@ def pascal_triangle(var num)
     for (i = 1; i <= num; i += 1){
         var array
         array = triangle_hash.find_item(i)
-        print("I", i)
+        os.print("I", i)
         for (j = 0; j < i; j += 1){
-            print(array[j])
+            os.print(array[j])
         }
     }
 }

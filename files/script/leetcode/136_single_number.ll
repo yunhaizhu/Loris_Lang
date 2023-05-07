@@ -7,7 +7,7 @@ def single_number(var array)
         var tmp
 
         tmp = single_tuple.find_item(array[i])
-        print("array[i]", array[i], tmp)
+        os.print("array[i]", array[i], tmp)
         if (tmp == null){
             single_tuple.add_item(array[i])
         }else {
@@ -16,7 +16,7 @@ def single_number(var array)
         }
     }
     for (i = 0; i < array.size(); i += 1) {
-        print("single_tuple", i, "value:", single_tuple.find_item(array[i]))
+        os.print("single_tuple", i, "value:", single_tuple.find_item(array[i]))
     }
 }
 

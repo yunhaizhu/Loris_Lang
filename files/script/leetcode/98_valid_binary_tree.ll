@@ -60,17 +60,17 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     is_valid_binary_tree(binary_tree_head, ret)
     if (ret == true) {
-        print("The binary tree is valid.")
+        os.print("The binary tree is valid.")
     } else {
-        print("The binary tree is not valid.")
+        os.print("The binary tree is not valid.")
     }
 }
 
-#script("leetcode/98_valid_binary_tree.nl")
+#script("script/leetcode/98_valid_binary_tree.ll")
 
 

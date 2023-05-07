@@ -7,7 +7,7 @@ def queue_loop_array(var queue, var idx_max)
     var i
 
     for (i = 0; i < idx_max; i+=1){
-        print(queue{i}[0], queue{i}[1])
+        os.print(queue{i}[0], queue{i}[1])
     }
 }
 
@@ -46,4 +46,4 @@ def main()
 {
     merge_intervals()
 }
-#script("leetcode/56_merge_intervals.nl")
+#script("script/leetcode/56_merge_intervals.ll")

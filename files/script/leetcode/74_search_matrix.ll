@@ -34,11 +34,11 @@ def main()
 
     target = 3
     searchMatrix(matrix, target, ret)
-    print("target: ", target, " ret: ", ret)
+    os.print("target: ", target, " ret: ", ret)
 
     target = 13
     searchMatrix(matrix, target, ret)
-    print("target: ", target, " ret: ", ret)
+    os.print("target: ", target, " ret: ", ret)
 }
 
-#script("leetcode/74_search_matrix.nl")
+#script("script/leetcode/74_search_matrix.ll")

@@ -57,10 +57,10 @@ def main()
     add_num(nums, 1)
     add_num(nums, 2)
     get_median(nums, ret)
-    print(ret)
+    os.print(ret)
 
     add_num(nums, 2)
     get_median(nums, ret)
-    print(ret)
+    os.print(ret)
 }
-#script("leetcode/295_find_median_stream.nl")
+#script("script/leetcode/295_find_median_stream.ll")

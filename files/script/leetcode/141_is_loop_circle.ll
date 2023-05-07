@@ -35,5 +35,5 @@ def main()
     single_list_loop(single_list_one)
 
     is_loop_circle(single_list_one, ret)
-    print("is loop circle", ret)
+    os.print("is loop circle", ret)
 }

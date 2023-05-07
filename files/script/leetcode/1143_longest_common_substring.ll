@@ -27,7 +27,7 @@ def longest_common_string(var str1, var str2, var ret)
                 max(dp{i-1}[j], dp{i}[j-1], ret_max)
                 dp{i}[j] = ret_max
             }
-            print("dp{i}[j]", i, j, dp{i}[j], str1[i-1], str2[j-1])
+            os.print("dp{i}[j]", i, j, dp{i}[j], str1[i-1], str2[j-1])
         }
     }
     ret = dp{m}[n]
@@ -40,6 +40,6 @@ def main()
     var ret
 
     longest_common_string(str1, str2, ret)
-    print(ret)
+    os.print(ret)
 }
-#script("leetcode/1143_longest_common_substring.nl")
+#script("script/leetcode/1143_longest_common_substring.ll")

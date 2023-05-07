@@ -34,7 +34,7 @@ def flatten(var root)
             moved_idx += 1
 
             {
-                print("RIGHT new node_string = ", node_string, tmp_moved{moved_idx-1}{"value"})
+                os.print("RIGHT new node_string = ", node_string, tmp_moved{moved_idx-1}{"value"})
             }
         }
 
@@ -45,7 +45,7 @@ def flatten(var root)
             moved_idx += 1
 
             {
-                print("LEFT new node_string = ", node_string, tmp_moved{moved_idx-1}{"value"})
+                os.print("LEFT new node_string = ", node_string, tmp_moved{moved_idx-1}{"value"})
             }
         }
 
@@ -53,7 +53,7 @@ def flatten(var root)
             prev_node{"left"} = null
             prev_node{"right"} = node
             node = prev_node{"right"}
-            print("prev_node = ", prev_node{"value"}, "node = ", node{"value"})
+            os.print("prev_node = ", prev_node{"value"}, "node = ", node{"value"})
         }
         prev_node = node
         stack_pop(stack, node_string)
@@ -77,12 +77,12 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     flatten(binary_tree_head)
 
-    print("flatten travel")
+    os.print("flatten travel")
     travel_binary_tree_left(binary_tree_head)
 }
-#script("leetcode/114_flatten_binary_tree.nl")
+#script("script/leetcode/114_flatten_binary_tree.ll")

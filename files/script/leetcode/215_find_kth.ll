@@ -21,11 +21,11 @@ def main()
     var ret
 
     find_kth(nums, kth, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 
     find_kth(nums2, kth2, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 }
 
-#script("leetcode/215_find_kth.nl")
+#script("script/leetcode/215_find_kth.ll")
 

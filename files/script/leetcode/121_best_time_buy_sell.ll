@@ -14,7 +14,7 @@ def best_time_buy_sell(var array)
         max(max_profit, array[i] - min_price, max_profit)
     }
 
-    print("max profit", max_profit)
+    os.print("max profit", max_profit)
 }
 
 def main()

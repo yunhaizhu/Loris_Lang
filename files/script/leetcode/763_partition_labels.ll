@@ -32,4 +32,4 @@ def main()
     array_loop(ret)
 }
 
-#script("leetcode/763_partition_labels.nl")
+#script("script/leetcode/763_partition_labels.ll")

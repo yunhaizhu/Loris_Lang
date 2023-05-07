@@ -79,13 +79,13 @@ def main()
     var ret_valid
 
     valid_parentness(string, ret_valid)
-    print("valid_parentness:", string, ret_valid)
+    os.print("valid_parentness:", string, ret_valid)
 
     string = "()[]{}"
     valid_parentness(string, ret_valid)
-    print("valid_parentness:", string, ret_valid)
+    os.print("valid_parentness:", string, ret_valid)
 
     string = "(]"
     valid_parentness(string, ret_valid)
-    print("valid_parentness:", string, ret_valid)
+    os.print("valid_parentness:", string, ret_valid)
 }

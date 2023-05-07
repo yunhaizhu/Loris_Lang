@@ -28,13 +28,13 @@ def get_depth(var binary_tree, var ret_depth)
 
     max(diameter, left_depth + right_depth, ret_max)
 
-    print("ret_max value", value, ret_max, left_depth, right_depth)
+    os.print("ret_max value", value, ret_max, left_depth, right_depth)
     binary_tree.add_key_item("diameter", left_depth)
 
     max(left_depth, right_depth, ret_max)
     ret_depth = 1 + ret_max
 
-    print("get_depth value", value, ret_depth)
+    os.print("get_depth value", value, ret_depth)
 }
 
 def main()
@@ -55,10 +55,10 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     get_depth(binary_tree_head, ret_depth)
-    print("max diameter binary tree", ret_depth)
+    os.print("max diameter binary tree", ret_depth)
 
 }

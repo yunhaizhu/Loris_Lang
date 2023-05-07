@@ -31,8 +31,8 @@ def main()
     var ret
 
     longest_parent_len(string, ret)
-    print(ret)
+    os.print(ret)
 }
 
-#script("leetcode/32_longest_parent_len.nl")
+#script("script/leetcode/32_longest_parent_len.ll")
 

@@ -63,20 +63,20 @@ def main()
     tire_insert(stack, "apple")
 
     tire_search(stack, "apple", ret)
-    print("trie_search apple", ret)
+    os.print("trie_search apple", ret)
 
     tire_search(stack, "app", ret)
-    print("trie_search app", ret)
+    os.print("trie_search app", ret)
 
     tire_start_with(stack, "app", ret)
-    print("trie_startsWith app", ret)
+    os.print("trie_startsWith app", ret)
 
     tire_insert(stack, "app")
     tire_search(stack, "app", ret)
-    print("tire_search app", ret)
+    os.print("tire_search app", ret)
 }
 
-#script("leetcode/208_tire_tree.nl")
+#script("script/leetcode/208_tire_tree.ll")
 
 
 

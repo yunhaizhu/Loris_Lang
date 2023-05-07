@@ -44,12 +44,12 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("MID travel")
+    os.print("MID travel")
     travel_binary_tree_mid(binary_tree_head)
 
     travel_binary_tree_mid_kth(binary_tree_head, kth, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 
 }
 
-#script("leetcode/230_kth_binary_tree.nl")
+#script("script/leetcode/230_kth_binary_tree.ll")

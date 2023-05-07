@@ -21,7 +21,7 @@ def remove_nth_node(var single_list, var nth)
 
         item_value = fast.find_item("value")
 
-        print("fast item_value:", item_value)
+        os.print("fast item_value:", item_value)
         fast = fast.find_item("next")
         pre = slow
         slow = slow.find_item("next")

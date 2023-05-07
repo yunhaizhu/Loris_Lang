@@ -87,7 +87,7 @@ def main()
     var node_string
 
     rotting_oranges(grid, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
  }
 
-#script("leetcode/994_rotting_oranges.nl")
+#script("script/leetcode/994_rotting_oranges.ll")

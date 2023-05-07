@@ -83,10 +83,10 @@ def main()
     var node_string
 
     exist(board, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 
     exist(board2, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 }
 
-#script("leetcode/200_number_of_islands.nl")
+#script("script/leetcode/200_number_of_islands.ll")

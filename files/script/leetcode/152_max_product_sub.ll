@@ -30,7 +30,7 @@ def main()
     var ret
 
     max_product(nums, ret)
-    print(ret)
+    os.print(ret)
 }
 
-#script("leetcode/152_max_product_sub.nl")
+#script("script/leetcode/152_max_product_sub.ll")

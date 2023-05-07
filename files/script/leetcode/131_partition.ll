@@ -38,7 +38,7 @@ def partition_backtrack(var stack, var string, var start, var path)
 
         subarray_to_string(string, start, i , sub_string)
         is_palindrome(string, start, i , ret_check)
-        print(sub_string, start, i, ret_check)
+        os.print(sub_string, start, i, ret_check)
 
         if (ret_check){
             tmp_string_array[0] = path
@@ -71,4 +71,4 @@ def main()
     partition(string)
 }
 
-#script("leetcode/131_partition.nl")
+#script("script/leetcode/131_partition.ll")

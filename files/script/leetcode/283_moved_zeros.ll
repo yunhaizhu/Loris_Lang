@@ -25,7 +25,7 @@ def main()
 
     moved_zeros(one)
     for (i = 0; i < one.size(); i+=1){
-        print(one[i])
+        os.print(one[i])
     }
 
 }

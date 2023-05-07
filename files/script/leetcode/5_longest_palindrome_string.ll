@@ -79,10 +79,10 @@ def longest_palindrome_string_dp(var string, var ret_string)
 
             dp_array[i] = (ret_string_array[j] == ret_string_array[i]) and ((i - j < 2) or dp_array_above[i - 1])
 
-#            print("ret_string_array[j] == ret_string_array[i]", ret_string_array[j] == ret_string_array[i])
-#            print("i - j < 2", i - j < 2)
-#            print("dp_array_above[i - 1]", dp_array_above[i - 1])
-#            print("dp_array[i]", dp_array[i], j, i)
+#            os.print("ret_string_array[j] == ret_string_array[i]", ret_string_array[j] == ret_string_array[i])
+#            os.print("i - j < 2", i - j < 2)
+#            os.print("dp_array_above[i - 1]", dp_array_above[i - 1])
+#            os.print("dp_array[i]", dp_array[i], j, i)
             if (dp_array[i] and (res_max < (i - j + 1))){
                 res_max = i - j + 1
                 subarray_to_string(ret_string_array, j, i, res_string)
@@ -98,15 +98,15 @@ def main()
     var res_string
 
     longest_palindrome_string(string, res_string)
-    print("longest palindrome string", string, res_string)
+    os.print("longest palindrome string", string, res_string)
 
     longest_palindrome_string_dp(string, res_string)
-    print("longest palindrome string dp", string, res_string)
+    os.print("longest palindrome string dp", string, res_string)
 
     string = "ddabcecbad"
     longest_palindrome_string(string, res_string)
-    print("longest palindrome string", string, res_string)
+    os.print("longest palindrome string", string, res_string)
 
     longest_palindrome_string_dp(string, res_string)
-    print("longest palindrome string dp", string, res_string)
+    os.print("longest palindrome string dp", string, res_string)
 }

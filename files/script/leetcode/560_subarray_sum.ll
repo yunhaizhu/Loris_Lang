@@ -33,7 +33,7 @@ def main()
     var ret
 
     subarray_sum(nums, k, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
 
-#script("leetcode/560_subarray_sum.nl")
+#script("script/leetcode/560_subarray_sum.ll")

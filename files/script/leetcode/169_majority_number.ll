@@ -25,7 +25,7 @@ def majority_number(var array)
             find_num = array[i]
         }
     }
-    print("find", find_num)
+    os.print("find", find_num)
 }
 
 def main()

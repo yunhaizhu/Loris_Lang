@@ -15,7 +15,7 @@ def preorder_array_to_binary_tree(var array, var start, var end, var binary_tree
     preorder_array_to_binary_tree(array, mid + 1, end, item_hash, "right")
 
     value = array[mid]
-    print("array[mid]", value, mid)
+    os.print("array[mid]", value, mid)
     item_hash.add_key_item("value", value)
 
     binary_tree.add_key_item(left_or_right, item_hash)
@@ -34,7 +34,7 @@ def travel_binary_tree_left(var binary_tree)
     left = binary_tree.find_item("left")
     right = binary_tree.find_item("right")
 
-    print("value", value)
+    os.print("value", value)
     travel_binary_tree_left(left)
     travel_binary_tree_left(right)
 }
@@ -53,7 +53,7 @@ def travel_binary_tree_mid(var binary_tree)
     right = binary_tree.find_item("right")
 
     travel_binary_tree_mid(left)
-    print("value", value)
+    os.print("value", value)
     travel_binary_tree_mid(right)
 }
 
@@ -72,7 +72,7 @@ def travel_binary_tree_right(var binary_tree)
 
     travel_binary_tree_right(left)
     travel_binary_tree_right(right)
-    print("value", value)
+    os.print("value", value)
 }
 
 def main()
@@ -84,12 +84,12 @@ def main()
     preorder_array_to_binary_tree(ones, 0, 6, binary_tree, "head")
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
-    print("MID travel")
+    os.print("MID travel")
     travel_binary_tree_mid(binary_tree_head)
 
-    print("RIGHT travel")
+    os.print("RIGHT travel")
     travel_binary_tree_right(binary_tree_head)
 }

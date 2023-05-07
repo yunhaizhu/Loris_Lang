@@ -43,15 +43,15 @@ def main()
     var result
     
     unique_paths(m, n, result)
-    print("unique_paths", m, n, result)
+    os.print("unique_paths", m, n, result)
 
     m = 3
     n = 2
     unique_paths(m, n, result)
-    print("unique_paths", m, n, result)
+    os.print("unique_paths", m, n, result)
 }
 
-#script("leetcode/62_unique_paths.nl")
+#script("script/leetcode/62_unique_paths.ll")
 
 
 

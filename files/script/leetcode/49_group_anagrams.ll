@@ -25,7 +25,7 @@ def group_anagrams(var group)
             tuple.add_item(array[j])
         }
         string_array.resize(N)
-        assert(tuple.size() == N, "tuple.size() == N")
+        os.assert(tuple.size() == N, "tuple.size() == N")
         for (j = 0; j < N; j += 1){
             string_array[j] = tuple{j}
         }
@@ -52,10 +52,10 @@ def group_anagrams(var group)
         var tuple_res
 
         for (i = 0; i < sorted_string_idx; i +=1){
-            print(i, sorted_string_array[i], ":")
+            os.print(i, sorted_string_array[i], ":")
             tuple_res = map.find_item(sorted_string_array[i])
             for (j = 0; j < tuple_res.size(); j +=1){
-                print(tuple_res{j})
+                os.print(tuple_res{j})
             }
         }
    }
@@ -68,4 +68,4 @@ def main()
     group_anagrams(group)
 }
 
-#script("leetcode/49_group_anagrams.nl")
+#script("script/leetcode/49_group_anagrams.ll")

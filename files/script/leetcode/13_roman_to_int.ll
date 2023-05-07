@@ -77,20 +77,20 @@ def main()
     var ret
 
     roman_to_int(string, ret)
-    print(string, "roman to int:", ret)
+    os.print(string, "roman to int:", ret)
 
     roman_to_int2(string, ret)
-    print(string, "roman to int2:", ret)
+    os.print(string, "roman to int2:", ret)
 
     string = "LVIII"
     roman_to_int(string, ret)
-    print(string, "roman to int:", ret)
+    os.print(string, "roman to int:", ret)
     roman_to_int2(string, ret)
-    print(string, "roman to int2:", ret)
+    os.print(string, "roman to int2:", ret)
 
     string = "MCMXCIV"
     roman_to_int(string, ret)
-    print(string, "roman to int:", ret)
+    os.print(string, "roman to int:", ret)
     roman_to_int2(string, ret)
-    print(string, "roman to int2:", ret)
+    os.print(string, "roman to int2:", ret)
 }

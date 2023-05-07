@@ -84,8 +84,8 @@ def buildTree(var preorder, var inorder, var ret_item)
 #   right_preorder = preorder[1+len(left_inorder):]
     array_loop(preorder)
     array_loop(inorder)
-    print("item_val: ", item_val)
-    print("inorder_idx: ", item_index)
+    os.print("item_val: ", item_val)
+    os.print("inorder_idx: ", item_index)
 
     array_subarray(inorder, 0, item_index, left_inorder)
     array_subarray(inorder, item_index+1, inorder.size(), right_inorder)
@@ -120,7 +120,7 @@ def main()
 }
 
 
-#script("leetcode/105_build_binary_tree_from_preinorder.nl")
+#script("script/leetcode/105_build_binary_tree_from_preinorder.ll")
 
 
 

@@ -24,9 +24,9 @@ def majority_number(var array)
         var count
 
         count = hash_map.find_item(array[i])
-        print(array[i], count, max/3)
+        os.print(array[i], count, max/3)
         if (count > max/3){
-            print("add:", array[i])
+            os.print("add:", array[i])
             find_tuple.add_item(array[i])
         }
     }
@@ -35,7 +35,7 @@ def majority_number(var array)
         var tmp_tuple
 
         tmp_tuple = find_tuple
-        print("find:", tmp_tuple{i})
+        os.print("find:", tmp_tuple{i})
     }
 }
 

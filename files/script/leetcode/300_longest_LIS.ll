@@ -95,8 +95,8 @@ def main()
     var ret
 
     length_of_lis(nums, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 }
 
-#script("leetcode/300_longest_LIS.nl")
+#script("script/leetcode/300_longest_LIS.ll")
 

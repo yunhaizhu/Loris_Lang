@@ -32,9 +32,9 @@ def main()
     var ret
 
     robber(nums, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 
     robber(nums2, ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 }
-#script("leetcode/198_house_robber.nl")
+#script("script/leetcode/198_house_robber.ll")

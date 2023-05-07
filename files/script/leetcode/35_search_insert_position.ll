@@ -58,13 +58,13 @@ def main()
     var ret_index
 
     search_insert_position(nums, target, ret_index)
-    print(target, "FIND:", ret_index)
+    os.print(target, "FIND:", ret_index)
 
     target = 2
     search_insert_position(nums, target, ret_index)
-    print(target, "FIND:", ret_index)
+    os.print(target, "FIND:", ret_index)
 
     target = 7
     search_insert_position(nums, target, ret_index)
-    print(target, "FIND:", ret_index)
+    os.print(target, "FIND:", ret_index)
 }

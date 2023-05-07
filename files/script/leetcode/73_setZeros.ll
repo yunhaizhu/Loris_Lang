@@ -74,12 +74,12 @@ def main()
 
     for (i = 0; i < m; i += 1) {
         for (j = 0; j < n; j += 1) {
-            print(matrix{i}[j])
+            os.print(matrix{i}[j])
         }
     }
 }
 
-#script("leetcode/73_setZeros.nl")
+#script("script/leetcode/73_setZeros.ll")
 
 
 

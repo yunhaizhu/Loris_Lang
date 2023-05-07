@@ -43,9 +43,9 @@ def key_tuple_loop(var hash_table, var tuple, var k)
         var node_string_tuple = hash_table{tuple{i}}
         var j = 0
 
-        print("tuple{i} = ", i, tuple{i})
+        os.print("tuple{i} = ", i, tuple{i})
         for (j = 0; j < node_string_tuple.size(); j+=1){
-            print("node_string_tuple{j} = ", j, node_string_tuple{j})
+            os.print("node_string_tuple{j} = ", j, node_string_tuple{j})
         }
     }
 }
@@ -111,9 +111,9 @@ def main()
 
     merge_K_sorted_linked_list(lists, 3, ret_merge_k_sorted_linked_list)
 
-    print("merged")
+    os.print("merged")
     single_list_loop(ret_merge_k_sorted_linked_list{"next"})
 }
 
-#script("leetcode/23_merge_k_sort.nl")
+#script("script/leetcode/23_merge_k_sort.ll")
 

@@ -15,7 +15,7 @@ def palindrome_linked_list(var single_list_one, var single_list_count, var ret)
 
         item_value_1 = single_list_one_first.find_item("value")
 
-        print("add", item_value_1)
+        os.print("add", item_value_1)
 
         single_list_one_first = single_list_one_first.find_item("next")
 
@@ -50,9 +50,9 @@ def main()
 
     array_to_single_list(one, single_list_one)
     palindrome_linked_list(single_list_one, 4, ret)
-    print("is ", ret)
+    os.print("is ", ret)
 
     array_to_single_list(one2, single_list_one2)
     palindrome_linked_list(single_list_one2, 2, ret)
-    print("is ", ret)
+    os.print("is ", ret)
 }

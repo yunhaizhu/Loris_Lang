@@ -35,6 +35,6 @@ def main()
     var ret
 
     contain_most_water(array, ret)
-    print("contain most water", ret)
+    os.print("contain most water", ret)
 
 }

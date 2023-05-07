@@ -35,11 +35,11 @@ def main()
     var max = 0
 
     longest_seq(nums, max)
-    print("longest sequence is: ", max)
+    os.print("longest sequence is: ", max)
 
     longest_seq(nums2, max)
-    print("longest sequence is: ", max)
+    os.print("longest sequence is: ", max)
 }
 
-#script("leetcode/128_longest_seq.nl")
+#script("script/leetcode/128_longest_seq.ll")
 

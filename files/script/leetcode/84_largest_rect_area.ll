@@ -21,7 +21,7 @@ def largest_rect_area(var heights, var ret)
             h = heights[top]
             w = i - stack{-1} - 1
 
-            print(h, w)
+            os.print(h, w)
             max(max_area, h * w, max_area)
         }
         stack.add_item(i)
@@ -37,7 +37,7 @@ def main()
     var area
 
     largest_rect_area(heights, area)
-    print(area)
+    os.print(area)
 }
-#script("leetcode/84_largest_rect_area.nl")
+#script("script/leetcode/84_largest_rect_area.ll")
 

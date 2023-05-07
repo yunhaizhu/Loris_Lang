@@ -29,7 +29,7 @@ def reverse_binary_tree(var binary_tree)
     moved_left = binary_tree.find_item("left")
     moved_right = binary_tree.find_item("right")
 
-    print("reverse_binary_tree value", value)
+    os.print("reverse_binary_tree value", value)
     reverse_binary_tree(moved_left)
     reverse_binary_tree(moved_right)
 }
@@ -55,11 +55,11 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("LEFT travel")
+    os.print("LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 
     reverse_binary_tree(binary_tree_head)
-    print("Reverse LEFT travel")
+    os.print("Reverse LEFT travel")
     travel_binary_tree_left(binary_tree_head)
 }
 

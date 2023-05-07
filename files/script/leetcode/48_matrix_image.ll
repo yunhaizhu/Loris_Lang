@@ -44,7 +44,7 @@ def rotate_matrix_image()
             }
             line2 = matrix.find_item(j)
 
-            print("swap", line1[j-1], line2[i-1])
+            os.print("swap", line1[j-1], line2[i-1])
 
             tmp = line1[j-1]
             line1[j-1] = line2[i-1]
@@ -90,7 +90,7 @@ def rotate_matrix_image2()
                 continue
             }
 
-            print("swap", matrix{i}[j-1], matrix{j}[i-1])
+            os.print("swap", matrix{i}[j-1], matrix{j}[i-1])
 
             tmp = matrix{i}[j-1]
             matrix{i}[j-1] = matrix{j}[i-1]
@@ -108,4 +108,4 @@ def main()
 #    rotate_matrix_image()
     rotate_matrix_image2()
 }
-#script("leetcode/48_matrix_image.nl")
+#script("script/leetcode/48_matrix_image.ll")

@@ -51,9 +51,9 @@ def decode_string(var string, var ret_string)
             array_to_string(temp_string_array, cur_substring)
 
         } else if (string[i] >= '0' and string[i] <= '9') {
-            print("#cur_count: ", cur_count, ", string[i]: ", string[i])
+            os.print("#cur_count: ", cur_count, ", string[i]: ", string[i])
             cur_count = cur_count * 10 + string[i] - '0'
-            print("cur_count: ", cur_count, ", string[i]: ", string[i])
+            os.print("cur_count: ", cur_count, ", string[i]: ", string[i])
         } else {
             var temp_string_array[2]
 
@@ -72,15 +72,15 @@ def main()
     var ret_string
 
     decode_string(string, ret_string)
-    print("Input: ", string, ", Output: ", ret_string)
+    os.print("Input: ", string, ", Output: ", ret_string)
 
     string = "3[a2[c]]"
     decode_string(string, ret_string)
-    print("Input: ", string, ", Output: ", ret_string)
+    os.print("Input: ", string, ", Output: ", ret_string)
 
     string = "2[abc]3[cd]ef"
     decode_string(string, ret_string)
-    print("Input: ", string, ", Output: ", ret_string)
+    os.print("Input: ", string, ", Output: ", ret_string)
 }
 
-#script("leetcode/394_decode_string.nl")
+#script("script/leetcode/394_decode_string.ll")

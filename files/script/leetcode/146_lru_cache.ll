@@ -12,23 +12,23 @@ def main()
     lru_put(map, 2, 2)
 
     lru_get(map, 1, ret)
-    print("get 1 ret = ", ret)
+    os.print("get 1 ret = ", ret)
 
     lru_put(map, 3, 3)
 
     lru_get(map, 2, ret)
-    print("get 2 ret = ", ret)
+    os.print("get 2 ret = ", ret)
 
     lru_put(map, 4, 4)
 
     lru_get(map, 1, ret)
-    print("get 1 ret = ", ret)
+    os.print("get 1 ret = ", ret)
 
 
     lru_get(map, 3, ret)
-    print("ret = ", ret)
+    os.print("ret = ", ret)
     lru_get(map, 4, ret)
-    print("ret = ", ret)
+    os.print("ret = ", ret)
 }
 
-#script("leetcode/146_lru_cache.nl")
+#script("script/leetcode/146_lru_cache.ll")

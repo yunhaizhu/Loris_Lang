@@ -83,11 +83,11 @@ def main()
     var ret
 
     can_finish(course, number_courses,  ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 
     can_finish(course2, number_courses,  ret)
-    print("ret:", ret)
+    os.print("ret:", ret)
 
 }
 
-#script("leetcode/207_course_prequire.nl")
+#script("script/leetcode/207_course_prequire.ll")

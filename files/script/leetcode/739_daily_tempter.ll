@@ -39,7 +39,7 @@ def main()
     daily_tempter(daily, ret)
     array_loop(ret)
 }
-#script("leetcode/739_daily_tempter.nl")
+#script("script/leetcode/739_daily_tempter.ll")
 
 
 

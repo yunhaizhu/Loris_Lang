@@ -1,3 +1,6 @@
+require "os"
+import os.print, os.assert
+
 /*
 Description:
 
@@ -100,20 +103,20 @@ def two_sum2(var nums, var nums_max, var target, var ret_i, var ret_j)
  */
 def main()
 {
-    var nums[4] = [2, 12, 15, 7]
+    var nums[] = [2, 12, 15, 7]
     var target = 9
     var i
     var j
 
     two_sum(nums, 4, target, i, j)
-    print("TWO SUM FIND i, j:", i, j)
-    assert(i == 0, "i == 0")
-    assert(j == 3, "j == 3")
+    os.print("TWO SUM FIND i, j:", i, j)
+    os.assert(i == 0, "i == 0")
+    os.assert(j == 3, "j == 3")
 
     two_sum2(nums, 4, target, i, j)
-    print("TWO SUM FIND i, j2:", i, j)
-    assert(i == 0, "i == 0")
-    assert(j == 3, "j == 3")
+    os.print("TWO SUM FIND i, j2:", i, j)
+    os.assert(i == 0, "i == 0")
+    os.assert(j == 3, "j == 3")
 }
 
-#script("leetcode/1_two_sum.nl")
+#script("script/leetcode/1_two_sum.ll")

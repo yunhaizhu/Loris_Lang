@@ -78,7 +78,7 @@ def stack_loop(var stack)
         var item_value
 
         item_value = stack.find_item(i)
-        print(item_value)
+        os.print(item_value)
     }
 }
 
@@ -96,15 +96,15 @@ def main()
     stack_push(stack, -3)
 
     stack_get_min(stack, ret_min)
-    print("ret_min", ret_min)
+    os.print("ret_min", ret_min)
 
     stack_pop(stack, ret_pop_value)
     stack_get_min(stack, ret_min)
-    print("ret_min", ret_min)
+    os.print("ret_min", ret_min)
 
     stack_pop(stack, ret_pop_value)
     stack_get_min(stack, ret_min)
-    print("ret_min", ret_min)
+    os.print("ret_min", ret_min)
 }
 
-#script("leetcode/155_min_stack.nl")
+#script("script/leetcode/155_min_stack.ll")

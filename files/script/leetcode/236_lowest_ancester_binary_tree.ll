@@ -61,12 +61,12 @@ def main()
     array_to_binary_tree_preorder(stack_array, binary_tree)
 
     binary_tree_head = binary_tree.find_item("head")
-    print("MID travel")
+    os.print("MID travel")
     travel_binary_tree_mid(binary_tree_head)
 
     travel_binary_tree_ancestor(binary_tree_head, p, q, ret)
-    print("ret:", ret{"value"})
+    os.print("ret:", ret{"value"})
 
 }
 
-#script("leetcode/236_lowest_ancester_binary_tree.nl")
+#script("script/leetcode/236_lowest_ancester_binary_tree.ll")

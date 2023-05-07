@@ -52,6 +52,6 @@ def main()
 {
     spiral_matrix()
 }
-#script("leetcode/54_spiral_matrix.nl")
+#script("script/leetcode/54_spiral_matrix.ll")
 
 

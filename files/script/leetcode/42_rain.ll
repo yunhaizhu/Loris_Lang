@@ -42,8 +42,8 @@ def main()
     var ret
 
     trap(heights, ret)
-    print(ret)
+    os.print(ret)
 }
 
-#script("leetcode/42_rain.nl")
+#script("script/leetcode/42_rain.ll")
 

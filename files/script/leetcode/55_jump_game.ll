@@ -27,6 +27,6 @@ def main()
     jump_game(array, ret1)
     jump_game(array2, ret2)
 
-    print("jump game", ret1, ret2)
+    os.print("jump game", ret1, ret2)
 }
-#script("leetcode/55_jump_game.nl")
+#script("script/leetcode/55_jump_game.ll")

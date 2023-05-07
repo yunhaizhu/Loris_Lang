@@ -15,7 +15,7 @@ def find_min_in_rotated_sorted_array(var array, var ret)
     }
 
     while(left <= right){
-        print("left, right", left, right)
+        os.print("left, right", left, right)
         mid = (left + right)/2
 
         if (array[mid] > array[mid + 1]){
@@ -41,6 +41,6 @@ def main()
     var ret
 
     find_min_in_rotated_sorted_array(array, ret)
-    print("ret", ret)
+    os.print("ret", ret)
 }
-#script("leetcode/153_find_min_in_rotated_sorted_array.nl")
+#script("script/leetcode/153_find_min_in_rotated_sorted_array.ll")
