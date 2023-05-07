@@ -114,10 +114,10 @@ def test_hash()
     os.print("TEST HASH SUCCESS")
 }
 
-def main()
-{
-    test_hash()
-}
+#def main()
+#{
+#    test_hash()
+#}
 
 #script("script/test_all/basic/variable/hash/test_hash.ll")
 
