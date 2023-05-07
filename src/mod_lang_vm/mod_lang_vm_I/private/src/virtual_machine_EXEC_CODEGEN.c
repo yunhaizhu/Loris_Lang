@@ -141,82 +141,82 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
 
         switch (Codes[i].opcode) {
             case POP:
-                emit_c_codes("inline_execute_code_POP(thread_id, &x);\n");
+                emit_c_codes("inline_execute_code_POP(&x);\n");
                 break;
 
             case VAR_A:
-                emit_c_codes("inline_execute_code_VAR_A(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_VAR_A(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case VAR_L:
-                emit_c_codes("inline_execute_code_VAR_L(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_VAR_L(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case VAR_A_CLEAN:
-                emit_c_codes("inline_execute_code_VAR_A_CLEAN(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_VAR_A_CLEAN(Codes, Pc);\n");
                 break;
 
             case VAR_L_CLEAN:
-                emit_c_codes("inline_execute_code_VAR_L_CLEAN(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_VAR_L_CLEAN(Codes, Pc);\n");
                 break;
 
             case SYM_A:
-                emit_c_codes("inline_execute_code_SYM_A(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_SYM_A(Codes, Pc);\n");
                 break;
 
             case SYM_L:
-                emit_c_codes("inline_execute_code_SYM_L(thread_id, Codes, Pc, Sp);\n");
+                emit_c_codes("inline_execute_code_SYM_L(Codes, Pc, Sp);\n");
                 break;
 
             case PUSHI:
             case PUSHU:
             case PUSHA:
             case PUSHS:
-                emit_c_codes("inline_execute_code_PUSHIUAS(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_PUSHIUAS(Codes, Pc);\n");
                 break;
 
             case ADD:
-                emit_c_codes("inline_execute_code_ADD(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_ADD(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case Inp_ADD:
-                emit_c_codes("inline_execute_code_Inp_ADD(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_Inp_ADD(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case Inp_ADDI:
-                emit_c_codes("inline_execute_code_Inp_ADD(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_Inp_ADD(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case SUB:
-                emit_c_codes("inline_execute_code_SUB(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_SUB(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case Inp_SUB:
-                emit_c_codes("inline_execute_code_Inp_SUB(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_Inp_SUB(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case MUL:
-                emit_c_codes("inline_execute_code_MUL(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_MUL(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case Inp_MUL:
-                emit_c_codes("inline_execute_code_Inp_MUL(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_Inp_MUL(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case DIV:
-                emit_c_codes("inline_execute_code_DIV(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_DIV(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case Inp_DIV:
-                emit_c_codes("inline_execute_code_Inp_DIV(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_Inp_DIV(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case MOD:
-                emit_c_codes("inline_execute_code_MOD(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_MOD(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case Inp_MOD:
-                emit_c_codes("inline_execute_code_Inp_MOD(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_Inp_MOD(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case GT:
@@ -244,7 +244,7 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
                 break;
 
             case BEQ0:
-                emit_c_codes("if (inline_execute_code_BEQ0(thread_id, Codes, Pc) == STD_BOOL_TRUE) {\n"
+                emit_c_codes("if (inline_execute_code_BEQ0(Codes, Pc) == STD_BOOL_TRUE) {\n"
                              "      goto *jump_table[ *Pc ];\n"
                              "}else {\n"
                              "      (*Pc)++;\n"
@@ -265,33 +265,33 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
                 break;
 
             case LOADA:
-                emit_c_codes("inline_execute_code_LOADA(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_LOADA(Codes, Pc);\n");
                 break;
 
             case LOADL:
-                emit_c_codes("inline_execute_code_LOADL(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_LOADL(Codes, Pc);\n");
                 break;
 
             case STOREA:
-                emit_c_codes("inline_execute_code_STOREA(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_STOREA(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case STOREL:
-                emit_c_codes("inline_execute_code_STOREL(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_STOREL(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case JUMP:
-                emit_c_codes("inline_execute_code_JUMP(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_JUMP(Codes, Pc);\n");
                 emit_c_codes("goto *jump_table[ *Pc ];\n");
                 continue;
 
             case CALL:
-                emit_c_codes("inline_execute_code_CALL(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_CALL(Codes, Pc);\n");
                 emit_c_codes("goto *jump_table[ *Pc ];\n");
                 continue;
 
             case RET:
-                emit_c_codes("if (inline_execute_code_RET(thread_id, Pc, Fp, Sp, &x) == 1) {\n"
+                emit_c_codes("if (inline_execute_code_RET(Pc, Fp, Sp, &x) == 1) {\n"
                              "      return; \n"
                              "}else {\n"
                              "      goto *jump_table[ *Pc ]; \n"
@@ -299,64 +299,64 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
                 continue;
 
             case POPR:
-                emit_c_codes("inline_execute_code_POPR(thread_id, Codes, Pc, Sp, &x);\n");
+                emit_c_codes("inline_execute_code_POPR(Codes, Pc, Sp, &x);\n");
                 break;
 
             case FRAME:
-                emit_c_codes("inline_execute_code_FRAME(thread_id, Codes, Pc, Fp, Sp);\n");
+                emit_c_codes("inline_execute_code_FRAME(Codes, Pc, Fp, Sp);\n");
                 break;
 
 
             case CUSTOM:
-                emit_c_codes("inline_execute_code_CUSTOM(thread_id, Codes, Pc);\n");
+                emit_c_codes("inline_execute_code_CUSTOM(Codes, Pc);\n");
                 break;
 
             case NEW_ARRAY:
-                emit_c_codes("inline_execute_code_NEW_ARRAY(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_NEW_ARRAY(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case NEW_LIST:
-                emit_c_codes("inline_execute_code_NEW_LIST(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_NEW_LIST(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case NEW_KEY_HASH:
-                emit_c_codes("inline_execute_code_NEW_KEY_HASH(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_NEW_KEY_HASH(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case ADD_ITEM:
-                emit_c_codes("inline_execute_code_ADD_ITEM(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_ADD_ITEM(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case ADD_KEY_ITEM:
-                emit_c_codes("inline_execute_code_ADD_KEY_ITEM(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_ADD_KEY_ITEM(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case DEL_ITEM:
-                emit_c_codes("inline_execute_code_DEL_ITEM(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_DEL_ITEM(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case DEL_ITEM_IDX:
-                emit_c_codes("inline_execute_code_DEL_ITEM_IDX(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_DEL_ITEM_IDX(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case GET_ITEM:
-                emit_c_codes("inline_execute_code_GET_ITEM(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_GET_ITEM(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case SET_ITEM:
-                emit_c_codes("inline_execute_code_SET_ITEM(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_SET_ITEM(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case FIND_ITEM:
-                emit_c_codes("inline_execute_code_FIND_ITEM(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_FIND_ITEM(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case SIZE:
-                emit_c_codes("inline_execute_code_SIZE(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_SIZE(Codes, Stack, Pc, Fp);\n");
                 break;
 
             case RESIZE_ARRAY:
-                emit_c_codes("inline_execute_code_RESIZE_ARRAY(thread_id, Codes, Stack, Pc, Fp);\n");
+                emit_c_codes("inline_execute_code_RESIZE_ARRAY(Codes, Stack, Pc, Fp);\n");
                 break;
 
             default:

@@ -28,7 +28,7 @@
  * @param   resp
  * @return  STD_CALL object_t *
  */
-STD_CALL own_value_t parse_json_resp(IN std_int_t thread_id, IN std_char_t *resp)
+STD_CALL own_value_t parse_json_resp(IN std_char_t *resp)
 {
     json_t const *json = NULL;
     json_t const *json_response;
@@ -80,7 +80,7 @@ STD_CALL own_value_t parse_json_resp(IN std_int_t thread_id, IN std_char_t *resp
  * @brief
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_id;
     own_value_t obj_handle;
@@ -106,7 +106,7 @@ STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t thread_id,
     if (resp == NULL) {
         ret = make_own_value_number(-1);
     } else {
-        ret = parse_json_resp(thread_id, resp);
+        ret = parse_json_resp(resp);
         FREE(resp);
     }
 
@@ -119,7 +119,7 @@ STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t thread_id,
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t ret_obj;
     own_value_t object;
@@ -142,7 +142,7 @@ STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t thread_id
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_uninstall(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_uninstall(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t object;
 
@@ -158,7 +158,7 @@ STD_CALL std_void_t library_uninstall(environment_vm_t *vm, IN std_int_t thread_
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_id;
     own_value_t obj_arg;
@@ -188,7 +188,7 @@ STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t thread_id, 
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_stop(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_stop(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_id;
 
@@ -204,7 +204,7 @@ STD_CALL std_void_t library_stop(environment_vm_t *vm, IN std_int_t thread_id, I
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_ps(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_ps(IN environment_vm_t *vm, IN std_int_t args)
 {
     cmd_ps();
 }
@@ -215,7 +215,7 @@ STD_CALL std_void_t library_ps(IN environment_vm_t *vm, IN std_int_t thread_id, 
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_help(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_help(IN environment_vm_t *vm, IN std_int_t args)
 {
     cmd_help();
 }
@@ -226,7 +226,7 @@ STD_CALL std_void_t library_help(IN environment_vm_t *vm, IN std_int_t thread_id
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_debug(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_debug(IN environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_debug;
 
@@ -242,7 +242,7 @@ STD_CALL std_void_t library_debug(IN environment_vm_t *vm, IN std_int_t thread_i
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_show(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_show(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_id;
 
@@ -258,7 +258,7 @@ STD_CALL std_void_t library_show(environment_vm_t *vm, IN std_int_t thread_id, I
  * @param   args
  * @return  std_void_t
  */
-std_void_t library_exit(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+std_void_t library_exit(IN environment_vm_t *vm, IN std_int_t args)
 {
     cmd_exit();
 }
@@ -269,7 +269,7 @@ std_void_t library_exit(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_create_instance(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_create_instance(IN environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_iid;
     own_value_t obj_args;
@@ -297,7 +297,7 @@ STD_CALL std_void_t library_create_instance(IN environment_vm_t *vm, IN std_int_
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_delete_instance(IN environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_delete_instance(IN environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_iid;
     own_value_t obj_handle;

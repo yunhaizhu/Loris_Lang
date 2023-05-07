@@ -42,7 +42,7 @@
  * @param   x
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_POP(environment_vm_t *vm, IN std_int_t thread_id, std_u64_t *x)
+STD_CALL static inline std_void_t inline_execute_code_POP(environment_vm_t *vm, std_u64_t *x)
 {
     *x = Pop(vm);
 }
@@ -54,7 +54,7 @@ STD_CALL static inline std_void_t inline_execute_code_POP(environment_vm_t *vm, 
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_PUSHIUAS(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc)
+STD_CALL static inline std_void_t inline_execute_code_PUSHIUAS(environment_vm_t *vm, const code_st *Codes, const std_int_t *Pc)
 {
     Push(vm,  Codes[*Pc].i_operand);
 }
@@ -71,7 +71,7 @@ STD_CALL static inline std_void_t inline_execute_code_PUSHIUAS(environment_vm_t 
  * @param   Fp
  * @return  STD_CALL static forced_inline std_void_t
  */
-STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t *vm, IN own_value_t ret, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t *vm, IN own_value_t ret, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     std_int_t reg_id;
     std_int_t fp_index;
@@ -103,7 +103,7 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
  * @param   Fp
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environment_vm_t *vm, std_int_t type, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environment_vm_t *vm, std_int_t type, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t obj_y = Pop(vm);
     own_value_t obj_x = Pop(vm);
@@ -121,21 +121,21 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm, ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm, ret, Codes, Stack, Pc, Fp);
         } else if (type == SUB || type == Inp_SUB) {
             ret = make_own_value_number(nx - ny);
             if (type != Inp_SUB) {
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == MUL || type == Inp_MUL) {
             ret = make_own_value_number(nx * ny);
             if (type != Inp_MUL) {
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == DIV || type == Inp_DIV) {
             if (ny == 0) {
                 ret = make_own_value_number(0);
@@ -143,7 +143,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                     Push(vm,  (intptr_t) ret);
                     return;
                 }
-                inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+                inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
                 return;
             }
             ret = make_own_value_number(nx / ny);
@@ -151,7 +151,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == MOD || type == Inp_MOD) {
             if (ny == 0) {
                 ret = make_own_value_number(0);
@@ -159,7 +159,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                     Push(vm,  (intptr_t) ret);
                     return;
                 }
-                inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+                inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
                 return;
             }
             ret = make_own_value_number(nx % ny);
@@ -167,7 +167,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         }
     } else if (get_own_value_type(obj_x) == OWN_TYPE_DOUBLE ||
                get_own_value_type(obj_y) == OWN_TYPE_DOUBLE) {
@@ -191,21 +191,21 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == SUB || type == Inp_SUB) {
             ret = make_own_value_float(x - y);
             if (type != Inp_SUB) {
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == MUL || type == Inp_MUL) {
             ret = make_own_value_float(x * y);
             if (type != Inp_MUL) {
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == DIV || type == Inp_DIV) {
             if (y == 0) {
                 ret = make_own_value_number(0);
@@ -213,7 +213,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                     Push(vm,  (intptr_t) ret);
                     return;
                 }
-                inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+                inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
                 return;
             }
             ret = make_own_value_float(x / y);
@@ -221,7 +221,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == MOD || type == Inp_MOD) {
             nx = (std_64_t) x;
             ny = (std_64_t) y;
@@ -232,7 +232,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                     Push(vm,  (intptr_t) ret);
                     return;
                 }
-                inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+                inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
                 return;
             }
 
@@ -241,7 +241,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
                 Push(vm,  (intptr_t) ret);
                 return;
             }
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         }
     } else if ((get_own_value_type(obj_x) == OWN_TYPE_OBJECT_STRING) &&
                (get_own_value_type(obj_y) == OWN_TYPE_OBJECT_STRING)) {
@@ -256,7 +256,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
 
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
             //to avoid memory leak when doing something like "string = str1 + str2 + str3", because "str1 + str2" is a tmp string,
             // is not assigned to any variable, so the memory of str1 + str2 is not freed.
@@ -275,7 +275,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
 
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
@@ -292,7 +292,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
 
-            inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
@@ -307,9 +307,9 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_ADD(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_ADD(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm, ADD, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm, ADD, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -317,9 +317,9 @@ STD_CALL static inline std_void_t inline_execute_code_ADD(environment_vm_t *vm, 
  * @brief
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_SUB(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_SUB(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,SUB, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,SUB, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -327,9 +327,9 @@ STD_CALL static inline std_void_t inline_execute_code_SUB(environment_vm_t *vm, 
  * @brief
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_MUL(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_MUL(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,MUL, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,MUL, Codes, Stack, Pc, Fp);
 }
 
 
@@ -338,9 +338,9 @@ STD_CALL static inline std_void_t inline_execute_code_MUL(environment_vm_t *vm, 
  * @brief   
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_DIV(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_DIV(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,DIV, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,DIV, Codes, Stack, Pc, Fp);
 }
 
 
@@ -349,9 +349,9 @@ STD_CALL static inline std_void_t inline_execute_code_DIV(environment_vm_t *vm, 
  * @brief   
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_MOD(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_MOD(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,MOD, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,MOD, Codes, Stack, Pc, Fp);
 }
 
 
@@ -360,9 +360,9 @@ STD_CALL static inline std_void_t inline_execute_code_MOD(environment_vm_t *vm, 
  * @brief
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADD(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADD(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_ADD, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_ADD, Codes, Stack, Pc, Fp);
 }
 
 
@@ -376,11 +376,11 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADD(environment
  * @param   Fp
  * @return  STD_CALL static forced_inline std_void_t
  */
-STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     Push(vm,  Codes[*Pc].i_operand);
 
-    return inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_ADD, thread_id, Codes, Stack, Pc, Fp);
+    return inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_ADD, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -389,9 +389,9 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environmen
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_Inp_SUB(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_Inp_SUB(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_SUB, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_SUB, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -400,9 +400,9 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_SUB(environment_vm_t *
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_Inp_MUL(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_Inp_MUL(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_MUL, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_MUL, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -411,9 +411,9 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_MUL(environment_vm_t *
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_Inp_DIV(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, IN const std_u64_t *Stack, IN const std_int_t *Pc, IN const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_Inp_DIV(environment_vm_t *vm, IN const code_st *Codes, IN const std_u64_t *Stack, IN const std_int_t *Pc, IN const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_DIV, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_DIV, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -422,9 +422,9 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_DIV(environment_vm_t *
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_Inp_MOD(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, IN const std_u64_t *Stack, IN const std_int_t *Pc, IN const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_Inp_MOD(environment_vm_t *vm, IN const code_st *Codes, IN const std_u64_t *Stack, IN const std_int_t *Pc, IN const std_int_t *Fp)
 {
-    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_MOD, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_MOD, Codes, Stack, Pc, Fp);
 }
 
 /**
@@ -592,7 +592,7 @@ STD_CALL static inline std_void_t inline_execute_code_XOR(environment_vm_t *vm, 
  * @param   Pc
  * @return  STD_CALL static std_int_t
  */
-STD_CALL static forced_inline std_bool_t inline_execute_code_BEQ0(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_int_t *Pc)
+STD_CALL static forced_inline std_bool_t inline_execute_code_BEQ0(environment_vm_t *vm, const code_st *Codes, std_int_t *Pc)
 {
     const own_value_t obj_x = Pop(vm);
 
@@ -615,7 +615,7 @@ STD_CALL static forced_inline std_bool_t inline_execute_code_BEQ0(environment_vm
  * @param   Sp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t obj_value;
 
@@ -647,7 +647,7 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
  * @param   Sp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t obj_value;
 
@@ -678,7 +678,7 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand + STACK_ARG_INDEX];
     set_VAR(object, NAN_BOX_Null, Top(vm));
@@ -696,7 +696,7 @@ STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *v
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
 
@@ -724,7 +724,7 @@ STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *v
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_JUMP(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_int_t *Pc)
+STD_CALL static inline std_void_t inline_execute_code_JUMP(environment_vm_t *vm, const code_st *Codes, std_int_t *Pc)
 {
     *Pc = (std_int_t) Codes[*Pc].i_operand;
 }
@@ -736,7 +736,7 @@ STD_CALL static inline std_void_t inline_execute_code_JUMP(environment_vm_t *vm,
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_CALL(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_int_t *Pc)
+STD_CALL static inline std_void_t inline_execute_code_CALL(environment_vm_t *vm, const code_st *Codes, std_int_t *Pc)
 {
     Push(vm,  *Pc + 1);
     *Pc = (std_int_t) Codes[*Pc].i_operand;
@@ -750,7 +750,7 @@ STD_CALL static inline std_void_t inline_execute_code_CALL(environment_vm_t *vm,
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_LOADF(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc)
+STD_CALL static inline std_void_t inline_execute_code_LOADF(environment_vm_t *vm, const code_st *Codes, const std_int_t *Pc)
 {
     std_int_t func_addr = (std_int_t) Codes[*Pc].i_operand;
     Push(vm,  func_addr);
@@ -764,7 +764,7 @@ STD_CALL static inline std_void_t inline_execute_code_LOADF(environment_vm_t *vm
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     own_value_t value;
@@ -806,7 +806,7 @@ STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm
  * @param   x
  * @return  STD_CALL static std_int_t
  */
-STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, IN std_int_t thread_id, std_int_t *Pc, std_int_t *Fp, std_int_t *Sp, IN const std_u64_t *x)
+STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, std_int_t *Pc, std_int_t *Fp, std_int_t *Sp, IN const std_u64_t *x)
 {
 #if FUNC_RET_SUPPORT
     *x = Pop(thread_id);
@@ -836,11 +836,11 @@ STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, I
  * @param   x
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_POPR(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc, std_int_t *Sp, IN const std_u64_t *x)
+STD_CALL static inline std_void_t inline_execute_code_POPR(environment_vm_t *vm, const code_st *Codes, const std_int_t *Pc, std_int_t *Sp, IN const std_u64_t *x)
 {
     *Sp = (std_int_t) (*Sp + Codes[*Pc].i_operand);
 #if FUNC_RET_SUPPORT
-    Push(thread_id, *x);
+    Push(*x);
 #endif
 }
 
@@ -853,7 +853,7 @@ STD_CALL static inline std_void_t inline_execute_code_POPR(environment_vm_t *vm,
  * @param Fp Current frame pointer.
  * @param Sp Current stack pointer.
  */
-STD_CALL static inline std_void_t inline_execute_code_FRAME(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc, std_int_t *Fp, std_int_t *Sp)
+STD_CALL static inline std_void_t inline_execute_code_FRAME(environment_vm_t *vm, const code_st *Codes, const std_int_t *Pc, std_int_t *Fp, std_int_t *Sp)
 {
     Push(vm,  *Fp);
     *Fp = *Sp;
@@ -867,7 +867,7 @@ STD_CALL static inline std_void_t inline_execute_code_FRAME(environment_vm_t *vm
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc)
+STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *vm, const code_st *Codes, const std_int_t *Pc)
 {
     std_char_t key[KEY_NAME_SIZE] = "\0";
     const func_entry_t *func_entry;
@@ -876,7 +876,7 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
     func_entry = (func_entry_t *) std_lock_free_key_hash_find(vm->custom_func_hash, key, std_safe_strlen(key, sizeof(key)));
 
     STD_ASSERT_RV(func_entry != NULL, );
-    func_entry->reg_func(vm, thread_id, func_entry->arg_counts);
+    func_entry->reg_func(vm, func_entry->arg_counts);
 }
 
 /**
@@ -888,7 +888,7 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm, const code_st *Codes, std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     ownership_object_symbol_t *symbol;
@@ -913,7 +913,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm, const code_st *Codes, std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     ownership_object_symbol_t *symbol;
@@ -934,7 +934,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     std_int_t fp_index;
     own_value_t object;
@@ -958,7 +958,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     std_int_t fp_index;
     own_value_t object;
@@ -983,7 +983,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
  * @param   Pc
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     std_int_t fp_index;
     own_value_t object;
@@ -1003,7 +1003,7 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm
  * @param   Sp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     std_int_t fp_index;
     own_value_t object;
@@ -1023,7 +1023,7 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_NEW_ARRAY(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_NEW_ARRAY(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand];
     ownership_object_symbol_t *symbol = get_own_value_object_symbol(object);
@@ -1041,7 +1041,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_ARRAY(environment_vm_t
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_NEW_LIST(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_NEW_LIST(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand];
     ownership_object_symbol_t *symbol = get_own_value_object_symbol(object);
@@ -1059,7 +1059,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_LIST(environment_vm_t 
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_NEW_KEY_HASH(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_NEW_KEY_HASH(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand];
     ownership_object_symbol_t *symbol = get_own_value_object_symbol(object);
@@ -1077,7 +1077,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_KEY_HASH(environment_v
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_SET_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_SET_ITEM(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     own_value_t obj_value = Pop(vm);
@@ -1097,7 +1097,7 @@ STD_CALL static inline std_void_t inline_execute_code_SET_ITEM(environment_vm_t 
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_GET_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_GET_ITEM(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     own_value_t value;
@@ -1118,7 +1118,7 @@ STD_CALL static inline std_void_t inline_execute_code_GET_ITEM(environment_vm_t 
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_ADD_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_ADD_ITEM(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
 
@@ -1137,7 +1137,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_ITEM(environment_vm_t 
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_ADD_KEY_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_ADD_KEY_ITEM(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
 
@@ -1157,7 +1157,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_KEY_ITEM(environment_v
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     own_value_t ret;
@@ -1180,7 +1180,7 @@ STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM(environment_vm_t 
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM_IDX(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM_IDX(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     own_value_t ret;
@@ -1202,7 +1202,7 @@ STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM_IDX(environment_v
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_FIND_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_FIND_ITEM(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
 
@@ -1224,7 +1224,7 @@ STD_CALL static inline std_void_t inline_execute_code_FIND_ITEM(environment_vm_t
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_SIZE(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_SIZE(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
     own_value_t ret = NAN_BOX_Null;
@@ -1244,7 +1244,7 @@ STD_CALL static inline std_void_t inline_execute_code_SIZE(environment_vm_t *vm,
  * @param   Fp
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_RESIZE_ARRAY(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+STD_CALL static inline std_void_t inline_execute_code_RESIZE_ARRAY(environment_vm_t *vm, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
 

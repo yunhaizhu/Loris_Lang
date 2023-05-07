@@ -33,7 +33,7 @@
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t file_name;
     own_value_t file_body;
@@ -65,7 +65,7 @@ STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t thread_
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t file_x;
     own_value_t file_y;
@@ -185,7 +185,7 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t args)
 {
     char *response = NULL;
     int res;

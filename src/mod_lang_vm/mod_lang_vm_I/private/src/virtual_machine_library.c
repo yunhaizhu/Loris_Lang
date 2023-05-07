@@ -213,7 +213,7 @@ std_void_t json_create_walk_callback(const std_char_t *key, std_void_t **data, s
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_name_value_hash;
     std_char_t request_string[MAX_BODY_SIZE] = "\0";
@@ -255,7 +255,7 @@ std_void_t keys_walk_callback(const std_char_t *key, IN std_void_t **data, IN st
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_name_value_hash;
     own_value_t ret_obj;
@@ -397,7 +397,7 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t args)
 {
     json_t const *json = NULL;
     own_value_t obj_json_string;
@@ -433,7 +433,7 @@ STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t thread
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj[32];
 
@@ -459,7 +459,7 @@ STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t thread_id, 
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj[32];
 
@@ -483,7 +483,7 @@ STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t thread_id,
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_assert(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_assert(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj1;
     own_value_t obj2;
@@ -507,7 +507,7 @@ STD_CALL std_void_t library_assert(environment_vm_t *vm, IN std_int_t thread_id,
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj1;
     own_value_t obj2;
@@ -553,7 +553,7 @@ STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t thread_id
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_check;
     own_value_t obj_tuple;
@@ -583,7 +583,7 @@ STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t thread
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj1;
     own_value_t ret_obj;
@@ -615,7 +615,7 @@ STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t thr
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t args)
 {
     std_64_t value;
     own_value_t ret_obj;
@@ -634,7 +634,7 @@ STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t th
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj1;
     own_value_t ret_obj;
@@ -670,7 +670,7 @@ STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t thr
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_string;
     std_char_t *string_string = NULL;
@@ -713,7 +713,7 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t t
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_array;
     std_char_t tmp_buffer[MAX_BODY_SIZE] = "\0";
@@ -755,7 +755,7 @@ STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t t
  * @param   args
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
+STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t args)
 {
     own_value_t obj_string;
     const std_char_t *file_name = NULL;

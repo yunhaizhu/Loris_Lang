@@ -26,7 +26,7 @@
  * @param   args
  * @return  typedef
  */
-typedef std_void_t (*register_func)(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args);
+typedef std_void_t (*register_func)(environment_vm_t *vm, IN std_int_t args);
 typedef struct func_entry_s {
     std_int_t arg_counts;
     register_func reg_func;

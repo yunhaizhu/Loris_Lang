@@ -140,31 +140,31 @@ STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN
     goto *jump_table[Codes[*Pc].opcode];
 
 OP_CODE_POP:
-    inline_execute_code_POP(vm, thread_id, &x);
+    inline_execute_code_POP(vm, &x);
     DISPATCH()
 
 OP_CODE_VAR_A:
-    inline_execute_code_VAR_A(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_VAR_A(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_VAR_L:
-    inline_execute_code_VAR_L(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_VAR_L(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_VAR_A_CLEAN:
-    inline_execute_code_VAR_A_CLEAN(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_VAR_A_CLEAN(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_VAR_L_CLEAN:
-    inline_execute_code_VAR_L_CLEAN(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_VAR_L_CLEAN(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_SYM_A:
-    inline_execute_code_SYM_A(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_SYM_A(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_SYM_L:
-    inline_execute_code_SYM_L(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_SYM_L(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_PUSHI:
@@ -173,51 +173,51 @@ OP_CODE_PUSHA:
 OP_CODE_PUSHC:
 OP_CODE_PUSHD:
 OP_CODE_PUSHS:
-    inline_execute_code_PUSHIUAS(vm, thread_id, Codes, Pc);
+    inline_execute_code_PUSHIUAS(vm, Codes, Pc);
     DISPATCH()
 
 OP_CODE_ADD:
-    inline_execute_code_ADD(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_Inp_ADD:
-    inline_execute_code_Inp_ADD(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_Inp_ADD(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_Inp_ADDI:
-    inline_execute_code_Inp_ADDI(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_Inp_ADDI(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_SUB:
-    inline_execute_code_SUB(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_SUB(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_Inp_SUB:
-    inline_execute_code_Inp_SUB(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_Inp_SUB(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_MUL:
-    inline_execute_code_MUL(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_MUL(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_Inp_MUL:
-    inline_execute_code_Inp_MUL(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_Inp_MUL(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_DIV:
-    inline_execute_code_DIV(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_DIV(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_Inp_DIV:
-    inline_execute_code_Inp_DIV(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_Inp_DIV(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_MOD:
-    inline_execute_code_MOD(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_MOD(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_Inp_MOD:
-    inline_execute_code_Inp_MOD(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_Inp_MOD(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_GT:
@@ -245,7 +245,7 @@ OP_CODE_BGE:
     DISPATCH()
 
 OP_CODE_BEQ0:
-    if (inline_execute_code_BEQ0(vm, thread_id, Codes, Pc) == STD_BOOL_TRUE) {
+    if (inline_execute_code_BEQ0(vm, Codes, Pc) == STD_BOOL_TRUE) {
         goto *jump_table[Codes[*Pc].opcode];
     } else {
         DISPATCH()
@@ -264,41 +264,41 @@ OP_CODE_XOR:
     DISPATCH()
 
 OP_CODE_LOADA:
-    inline_execute_code_LOADA(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_LOADA(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_LOADL:
-    inline_execute_code_LOADL(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_LOADL(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_STOREA:
-    inline_execute_code_STOREA(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_STOREA(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_STOREL:
-    inline_execute_code_STOREL(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_STOREL(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_JUMP:
-    inline_execute_code_JUMP(vm, thread_id, Codes, Pc);
+    inline_execute_code_JUMP(vm, Codes, Pc);
     goto *jump_table[Codes[*Pc].opcode];
 
 OP_CODE_CALL:
-    inline_execute_code_CALL(vm, thread_id, Codes, Pc);
+    inline_execute_code_CALL(vm, Codes, Pc);
     goto *jump_table[Codes[*Pc].opcode];
 
 OP_CODE_RET:
-    if (inline_execute_code_RET(vm, thread_id, Pc, Fp, Sp, &x) == 1) {
+    if (inline_execute_code_RET(vm, Pc, Fp, Sp, &x) == 1) {
         return;
     }
     goto *jump_table[Codes[*Pc].opcode];
 
 OP_CODE_POPR:
-    inline_execute_code_POPR(vm, thread_id, Codes, Pc, Sp, &x);
+    inline_execute_code_POPR(vm, Codes, Pc, Sp, &x);
     DISPATCH()
 
 OP_CODE_FRAME:
-    inline_execute_code_FRAME(vm, thread_id, Codes, Pc, Fp, Sp);
+    inline_execute_code_FRAME(vm, Codes, Pc, Fp, Sp);
     DISPATCH()
 
 OP_CODE_ENTRY:
@@ -308,63 +308,63 @@ OP_CODE_LABEL:
     return;
 
 OP_CODE_CUSTOM:
-    inline_execute_code_CUSTOM(vm, thread_id, Codes, Pc);
+    inline_execute_code_CUSTOM(vm, Codes, Pc);
     DISPATCH()
 
 OP_CODE_NEW_ARRAY:
-    inline_execute_code_NEW_ARRAY(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_NEW_ARRAY(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_NEW_LIST:
-    inline_execute_code_NEW_LIST(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_NEW_LIST(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_NEW_KEY_HASH:
-    inline_execute_code_NEW_KEY_HASH(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_NEW_KEY_HASH(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_ADD_ITEM:
-    inline_execute_code_ADD_ITEM(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_ITEM(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_ADD_KEY_ITEM:
-    inline_execute_code_ADD_KEY_ITEM(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_ADD_KEY_ITEM(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_DEL_ITEM:
-    inline_execute_code_DEL_ITEM(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_DEL_ITEM(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_DEL_ITEM_INDEX:
-    inline_execute_code_DEL_ITEM_IDX(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_DEL_ITEM_IDX(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_GET_ITEM:
-    inline_execute_code_GET_ITEM(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_GET_ITEM(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_SET_ITEM:
-    inline_execute_code_SET_ITEM(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_SET_ITEM(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_FIND_ITEM:
-    inline_execute_code_FIND_ITEM(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_FIND_ITEM(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_SIZE:
-    inline_execute_code_SIZE(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_SIZE(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_RESIZE_ARRAY:
-    inline_execute_code_RESIZE_ARRAY(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_RESIZE_ARRAY(vm, Codes, Stack, Pc, Fp);
     DISPATCH()
 
 OP_CODE_LOADF:
-    inline_execute_code_LOADF(vm, thread_id, Codes, Pc);
+    inline_execute_code_LOADF(vm, Codes, Pc);
     DISPATCH()
 
 OP_CODE_CALLF:
-    inline_execute_code_CALLF(vm, thread_id, Codes, Stack, Pc, Fp);
+    inline_execute_code_CALLF(vm, Codes, Stack, Pc, Fp);
     goto *jump_table[Codes[*Pc].opcode];
 
 OP_CODE_LOAD_LIB:
