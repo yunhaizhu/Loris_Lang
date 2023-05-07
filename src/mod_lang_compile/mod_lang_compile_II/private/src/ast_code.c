@@ -286,15 +286,5 @@ STD_CALL std_rv_t gen_buffer_output(generate_code_env_t *generate_code_env, IN s
    return ret;
 }
 
-/**
-* gen_buffer_reset
-* @brief
-* @return  STD_CALL std_void_t
-*/
-STD_CALL std_void_t gen_buffer_reset(generate_code_env_t *generate_code_env)
-{
-   memset(generate_code_env->gen_buffer, 0, sizeof(generate_code_env->gen_buffer));
-   generate_code_env->gen_buffer_idx = 0;
-}
 
 

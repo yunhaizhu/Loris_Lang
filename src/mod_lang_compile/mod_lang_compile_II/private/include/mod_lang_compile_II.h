@@ -22,22 +22,7 @@ typedef struct mod_lang_compile_imp_st {
 	mod_ownership_t ownership;
 	std_u64_t unique_id;
 	struct mod_lang_compile_ops_st *p_ops;
-
 } mod_lang_compile_imp_t;
-
-/****shell_interface*****/
-
-/**
- * shell_stub_mod_lang_compile_II_compile_bytecode
- * @brief   
- * @param   p_handle
- * @param   params
- * @return  extern STD_CALL std_char_t *
- */
-extern STD_CALL std_char_t *shell_stub_mod_lang_compile_II_compile_bytecode(IN std_void_t * p_handle,
-									    IN std_char_t * params);
-
-/****rpc_service_interface*****/
 
 /**
  * mod_lang_compile_II_create_instance

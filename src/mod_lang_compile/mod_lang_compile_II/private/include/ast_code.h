@@ -169,12 +169,7 @@ STD_CALL std_char_t *gen_code_func(generate_code_env_t *generate_code_env,
 * @return  STD_CALL std_char_t *
 */
 STD_CALL std_char_t *gen_code_expr(generate_code_env_t *generate_code_env);
-/**
-* gen_buffer_reset
-* @brief
-* @return  STD_CALL std_void_t
-*/
-STD_CALL std_void_t gen_buffer_reset(generate_code_env_t *generate_code_env);
+
 
 /**
 * gen_buffer_output
