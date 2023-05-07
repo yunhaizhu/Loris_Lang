@@ -1,7 +1,7 @@
 package test
 require "os"
 import os.print, os.assert
-import test.test_key_class_data
+
 
 def test_key_class_data(var key, var data, var ret)
 {
@@ -38,7 +38,7 @@ def test_func_class()
 #    test_func_class()
 #}
 
-#script("test/basic/function/test_func_class.nl")
+#script("script/test_all/basic/function/test_func_class.ll")
 
 
 

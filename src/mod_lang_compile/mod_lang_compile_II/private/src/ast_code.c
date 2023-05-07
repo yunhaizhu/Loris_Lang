@@ -177,7 +177,7 @@ STD_CALL std_char_t *gen_code_func(generate_code_env_t *generate_code_env, IN co
            generate_code_env->gen_codes[i].opcode == LABEL||
            generate_code_env->gen_codes[i].opcode == JUMP) {
            std_char_t label[KEY_NAME_SIZE] = {0};
-           snprintf(label, KEY_NAME_SIZE, "L%ld", generate_code_env->gen_codes[i].i64_operand);
+           snprintf(label, KEY_NAME_SIZE, "L%s_%ld", entry_name, generate_code_env->gen_codes[i].i64_operand);
            generate_code_env->gen_codes[i].str_operand = label;
        }
 

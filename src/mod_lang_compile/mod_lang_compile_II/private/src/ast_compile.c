@@ -178,19 +178,14 @@ std_void_t compile_load_var(lang_compile_environment_t *compile_env, symbol_t *v
                case VAR_LOCAL:
                    gen_codeIUDSE(compile_env->generate_code_env,LOADL, Env[i].pos, 0, 0, NULL, 0, line);
                    return;
+               case VAR_FUNC:
+                   gen_codeIUDSE(compile_env->generate_code_env, LOADF, 0, 0, 0, var->name, 0, line);
+                     return;
                default:
                    break;
            }
        }
    }
-
-//   for (std_int_t i = 0; i < global_env[get_std_thread_id()].global_func_custom_extern_idx; ++i) {
-//       STD_LOG(DISPLAY, "%s\n", global_env[get_std_thread_id()].global_func_custom_extern[i]);
-//       if (0 == strcmp(var->name + std_safe_strlen("function__", BUF_SIZE_32), global_env[get_std_thread_id()].global_func_custom_extern[i])) {
-//           gen_codeIUDSE(LOADF, 0, 0, 0, var->name, 0, line);
-//           return;
-//       }
-//   }
 
    STD_LOG(ERR, "undefined variable '%s', please check line [%d]\n", var->name, line);
    compile_error(compile_env);
@@ -1537,9 +1532,12 @@ std_void_t define_function(lang_compile_environment_t *compile_env, lang_ast_t *
    symbol_t *last_symbol;
 
    gen_code_init(compile_env->generate_code_env);
-   *envp = 0;
+//   *envp = 0;
    param_pos = 0;
    compile_env->local_var_pos = 0;
+
+
+
    for (; params != NULL; params = get_lang_ast_next(params)) {
        Env[*envp].var = get_lang_ast_symbol(get_lang_ast_first(params));
        Env[*envp].var_kind = VAR_ARG;

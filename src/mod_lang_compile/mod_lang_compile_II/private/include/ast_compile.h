@@ -23,7 +23,8 @@
 typedef enum var_type_s {
    VAR_LOCAL = 0,
    VAR_ARG = 1,
-   VAR_LINK = 2
+   VAR_LINK = 2,
+   VAR_FUNC = 3,
 }var_type_t;
 
 
@@ -38,7 +39,7 @@ typedef struct variable_env_s {
 } variable_env_t;
 
 
-#define MAX_VARIABLE 1000
+#define MAX_VARIABLE 128
 typedef struct lang_compile_environment_s {
    std_int_t envp_save;
    std_int_t envp;

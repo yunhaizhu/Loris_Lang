@@ -1,4 +1,5 @@
 script("script/test_all/basic/test_all.ll")
+script("script/test_all/basic/function/test_func_class.ll")
 script("script/test_all/parse_error/def/test_def_error1.ll")
 script("script/test_all/parse_error/def/test_def_error2.ll")
 script("script/test_all/parse_error/def/test_def_error3.ll")

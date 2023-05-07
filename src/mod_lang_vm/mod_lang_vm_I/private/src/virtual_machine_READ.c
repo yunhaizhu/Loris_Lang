@@ -130,7 +130,7 @@ STD_CALL std_int_t find_label_ex(environment_vm_t *vm, IN std_char_t *name, IN s
         }
     }
 
-    STD_LOG(ERR, "Please check line:[%d], the label '%s' is undefined.\n", line, name);
+    STD_LOG(WARN, "Please check line:[%d], the label '%s' is undefined.\n", line, name);
 
     return STD_RV_ERR_UNEXPECTED;
 }
@@ -502,8 +502,6 @@ STD_CALL std_rv_t read_code(environment_vm_t *vm,
             default:
                 break;
         }
-
-
 
         if (opcode == LABEL || opcode == ENTRY) {
             (*n_labels)++;

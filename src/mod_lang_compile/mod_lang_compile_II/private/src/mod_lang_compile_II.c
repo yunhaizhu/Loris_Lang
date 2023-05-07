@@ -42,7 +42,7 @@ STD_CALL std_rv_t mod_lang_compile_II_cleanup(mod_lang_compile_t * p_m)
 /***func_implementation***/
 std_char_t *compile_bytecode(loris_state_t *state)
 {
-    lang_compile_environment_t compile_env;
+    lang_compile_environment_t *compile_env = (lang_compile_environment_t *)CALLOC(1, sizeof(lang_compile_environment_t));
     def_func_compile_ast_t *def_func_compile_ast = NULL;
     std_char_t *bytecode_buffer = (std_char_t *)CALLOC(1, MAX_CODE_SIZE);
     std_char_t *bytecode_buffer_start = bytecode_buffer;
@@ -50,11 +50,12 @@ std_char_t *compile_bytecode(loris_state_t *state)
     bytecode_buffer_start[0] = '[';
     bytecode_buffer_start += 1;
 
-    compile_env.generate_code_env = (generate_code_env_t *)CALLOC(1, sizeof(generate_code_env_t));
+    compile_env->generate_code_env = (generate_code_env_t *)CALLOC(1, sizeof(generate_code_env_t));
 
     for (std_int_t i = 0; i < state->required_states_idx; ++i) {
         std_char_t *required_bytecode = compile_bytecode( state->required_states[i]);
-        STD_ASSERT_RV_ACTION(required_bytecode != NULL, NULL, FREE(bytecode_buffer); FREE(compile_env.generate_code_env););
+        STD_ASSERT_RV_ACTION(required_bytecode != NULL, NULL,
+                             FREE(bytecode_buffer); FREE(compile_env->generate_code_env);FREE(compile_env););
 
         std_safe_strip_chars(required_bytecode, '[');
         std_safe_strip_chars(required_bytecode, ']');
@@ -67,39 +68,52 @@ std_char_t *compile_bytecode(loris_state_t *state)
 
         std_strcat_s(bytecode_buffer_start, MAX_CODE_SIZE, ",", 1);
         bytecode_buffer_start += 1;
-
     }
+
     std_int_t jmp_ret;
-    jmp_ret = setjmp(compile_env.error_jump_buf);
+    jmp_ret = setjmp(compile_env->error_jump_buf);
     if (jmp_ret) {
         FREE(bytecode_buffer);
-        FREE(compile_env.generate_code_env);
+        FREE(compile_env->generate_code_env);
+        FREE(compile_env);
         return NULL;
     }
 
     for (int i = 0; i < state->load_lib_ast_idx; ++i) {
-        compile_expr(&compile_env, (lang_ast_t *)(state->load_lib_ast[i]));
+        compile_expr(compile_env, (lang_ast_t *)(state->load_lib_ast[i]));
     }
 
     for (std_int_t i = 0; i < state->global_func_compile_ast_idx; ++i) {
         def_func_compile_ast = (def_func_compile_ast_t *)state->global_func_compile_ast[i];
 
-        define_function(&compile_env,
+        std_int_t *envp = &compile_env->envp;
+        variable_env_t *Env = compile_env->var_env;
+
+        *envp = 0;
+        for (std_int_t j = 0; j < state->global_func_compile_ast_idx; ++j) {
+            Env[*envp].var = get_lang_ast_symbol(((def_func_compile_ast_t *)state->global_func_compile_ast[j])->func_symbol);
+            Env[*envp].var_kind = VAR_FUNC;
+            Env[*envp].pos = 0;
+            (*envp)++;
+        }
+
+        define_function(compile_env,
                         def_func_compile_ast->func_symbol,
                         def_func_compile_ast->func_parameter,
                         def_func_compile_ast->func_body);
     }
 
     if (state->cmd_ast){
-        compile_command_statements(&compile_env, state->cmd_ast);
+        compile_command_statements(compile_env, state->cmd_ast);
     }
 
-    gen_buffer_output(compile_env.generate_code_env, bytecode_buffer_start, MAX_CODE_SIZE - (bytecode_buffer_start - bytecode_buffer));
+    gen_buffer_output(compile_env->generate_code_env, bytecode_buffer_start, MAX_CODE_SIZE - (bytecode_buffer_start - bytecode_buffer));
 
     std_char_t *output_buffer = bytecode_buffer_start + std_safe_strlen(bytecode_buffer_start, MAX_CODE_SIZE);
     *(output_buffer - 1) = ']';
 
-    FREE(compile_env.generate_code_env);
+    FREE(compile_env->generate_code_env);
+    FREE(compile_env);
 
     return bytecode_buffer;
 }
