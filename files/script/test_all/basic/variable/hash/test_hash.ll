@@ -96,6 +96,9 @@ def test_hash_get_keys()
     var i
 
     os.get_hash_keys(safe_hash, keys)
+
+    os.assert(keys.size() == 4, "keys.size() == 4")
+
     for (i = 0; i < keys.size(); i+=1){
         os.assert(keys{i} == keys_compare[i], "keys{i} ==  keys_compare[i]")
     }
@@ -111,11 +114,10 @@ def test_hash()
     os.print("TEST HASH SUCCESS")
 }
 
+def main()
+{
+    test_hash()
+}
 
-#def main()
-#{
-#    test_hash_get_keys()
-#}
-
-#script("test/basic/variable/hash/test_hash.nl")
+#script("script/test_all/basic/variable/hash/test_hash.ll")
 

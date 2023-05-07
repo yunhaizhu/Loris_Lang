@@ -14,14 +14,11 @@
  */
 #include "virtual_machine_library.h"
 #include "json-maker.h"
-//#include "shell.h"
 #include "std_common.h"
 #include "std_lock_free_key_hash.h"
 #include "tiny-json.h"
 #include "virtual_machine.h"
 #include "virtual_machine_safe_var.h"
-
-
 
 
 STD_CALL std_void_t read_code(environment_vm_t *vm, std_int_t *register_id, IN std_char_t *buffer, IN std_char_t *entry);
@@ -239,15 +236,16 @@ STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t thread_
     set_VAR(ret_obj, NAN_BOX_Null, make_own_value_object_string(request_string));
 }
 
-//std_void_t keys_walk_callback(const std_char_t *key, std_void_t **data, std_void_t *callback_arg)
-//{
-//    const std_char_t *arg_name = key;
-//    const own_value_t *ret_obj = (own_value_t *) callback_arg;
-//    own_value_t arg_value = make_own_value_object_string(arg_name);
-//
-//    set_VAR(vm, *ret_obj, NAN_BOX_Null, arg_value);
-//    free_ownership_ownvalue(NULL, arg_value);
-//}
+
+std_void_t keys_walk_callback(const std_char_t *key, IN std_void_t **data, IN std_void_t *callback_arg)
+{
+    const std_char_t *arg_name = key;
+    const own_value_t *ret_obj = (own_value_t *) callback_arg;
+    own_value_t arg_value = make_own_value_object_string(arg_name);
+
+    set_VAR( *ret_obj, NAN_BOX_Null, arg_value);
+    free_ownership_ownvalue(NULL, arg_value);
+}
 
 /**
  * library_get_hash_keys
@@ -268,8 +266,7 @@ STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t thr
     obj_name_value_hash = Pop(vm, thread_id);
     obj_name_value_hash = get_VAR(obj_name_value_hash, NAN_BOX_Null, STD_BOOL_FALSE);
 
-//    walk_VAR_with_hash_type(get_own_value_object_symbol(obj_name_value_hash), keys_walk_callback, &ret_obj);
-
+    walk_VAR_with_hash_type(get_own_value_object_symbol(obj_name_value_hash), keys_walk_callback, &ret_obj);
 }
 
 
