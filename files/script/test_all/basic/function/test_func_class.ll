@@ -33,10 +33,10 @@ def test_func_class()
     os.print("TEST FUNC CLASS SUCCESS")
 }
 
-#def main()
-#{
-#    test_func_class()
-#}
+def main()
+{
+    test_func_class()
+}
 
 #script("script/test_all/basic/function/test_func_class.ll")
 
