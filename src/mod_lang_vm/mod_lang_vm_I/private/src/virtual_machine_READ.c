@@ -23,10 +23,10 @@
  */
 STD_CALL std_void_t clean_codes(environment_vm_t *vm)
 {
-    code_st *Codes = vm[get_std_thread_id()].Codes;
-    const std_int_t *n_codes = &vm[get_std_thread_id()].n_codes;
-    label_t *Labels = vm[get_std_thread_id()].Labels;
-    const std_int_t *n_labels = &vm[get_std_thread_id()].n_labels;
+    code_st *Codes = vm->Codes;
+    const std_int_t *n_codes = &vm->n_codes;
+    label_t *Labels = vm->Labels;
+    const std_int_t *n_labels = &vm->n_labels;
 
     for (int i = 1; i < *n_codes; i++) {
         STD_LOG(INFO, "CLEAN %d: %s %ld [%d]\n", i, get_opcode_name(Codes[i].opcode),
@@ -40,7 +40,7 @@ STD_CALL std_void_t clean_codes(environment_vm_t *vm)
             case PUSHD:
                 break;
             case PUSHS:
-                free_ownership_ownvalue(&vm[get_std_thread_id()].global_system_object_symbol, Codes[i].i_operand);
+                free_ownership_ownvalue(&vm->global_system_object_symbol, Codes[i].i_operand);
                 break;
 
             case BEQ0:
@@ -71,8 +71,8 @@ STD_CALL std_void_t clean_codes(environment_vm_t *vm)
  */
 STD_CALL std_int_t find_label(environment_vm_t *vm, IN std_char_t *name, IN std_int_t line)
 {
-    const label_t *Labels = vm[get_std_thread_id()].Labels;
-    std_int_t n_labels = vm[get_std_thread_id()].n_labels;
+    const label_t *Labels = vm->Labels;
+    std_int_t n_labels = vm->n_labels;
 
     for (std_int_t j = 0; j < n_labels; j++) {
         if (strcmp(Labels[j].name, name) == 0)
@@ -94,8 +94,8 @@ STD_CALL std_int_t find_label(environment_vm_t *vm, IN std_char_t *name, IN std_
  */
 STD_CALL std_int_t wild_find_label(environment_vm_t *vm, IN std_char_t *name, IN std_int_t line)
 {
-    const label_t *Labels = vm[get_std_thread_id()].Labels;
-    std_int_t n_labels = vm[get_std_thread_id()].n_labels;
+    const label_t *Labels = vm->Labels;
+    std_int_t n_labels = vm->n_labels;
 
     for (std_int_t j = 0; j < n_labels; j++) {
         if (strstr(Labels[j].name, name) != NULL)
@@ -117,8 +117,8 @@ STD_CALL std_int_t wild_find_label(environment_vm_t *vm, IN std_char_t *name, IN
  */
 STD_CALL std_int_t find_label_ex(environment_vm_t *vm, IN std_char_t *name, IN std_int_t args_count, IN std_int_t line)
 {
-    const label_t *Labels = vm[get_std_thread_id()].Labels;
-    std_int_t n_labels = vm[get_std_thread_id()].n_labels;
+    const label_t *Labels = vm->Labels;
+    std_int_t n_labels = vm->n_labels;
 
     for (std_int_t j = 0; j < n_labels; j++) {
         if (strcmp(Labels[j].name, name) == 0) {
@@ -156,7 +156,7 @@ STD_CALL static inline std_void_t read_PUSHS(environment_vm_t *vm,
     Codes[*n_codes].i_operand = value;
     Codes[*n_codes].line = line;
 
-    create_ownership_signature(&vm[get_std_thread_id()].global_system_object_symbol, get_own_value_object(value));
+    create_ownership_signature(&vm->global_system_object_symbol, get_own_value_object(value));
 }
 
 STD_CALL static inline std_void_t read_PUSHI(
@@ -379,10 +379,10 @@ STD_CALL std_rv_t read_code(environment_vm_t *vm,
                             std_int_t *register_id,
                             IN const std_char_t *json_str)
 {
-    code_st *Codes = vm[get_std_thread_id()].Codes;
-    label_t *Labels = vm[get_std_thread_id()].Labels;
-    std_int_t *n_codes = &vm[get_std_thread_id()].n_codes;
-    std_int_t *n_labels = &vm[get_std_thread_id()].n_labels;
+    code_st *Codes = vm->Codes;
+    label_t *Labels = vm->Labels;
+    std_int_t *n_codes = &vm->n_codes;
+    std_int_t *n_labels = &vm->n_labels;
     std_char_t *entry = NULL;
     json_t const *json = NULL;
     json_t mem[MAX_CODE*5];

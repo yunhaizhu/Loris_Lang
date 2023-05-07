@@ -30,16 +30,16 @@
 STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN std_bool_t reset, const std_char_t *main_arg)
 {
     std_int_t thread_id = get_std_thread_id();
-    const code_st *Codes = vm[thread_id].Codes;
-    std_int_t *Sp = &vm[thread_id].Sp;
-    std_int_t *Fp = &vm[thread_id].Fp;
-    std_int_t *Pc = &vm[thread_id].Pc;
-    std_u64_t *Stack = vm[thread_id].Stack;
+    const code_st *Codes = vm->Codes;
+    std_int_t *Sp = &vm->Sp;
+    std_int_t *Fp = &vm->Fp;
+    std_int_t *Pc = &vm->Pc;
+    std_u64_t *Stack = vm->Stack;
     std_u64_t x = 0;
 
     if (reset) {
         *Sp = *Fp = MAX_STACK - 1;
-        vm[get_std_thread_id()].error_code = STD_RV_SUC;
+        vm->error_code = STD_RV_SUC;
     }
 
     *Pc = start_pc;

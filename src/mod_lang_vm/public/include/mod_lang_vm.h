@@ -46,14 +46,14 @@ struct mod_lang_vm_ops_st {
     std_int_t (*cleanup)(IN mod_lang_vm_t *m);
 
     /***func_define***/
-    std_int_t (*run_init)(IN mod_lang_vm_t *m, IN const std_char_t *file_name, IN const std_char_t *bytecode_buffer);
-    std_int_t (*run_execute)(IN mod_lang_vm_t *m, IN const std_char_t *file_name, IN std_u64_t u64_key, IN const std_char_t *arg);
-    std_int_t (*run_cleanup)(IN mod_lang_vm_t *m, IN const std_char_t *file_name);
+    std_void_t *(*run_init)(IN mod_lang_vm_t *m, IN const std_char_t *file_name, IN const std_char_t *bytecode_buffer);
+    std_int_t (*run_execute)(IN mod_lang_vm_t *m, IN std_void_t *vm, IN const std_char_t *arg);
+    std_int_t (*run_cleanup)(IN mod_lang_vm_t *m, IN std_void_t *vm);
 
-    std_int_t (*run_func_init)(IN mod_lang_vm_t *m, IN const std_char_t *file_name, IN const std_char_t *bytecode_buffer);
-    std_rv_t (*run_func_push_var_int)(IN mod_lang_vm_t *m, IN std_int_t value);
-    std_rv_t (*run_func_call)(IN mod_lang_vm_t *m, IN const std_char_t *func_name, IN std_int_t arg_num);
-    std_int_t (*run_func_cleanup)(IN mod_lang_vm_t *m, IN const std_char_t *file_name);
+    std_void_t * (*run_func_init)(IN mod_lang_vm_t *m, IN const std_char_t *file_name, IN const std_char_t *bytecode_buffer);
+    std_rv_t (*run_func_push_var_int)(IN mod_lang_vm_t *m, IN std_void_t *vm, IN std_int_t value);
+    std_rv_t (*run_func_call)(IN mod_lang_vm_t *m, IN std_void_t *vm, IN const std_char_t *func_name, IN std_int_t arg_num);
+    std_int_t (*run_func_cleanup)(IN mod_lang_vm_t *m, IN std_void_t *vm);
 };
 
 /***************************************************
@@ -75,12 +75,12 @@ struct mod_lang_vm_ops_st {
 
 /***interface_define***/
 #define mod_lang_vm_run_init(m, file_name, bytecode_buffer) ((m)->p_ops->run_init((mod_lang_vm_t *) (m), file_name, bytecode_buffer))
-#define mod_lang_vm_run_execute(m, file_name, u64_key, arg) ((m)->p_ops->run_execute((mod_lang_vm_t *) (m), file_name, u64_key, arg))
-#define mod_lang_vm_run_cleanup(m, file_name) ((m)->p_ops->run_cleanup((mod_lang_vm_t *) (m), file_name))
+#define mod_lang_vm_run_execute(m, vm, arg) ((m)->p_ops->run_execute((mod_lang_vm_t *) (m), vm, arg))
+#define mod_lang_vm_run_cleanup(m, vm) ((m)->p_ops->run_cleanup((mod_lang_vm_t *) (m), vm))
 
 #define mod_lang_vm_run_func_init(m, file_name, bytecode_buffer) ((m)->p_ops->run_func_init((mod_lang_vm_t *) (m), file_name, bytecode_buffer))
-#define mod_lang_vm_run_func_push_var_int(m, value) ((m)->p_ops->run_func_push_var_int((mod_lang_vm_t *) (m), value))
-#define mod_lang_vm_run_func_call(m, func, arg_num) ((m)->p_ops->run_func_call((mod_lang_vm_t *) (m), func, arg_num))
-#define mod_lang_vm_run_func_cleanup(m, file_name) ((m)->p_ops->run_func_cleanup((mod_lang_vm_t *) (m), file_name))
+#define mod_lang_vm_run_func_push_var_int(m, vm, value) ((m)->p_ops->run_func_push_var_int((mod_lang_vm_t *) (m), vm, value))
+#define mod_lang_vm_run_func_call(m, vm, func, arg_num) ((m)->p_ops->run_func_call((mod_lang_vm_t *) (m), vm, func, arg_num))
+#define mod_lang_vm_run_func_cleanup(m, vm) ((m)->p_ops->run_func_cleanup((mod_lang_vm_t *) (m), vm))
 
 #endif

@@ -53,10 +53,10 @@ struct mod_shell_ops_st {
     std_int_t (*unregister)(IN mod_shell_t *m, IN const std_char_t *name, IN std_int_t name_len);
     std_int_t (*shell)(IN mod_shell_t *m, IN std_int_t shell_type, IN std_char_t *cmd);
 
-    std_rv_t (*call_script_func_init)(IN mod_shell_t *m, IN const std_char_t *script_name);
-    std_rv_t (*call_script_func_push_int)(IN mod_shell_t *m, IN std_int_t value);
-    std_rv_t (*call_script_func_call)(IN mod_shell_t *m, IN const std_char_t *script_name, IN const std_char_t *func_name, IN std_int_t arg_num);
-    std_rv_t (*call_script_func_cleanup)(IN mod_shell_t *m, IN const std_char_t *script_name);
+    std_void_t *(*call_script_func_init)(IN mod_shell_t *m, IN const std_char_t *script_name);
+    std_rv_t (*call_script_func_push_int)(IN mod_shell_t *m, IN std_void_t *vm, IN std_int_t value);
+    std_rv_t (*call_script_func_call)(IN mod_shell_t *m, IN std_void_t *vm, IN const std_char_t *func_name, IN std_int_t arg_num);
+    std_rv_t (*call_script_func_cleanup)(IN mod_shell_t *m, IN std_void_t *vm);
 };
 
 /***************************************************
@@ -82,9 +82,9 @@ struct mod_shell_ops_st {
 #define mod_shell_shell(m, shell_type, cmd) ((m)->p_ops->shell((mod_shell_t *) (m), shell_type, cmd))
 
 #define mod_shell_call_script_func_init(m, script_name) ((m)->p_ops->call_script_func_init((mod_shell_t *) (m), script_name))
-#define mod_shell_call_script_func_push_int(m, value) ((m)->p_ops->call_script_func_push_int((mod_shell_t *) (m), value))
-#define mod_shell_call_script_func_call(m, script_name, func_name, arg_num) ((m)->p_ops->call_script_func_call((mod_shell_t *) (m), script_name, func_name, arg_num))
-#define mod_shell_call_script_func_cleanup(m, script_name) ((m)->p_ops->call_script_func_cleanup((mod_shell_t *) (m), script_name))
+#define mod_shell_call_script_func_push_int(m, vm, value) ((m)->p_ops->call_script_func_push_int((mod_shell_t *) (m), vm, value))
+#define mod_shell_call_script_func_call(m, vm, func_name, arg_num) ((m)->p_ops->call_script_func_call((mod_shell_t *) (m), vm, func_name, arg_num))
+#define mod_shell_call_script_func_cleanup(m, vm) ((m)->p_ops->call_script_func_cleanup((mod_shell_t *) (m), vm))
 
 
 #endif

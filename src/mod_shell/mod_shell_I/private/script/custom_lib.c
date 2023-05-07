@@ -41,9 +41,9 @@ STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t thread_
     std_char_t *string_file_body;
     FILE *fp = NULL;
 
-    file_body = Pop(vm,thread_id);
+    file_body = Pop(vm);
     file_body = get_VAR(file_body, NAN_BOX_Null, STD_BOOL_FALSE);
-    file_name = Pop(vm,thread_id);
+    file_name = Pop(vm);
     file_name = get_VAR(file_name, NAN_BOX_Null, STD_BOOL_FALSE);
 
     string_file_name = get_own_value_object_string(file_name);
@@ -73,9 +73,9 @@ STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t thread_id, I
     std_char_t *string_file_x;
     std_char_t *string_file_y;
 
-    file_y = Pop(vm,thread_id);
+    file_y = Pop(vm);
     file_y = get_VAR(file_y, NAN_BOX_Null, STD_BOOL_FALSE);
-    file_x = Pop(vm,thread_id);
+    file_x = Pop(vm);
     file_x = get_VAR(file_x, NAN_BOX_Null, STD_BOOL_FALSE);
 
     string_file_x = get_own_value_object_string(file_x);
@@ -202,12 +202,12 @@ STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t thread_id
     std_char_t *api_key = NULL;
     own_value_t response_obj;
 
-    ret_obj = Pop(vm,thread_id);
-    ask_text_obj = Pop(vm,thread_id);
-    model_obj = Pop(vm,thread_id);
-    prompt_obj = Pop(vm,thread_id);
-    api_endpoint_obj = Pop(vm,thread_id);
-    api_key_obj = Pop(vm,thread_id);
+    ret_obj = Pop(vm);
+    ask_text_obj = Pop(vm);
+    model_obj = Pop(vm);
+    prompt_obj = Pop(vm);
+    api_endpoint_obj = Pop(vm);
+    api_key_obj = Pop(vm);
 
     model_obj = get_VAR(model_obj, NAN_BOX_Null, STD_BOOL_FALSE);
     ask_text_obj = get_VAR(ask_text_obj, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -249,10 +249,8 @@ STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t thread_id
  */
 STD_CALL std_void_t library_init(environment_vm_t *vm, std_int_t *register_id)
 {
-    std_int_t thread_id = get_std_thread_id();
-
-    library_func_register(vm,&register_id[thread_id], "function__diff", 2, library_diff);
-    library_func_register(vm,&register_id[thread_id], "function__ask_gpt", 6, library_ask_gpt);
-    library_func_register(vm,&register_id[thread_id], "function__save_file", 2, library_save_file);
+    library_func_register(vm,register_id, "function__diff", 2, library_diff);
+    library_func_register(vm,register_id, "function__ask_gpt", 6, library_ask_gpt);
+    library_func_register(vm,register_id, "function__save_file", 2, library_save_file);
 
 }

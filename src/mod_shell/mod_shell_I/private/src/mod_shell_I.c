@@ -176,18 +176,18 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
  * @param   script_name
  * @return  std_rv_t
  */
-std_rv_t mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_char_t *script_name)
+std_void_t *mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_char_t *script_name)
 {
-    std_rv_t ret;
+    std_void_t *ret;
 
     loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, (std_char_t *)script_name) == STD_RV_SUC,
-                        STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+                        NULL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
     std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
     STD_ASSERT_RV_ACTION(bytecode != NULL,
-                        STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+                        NULL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
     ret = mod_lang_vm_run_func_init(p_global_mod_lang_vm, script_name, bytecode);
 
@@ -206,11 +206,11 @@ std_rv_t mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_char_
  * @param   arg_num
  * @return  std_rv_t
  */
-std_rv_t mod_shell_I_call_script_func(IN mod_shell_t *m, IN const std_char_t *script_name, IN const std_char_t *func_name, IN std_int_t arg_num)
+std_rv_t mod_shell_I_call_script_func(IN mod_shell_t *m, IN std_void_t *vm, IN const std_char_t *func_name, IN std_int_t arg_num)
 {
     std_rv_t ret;
 
-    ret = mod_lang_vm_run_func_call(p_global_mod_lang_vm, func_name, arg_num);
+    ret = mod_lang_vm_run_func_call(p_global_mod_lang_vm, vm, func_name, arg_num);
 
     return ret;
 }
@@ -222,11 +222,11 @@ std_rv_t mod_shell_I_call_script_func(IN mod_shell_t *m, IN const std_char_t *sc
  * @param   value
  * @return  std_rv_t
  */
-std_rv_t mod_shell_I_call_script_func_push_int(IN mod_shell_t *m, IN std_int_t value)
+std_rv_t mod_shell_I_call_script_func_push_int(IN mod_shell_t *m, IN std_void_t *vm, IN std_int_t value)
 {
     std_rv_t ret;
 
-    ret = mod_lang_vm_run_func_push_var_int(p_global_mod_lang_vm, value);
+    ret = mod_lang_vm_run_func_push_var_int(p_global_mod_lang_vm, vm, value);
     return ret;
 }
 
@@ -237,9 +237,9 @@ std_rv_t mod_shell_I_call_script_func_push_int(IN mod_shell_t *m, IN std_int_t v
  * @param   script_name
  * @return  std_rv_t
  */
-std_rv_t mod_shell_I_call_script_func_cleanup(IN mod_shell_t *m, IN const std_char_t *script_name)
+std_rv_t mod_shell_I_call_script_func_cleanup(IN mod_shell_t *m, IN std_void_t *vm)
 {
-    return mod_lang_vm_run_func_cleanup(p_global_mod_lang_vm, script_name);
+    return mod_lang_vm_run_func_cleanup(p_global_mod_lang_vm, vm);
 }
 
 struct mod_shell_ops_st mod_shell_I_ops = {

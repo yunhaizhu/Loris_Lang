@@ -97,7 +97,7 @@ STD_CALL std_void_t library_func_register(environment_vm_t *vm, IN std_int_t *re
     func_entry->arg_counts = arg_counts;
     func_entry->reg_func = func;
 
-    std_lock_free_key_hash_add(vm[get_std_thread_id()].custom_func_hash, key, std_safe_strlen(key, sizeof(key)), func_entry);
+    std_lock_free_key_hash_add(vm->custom_func_hash, key, std_safe_strlen(key, sizeof(key)), func_entry);
     read_code(vm, reg_id, buffer, func_name);
 }
 
@@ -220,8 +220,8 @@ STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t thread_
     std_char_t *dest;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
-    obj_name_value_hash = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
+    obj_name_value_hash = Pop(vm);
     obj_name_value_hash = get_VAR(obj_name_value_hash, NAN_BOX_Null, STD_BOOL_FALSE);
 
     memset(request_string, 0, sizeof(request_string));
@@ -260,10 +260,10 @@ STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t thr
     own_value_t obj_name_value_hash;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
     ret_obj = get_VAR(ret_obj, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    obj_name_value_hash = Pop(vm, thread_id);
+    obj_name_value_hash = Pop(vm);
     obj_name_value_hash = get_VAR(obj_name_value_hash, NAN_BOX_Null, STD_BOOL_FALSE);
 
     walk_VAR_with_hash_type(get_own_value_object_symbol(obj_name_value_hash), keys_walk_callback, &ret_obj);
@@ -304,7 +304,7 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
 
             std_char_t key[KEY_NAME_SIZE] = "\0";
             snprintf(key, sizeof(key), "%lu", array_symbol);
-            std_lock_free_key_hash_add(vm[get_std_thread_id()].symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) array_symbol);
+            std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) array_symbol);
 
             for (json_t const *item = json_getChild(arrayList); item != 0; item = json_getSibling(item)) {
                 char const *name = json_getName(item);
@@ -314,7 +314,7 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
                     declare_VAR_with_hash_type(get_own_value_object_symbol(hash_symbol));
 
                     snprintf(key, sizeof(key), "%lu", hash_symbol);
-                    std_lock_free_key_hash_add(vm[get_std_thread_id()].symbol_hash, key, std_safe_strlen(key, sizeof(key)),(std_void_t *) hash_symbol);
+                    std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)),(std_void_t *) hash_symbol);
 
                     json_parse(vm, name, item, hash_symbol);
                     set_VAR(array_symbol, NAN_BOX_Null, hash_symbol);
@@ -405,8 +405,8 @@ STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t thread
     json_t mem[32];
     std_char_t *json_string;
 
-    obj_name_value_hash = Pop(vm, thread_id);
-    obj_json_string = Pop(vm, thread_id);
+    obj_name_value_hash = Pop(vm);
+    obj_json_string = Pop(vm);
 
     obj_name_value_hash = get_VAR(obj_name_value_hash, NAN_BOX_Null, STD_BOOL_FALSE);
     obj_json_string = get_VAR(obj_json_string, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -440,7 +440,7 @@ STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t thread_id, 
     STD_ASSERT_RV(args <= 31, );
 
     for (std_int_t i = 0; i < args; ++i) {
-        obj[i] = Pop(vm, thread_id);
+        obj[i] = Pop(vm);
     }
 
     for (std_int_t i = args - 1; i >= 0; --i) {
@@ -466,7 +466,7 @@ STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t thread_id,
     STD_ASSERT_RV(args <= 31, );
 
     for (std_int_t i = 0; i < args; ++i) {
-        obj[i] = Pop(vm, thread_id);
+        obj[i] = Pop(vm);
     }
 
     for (std_int_t i = args - 1; i >= 0; --i) {
@@ -489,15 +489,15 @@ STD_CALL std_void_t library_assert(environment_vm_t *vm, IN std_int_t thread_id,
     own_value_t obj2;
     std_char_t *string;
 
-    obj2 = Pop(vm, thread_id);
-    obj1 = Pop(vm, thread_id);
+    obj2 = Pop(vm);
+    obj1 = Pop(vm);
 
     string = get_own_value_object_string(get_VAR(obj2, NAN_BOX_Null, STD_BOOL_FALSE));
     if (STD_BOOL_TRUE == get_own_value_bool(get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE))) {
         STD_LOG(INFO, "ASSERT %s OK! \n", string);
     } else {
         STD_LOG(DISPLAY, "ASSERT %s FAILED!\n", string);
-        vm[thread_id].error_code = VM_ERROR_ASSERT;
+        vm->error_code = VM_ERROR_ASSERT;
     }
 }
 
@@ -515,9 +515,9 @@ STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t thread_id
     const std_char_t *string;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
-    obj2 = Pop(vm, thread_id);
-    obj1 = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
+    obj2 = Pop(vm);
+    obj1 = Pop(vm);
 
     string = get_own_value_object_string(get_VAR(obj1,
                                                  NAN_BOX_Null,
@@ -561,9 +561,9 @@ STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t thread
     own_value_t ret_obj;
     std_char_t const *check_string;
 
-    ret_obj = Pop(vm, thread_id);
-    obj_tuple = Pop(vm, thread_id);
-    obj_check = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
+    obj_tuple = Pop(vm);
+    obj_check = Pop(vm);
 
     obj_check = get_VAR(obj_check, NAN_BOX_Null, STD_BOOL_FALSE);
     obj_tuple = get_VAR(obj_tuple, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -588,8 +588,8 @@ STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t thr
     own_value_t obj1;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
-    obj1 = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
+    obj1 = Pop(vm);
     obj1 = get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE);
 
     STD_ASSERT_RV(get_own_value_type(obj1) == OWN_TYPE_NUMBER, );
@@ -620,7 +620,7 @@ STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t th
     std_64_t value;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
 
     value = (std_64_t) (std_random_u64() % INT32_MAX);
 
@@ -639,8 +639,8 @@ STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t thr
     own_value_t obj1;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
-    obj1 = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
+    obj1 = Pop(vm);
     obj1 = get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE);
 
     STD_ASSERT_RV(get_own_value_type(obj1) == OWN_TYPE_NUMBER, );
@@ -679,10 +679,10 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t t
     own_value_t ret_obj;
     ownership_object_symbol_t *ret_symbol;
 
-    ret_obj = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
     ret_obj = get_VAR(ret_obj, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    obj_string = Pop(vm, thread_id);
+    obj_string = Pop(vm);
     obj_string = get_VAR(obj_string, NAN_BOX_Null, STD_BOOL_FALSE);
 
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
@@ -720,9 +720,9 @@ STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t t
     own_value_t ret_obj;
     std_int_t array_size;
 
-    ret_obj = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
 
-    obj_array = Pop(vm, thread_id);
+    obj_array = Pop(vm);
     obj_array = get_VAR(obj_array, NAN_BOX_Null, STD_BOOL_FALSE);
 
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
@@ -764,10 +764,10 @@ STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t thread
     own_value_t ret_obj;
     ownership_object_symbol_t *ret_symbol;
 
-    ret_obj = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
     ret_obj = get_VAR(ret_obj, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    obj_string = Pop(vm, thread_id);
+    obj_string = Pop(vm);
     obj_string = get_VAR(obj_string, NAN_BOX_Null, STD_BOOL_FALSE);
 
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
@@ -806,40 +806,38 @@ STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t thread
  */
 STD_CALL std_void_t library_register(environment_vm_t *vm, std_int_t *register_id)
 {
-    std_int_t thread_id = get_std_thread_id();
-
-    register_id[thread_id] = 33;
+    *register_id = 33;
 
     for (std_int_t i = 1; i <= 20; ++i) {
         std_char_t name[KEY_NAME_SIZE] = "\0";
 
         snprintf(name, sizeof(name), "package__os__function__print_%d", i);
-        library_func_register(vm, &register_id[thread_id], name, i, library_print);
+        library_func_register(vm, register_id, name, i, library_print);
     }
 
     for (std_int_t i = 1; i <= 20; ++i) {
         std_char_t name[KEY_NAME_SIZE] = "\0";
 
         snprintf(name, sizeof(name), "package__os__function__eprint_%d", i);
-        library_func_register(vm, &register_id[thread_id], name, i, library_eprint);
+        library_func_register(vm, register_id, name, i, library_eprint);
     }
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__assert_2", 2, library_assert);
+    library_func_register(vm, register_id, "package__os__function__assert_2", 2, library_assert);
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__random_number", 2, library_random_number);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__random_address", 1, library_random_address);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__random_string", 2, library_random_string);
+    library_func_register(vm, register_id, "package__os__function__random_number", 2, library_random_number);
+    library_func_register(vm, register_id, "package__os__function__random_address", 1, library_random_address);
+    library_func_register(vm, register_id, "package__os__function__random_string", 2, library_random_string);
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__make_json", 2, library_make_json);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__parse_json", 2, library_parse_json);
+    library_func_register(vm, register_id, "package__os__function__make_json", 2, library_make_json);
+    library_func_register(vm, register_id, "package__os__function__parse_json", 2, library_parse_json);
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__convert", 3, library_convert);
+    library_func_register(vm, register_id, "package__os__function__convert", 3, library_convert);
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__check_type", 3, library_check_type);
+    library_func_register(vm, register_id, "package__os__function__check_type", 3, library_check_type);
 
 
-    library_func_register(vm, &register_id[thread_id], "package__os__function__string_to_array", 2, library_string_to_array);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__array_to_string", 2, library_array_to_string);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__read_lines", 2, library_read_lines);
-    library_func_register(vm, &register_id[thread_id], "package__os__function__get_hash_keys", 2, library_get_hash_keys);
+    library_func_register(vm, register_id, "package__os__function__string_to_array", 2, library_string_to_array);
+    library_func_register(vm, register_id, "package__os__function__array_to_string", 2, library_array_to_string);
+    library_func_register(vm, register_id, "package__os__function__read_lines", 2, library_read_lines);
+    library_func_register(vm, register_id, "package__os__function__get_hash_keys", 2, library_get_hash_keys);
 }

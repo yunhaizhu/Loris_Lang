@@ -39,8 +39,8 @@ STD_CALL static inline std_void_t emit_c_codes(IN const std_char_t *buffer)
  */
 STD_CALL std_void_t emit_c_codes_define_start(environment_vm_t *vm, IN const std_char_t *name)
 {
-    const code_st *Codes = vm[get_std_thread_id()].Codes;
-    const std_int_t *n_codes = &vm[get_std_thread_id()].n_codes;
+    const code_st *Codes = vm->Codes;
+    const std_int_t *n_codes = &vm->n_codes;
     std_char_t line_buf[MAX_BODY_SIZE] = "\0";
     std_char_t tmp_buf[KEY_NAME_SIZE] = "\0";
 
@@ -54,11 +54,11 @@ STD_CALL std_void_t emit_c_codes_define_start(environment_vm_t *vm, IN const std
                  "{\n");
 
     emit_c_codes("std_int_t thread_id = get_std_thread_id();\n"
-                 "code_st *Codes = vm[thread_id].Codes;\n"
-                 "std_int_t *Sp = &vm[thread_id].Sp;\n"
-                 "std_int_t *Fp = &vm[thread_id].Fp;\n"
-                 "std_int_t *Pc = &vm[thread_id].Pc;\n"
-                 "std_u64_t *Stack = vm[thread_id].Stack;\n"
+                 "code_st *Codes = vm->Codes;\n"
+                 "std_int_t *Sp = &vm->Sp;\n"
+                 "std_int_t *Fp = &vm->Fp;\n"
+                 "std_int_t *Pc = &vm->Pc;\n"
+                 "std_u64_t *Stack = vm->Stack;\n"
                  "std_u64_t x = 0;\n"
                  "\n"
                  "*Sp = *Fp = MAX_STACK - 1;\n"
@@ -121,8 +121,8 @@ STD_CALL std_void_t emit_c_codes_define_end(IN const std_char_t *name)
  */
 STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, IN std_int_t start_pc)
 {
-    const code_st *Codes = vm[get_std_thread_id()].Codes;
-    std_int_t const *n_codes = &vm[get_std_thread_id()].n_codes;
+    const code_st *Codes = vm->Codes;
+    std_int_t const *n_codes = &vm->n_codes;
     std_char_t line_buf[KEY_NAME_SIZE] = "\0";
 
     emit_c_codes_define_start(vm, name);

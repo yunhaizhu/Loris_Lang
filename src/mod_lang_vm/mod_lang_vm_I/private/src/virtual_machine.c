@@ -30,19 +30,22 @@
  * @param   buffer
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_init(environment_vm_t *vm, std_int_t *register_id, IN const std_char_t *name, IN const std_char_t *buffer)
+STD_CALL environment_vm_t *vm_init(IN const std_char_t *name, IN const std_char_t *buffer)
 {
-    std_int_t thread_it = get_std_thread_id();
-    memset((std_void_t *) &vm[thread_it], 0, sizeof(environment_vm_t));
+    environment_vm_t *vm = (environment_vm_t *)CALLOC(1, sizeof(environment_vm_t));
 
-    vm[thread_it].custom_func_hash = std_lock_free_key_hash_create(128);
-    vm[thread_it].symbol_hash = std_lock_free_key_hash_create(128);
-    vm[get_std_thread_id()].n_codes = 1;
+    vm->custom_func_hash = std_lock_free_key_hash_create(128);
+    vm->symbol_hash = std_lock_free_key_hash_create(128);
+    vm->n_codes = 1;
+    snprintf(vm->execute_name,  sizeof(vm->execute_name), "%s", name);
+    snprintf(vm->execute_debug_file,   sizeof(vm->execute_debug_file),   "%s.log", name);
 
-    library_register(vm, register_id);
-    rsa_gen_keys(&vm[thread_it].global_system_object_symbol.pub, &vm[thread_it].global_system_object_symbol.pri, PRIME_SOURCE_FILE);
+    library_register(vm, &vm->register_id);
+    rsa_gen_keys(&vm->global_system_object_symbol.pub, &vm->global_system_object_symbol.pri, PRIME_SOURCE_FILE);
 
-    return read_code(vm, register_id,  buffer);
+    STD_ASSERT_RV_ACTION(read_code(vm, &vm->register_id,  buffer) == STD_RV_SUC, NULL, FREE(vm););
+
+    return vm;
 }
 
 STD_CALL std_void_t dump_codes(IN const std_char_t *name, IN std_int_t start_pc);
@@ -52,7 +55,7 @@ STD_CALL std_void_t dump_codes(IN const std_char_t *name, IN std_int_t start_pc)
  * @brief   
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *name, IN std_u64_t u64_key, const std_char_t *arg)
+STD_CALL std_rv_t vm_execute(environment_vm_t *vm, const std_char_t *arg)
 {
     std_int_t pc;
     std_u64_t tick;
@@ -95,12 +98,10 @@ STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *name, IN
         }
 #else
         TICK(tick);
-        snprintf(vm[get_std_thread_id()].execute_name,  sizeof(vm[get_std_thread_id()].execute_name), "%s", name);
-        snprintf(vm[get_std_thread_id()].execute_debug_file,   sizeof(vm[get_std_thread_id()].execute_debug_file),   "%lu.log", u64_key);
-        vm[get_std_thread_id()].error_code = 0;
+        vm->error_code = 0;
 
         execute_code(vm, pc, STD_BOOL_TRUE, arg);
-        ret = vm[get_std_thread_id()].error_code;
+        ret = vm->error_code;
         TOCK(tick);
         STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
 #endif
@@ -130,19 +131,19 @@ STD_CALL std_void_t cleanup_symbol_object_callback(IN std_void_t *value, IN cons
  * @brief   
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_cleanup(environment_vm_t *vm, IN const std_char_t *name)
+STD_CALL std_rv_t vm_cleanup(environment_vm_t *vm)
 {
     clean_codes(vm);
 
-    vm[get_std_thread_id()].n_codes = 1;
+    vm->n_codes = 1;
 
-    std_lock_free_key_hash_value_destroy(vm[get_std_thread_id()].custom_func_hash);
-    std_lock_free_key_hash_value_callback_destroy(vm[get_std_thread_id()].symbol_hash, cleanup_symbol_object_callback, NULL);
+    std_lock_free_key_hash_value_destroy(vm->custom_func_hash);
+    std_lock_free_key_hash_value_callback_destroy(vm->symbol_hash, cleanup_symbol_object_callback, NULL);
 
-    vm[get_std_thread_id()].custom_func_hash = NULL;
-    vm[get_std_thread_id()].symbol_hash = NULL;
+    vm->custom_func_hash = NULL;
+    vm->symbol_hash = NULL;
 
-    memset((std_void_t *) &vm[get_std_thread_id()], 0, sizeof(environment_vm_t));
+    FREE(vm);
 
     return STD_RV_SUC;
 }
@@ -263,10 +264,9 @@ STD_CALL std_rv_t vm_push_var_int(environment_vm_t *vm, IN std_int_t value)
 {
     std_rv_t ret = STD_RV_SUC;
     own_value_t object;
-    std_int_t thread_id = get_std_thread_id();
 
     object = make_own_value_number(value);
-    vm[thread_id].func_arg_stack[vm[thread_id].func_arg_stack_index++] = object;
+    vm->func_arg_stack[vm->func_arg_stack_index++] = object;
 
     return ret;
 }
@@ -332,25 +332,24 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
         }
 #else
         TICK(tick);
-        snprintf(vm[get_std_thread_id()].execute_name,  sizeof(vm[get_std_thread_id()].execute_name), "%s", func_name);
-        snprintf(vm[get_std_thread_id()].execute_debug_file,   sizeof(vm[get_std_thread_id()].execute_debug_file),   "%s.log", func_name);
-        vm[get_std_thread_id()].error_code = 0;
+        snprintf(vm->execute_name,  sizeof(vm->execute_name), "%s", func_name);
+        snprintf(vm->execute_debug_file,   sizeof(vm->execute_debug_file),   "%s.log", func_name);
+        vm->error_code = 0;
 
-        std_int_t thread_id = get_std_thread_id();
-        std_int_t *Sp = &vm[thread_id].Sp;
-        std_int_t *Fp = &vm[thread_id].Fp;
-        std_u64_t *Stack = vm[thread_id].Stack;
+        std_int_t *Sp = &vm->Sp;
+        std_int_t *Fp = &vm->Fp;
+        std_u64_t *Stack = vm->Stack;
 
         *Sp = *Fp = MAX_STACK - 1;
-        vm[get_std_thread_id()].error_code = STD_RV_SUC;
+        vm->error_code = STD_RV_SUC;
 
         //FRAME
-        Push(vm, thread_id, *Fp);
+        Push(vm, *Fp);
         *Fp = *Sp;
         *Sp -= arg_num;
 
         //VAR_L
-        for(std_int_t i = 0; i < vm[thread_id].func_arg_stack_index; i++) {
+        for(std_int_t i = 0; i < vm->func_arg_stack_index; i++) {
 
             own_value_t object;
             ownership_object_symbol_t *symbol;
@@ -361,29 +360,29 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
 
             fp_index = (std_int_t) (*Fp - i);
             Stack[fp_index] = object;
-            declare_VAR(symbol, var_type, 0, vm[thread_id].func_arg_stack[i]);
+            declare_VAR(symbol, var_type, 0, vm->func_arg_stack[i]);
         }
 
         //SYM_L
-        for(std_int_t i = vm[thread_id].func_arg_stack_index -1; i >= 0; i--) {
+        for(std_int_t i = vm->func_arg_stack_index -1; i >= 0; i--) {
             std_int_t fp_index;
             own_value_t object;
 
             fp_index = (std_int_t) (*Fp - i);
             object = Stack[fp_index];
 
-            Push(vm, thread_id, object);
+            Push(vm,  object);
         }
 
         //CALL
-        Push(vm, thread_id, 0);
+        Push(vm,  0);
         execute_code(vm, pc, STD_BOOL_FALSE, NULL);
 
         //POPR 3
         *Sp = (std_int_t) (*Sp + arg_num);
 
         //VAR_L_CLEAN
-        for(std_int_t i = 0; i < vm[thread_id].func_arg_stack_index; i++) {
+        for(std_int_t i = 0; i < vm->func_arg_stack_index; i++) {
             std_int_t fp_index;
             own_value_t object;
             std_char_t key[KEY_NAME_SIZE] = "\0";
@@ -397,10 +396,10 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
             del_VARS(object, STD_BOOL_TRUE);
 
             snprintf(key, sizeof(key), "%lu", object);
-            std_lock_free_key_hash_add(vm[get_std_thread_id()].symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
+            std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
         }
 
-        ret = vm[get_std_thread_id()].error_code;
+        ret = vm->error_code;
         TOCK(tick);
         STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
 #endif

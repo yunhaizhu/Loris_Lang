@@ -139,6 +139,7 @@ typedef struct environment_vm_s {
 
     std_u64_t gpr[32];
 
+    std_int_t register_id;
     std_int_t error_code;
     std_char_t execute_name[KEY_NAME_SIZE];
     std_char_t execute_debug_file[KEY_NAME_SIZE];
@@ -147,9 +148,9 @@ typedef struct environment_vm_s {
     std_int_t func_arg_stack_index;
 } environment_vm_t;
 
-#define Push(vm, t, x) vm[t].Stack[vm[t].Sp--] = (x)
-#define Pop(vm, t) vm[t].Stack[++vm[t].Sp]
-#define Top(vm, t) vm[t].Stack[vm[t].Sp + 1]
+#define Push(vm, x) vm->Stack[(vm)->Sp--] = (x)
+#define Pop(vm) vm->Stack[++(vm)->Sp]
+#define Top(vm) vm->Stack[(vm)->Sp + 1]
 
 
 
@@ -160,19 +161,19 @@ typedef struct environment_vm_s {
  * @param   buffer
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_init(environment_vm_t *vm,IN std_int_t *register_id, const std_char_t *name, IN const std_char_t *buffer);
+STD_CALL environment_vm_t * vm_init(const std_char_t *name, IN const std_char_t *buffer);
 /**
  * vm_execute
  * @brief   
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_execute(environment_vm_t *vm,IN const std_char_t *name, IN std_u64_t u64_key, IN const std_char_t *arg);
+STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *arg);
 /**
  * vm_cleanup
  * @brief   
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_cleanup(environment_vm_t *vm, IN const std_char_t *name);
+STD_CALL std_rv_t vm_cleanup(environment_vm_t *vm);
 
 /**
  * get_opcode_name

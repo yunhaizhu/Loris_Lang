@@ -20,7 +20,7 @@
 #define GET_OBJECT()                                                      \
     switch (Codes[*Pc].i_operand_ex) {                                    \
         case VAR_LINK:                                                    \
-            object = Pop(vm, thread_id);                                      \
+            object = Pop(vm);                                      \
             break;                                                        \
                                                                           \
         case VAR_ARG:                                                     \
@@ -44,7 +44,7 @@
  */
 STD_CALL static inline std_void_t inline_execute_code_POP(environment_vm_t *vm, IN std_int_t thread_id, std_u64_t *x)
 {
-    *x = Pop(vm, thread_id);
+    *x = Pop(vm);
 }
 
 /**
@@ -56,7 +56,7 @@ STD_CALL static inline std_void_t inline_execute_code_POP(environment_vm_t *vm, 
  */
 STD_CALL static inline std_void_t inline_execute_code_PUSHIUAS(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc)
 {
-    Push(vm, thread_id, Codes[*Pc].i_operand);
+    Push(vm,  Codes[*Pc].i_operand);
 }
 
 
@@ -80,7 +80,7 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
     reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
 
 #if GPR
-    vm[thread_id].gpr[reg_id] = ret;
+    vm->gpr[reg_id] = ret;
 #endif
 
     fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
@@ -105,8 +105,8 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
  */
 STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environment_vm_t *vm, std_int_t type, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    own_value_t obj_y = Pop(vm, thread_id);
-    own_value_t obj_x = Pop(vm, thread_id);
+    own_value_t obj_y = Pop(vm);
+    own_value_t obj_x = Pop(vm);
     own_value_t ret;
     std_64_t nx = 0;
     std_64_t ny = 0;
@@ -118,21 +118,21 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         if (type == ADD || type == Inp_ADD) {
             ret = make_own_value_number(nx + ny);
             if (type != Inp_ADD) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm, ret, thread_id, Codes, Stack, Pc, Fp);
         } else if (type == SUB || type == Inp_SUB) {
             ret = make_own_value_number(nx - ny);
             if (type != Inp_SUB) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
         } else if (type == MUL || type == Inp_MUL) {
             ret = make_own_value_number(nx * ny);
             if (type != Inp_MUL) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -140,7 +140,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             if (ny == 0) {
                 ret = make_own_value_number(0);
                 if (type != Inp_DIV) {
-                    Push(vm, thread_id, (intptr_t) ret);
+                    Push(vm,  (intptr_t) ret);
                     return;
                 }
                 inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -148,7 +148,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             }
             ret = make_own_value_number(nx / ny);
             if (type != Inp_DIV) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -156,7 +156,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             if (ny == 0) {
                 ret = make_own_value_number(0);
                 if (type != Inp_MOD) {
-                    Push(vm, thread_id, (intptr_t) ret);
+                    Push(vm,  (intptr_t) ret);
                     return;
                 }
                 inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -164,7 +164,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             }
             ret = make_own_value_number(nx % ny);
             if (type != Inp_MOD) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -188,21 +188,21 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         if (type == ADD || type == Inp_ADD) {
             ret = make_own_value_float(x + y);
             if (type != Inp_ADD) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
         } else if (type == SUB || type == Inp_SUB) {
             ret = make_own_value_float(x - y);
             if (type != Inp_SUB) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
         } else if (type == MUL || type == Inp_MUL) {
             ret = make_own_value_float(x * y);
             if (type != Inp_MUL) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -210,7 +210,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             if (y == 0) {
                 ret = make_own_value_number(0);
                 if (type != Inp_DIV) {
-                    Push(vm, thread_id, (intptr_t) ret);
+                    Push(vm,  (intptr_t) ret);
                     return;
                 }
                 inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -218,7 +218,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             }
             ret = make_own_value_float(x / y);
             if (type != Inp_DIV) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -229,7 +229,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             if (ny == 0) {
                 ret = make_own_value_number(0);
                 if (type != Inp_MOD) {
-                    Push(vm, thread_id, (intptr_t) ret);
+                    Push(vm,  (intptr_t) ret);
                     return;
                 }
                 inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -238,7 +238,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
 
             ret = make_own_value_number(nx % ny);
             if (type != Inp_MOD) {
-                Push(vm, thread_id, (intptr_t) ret);
+                Push(vm,  (intptr_t) ret);
                 return;
             }
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
@@ -260,7 +260,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         } else if (type == ADD) {
             //to avoid memory leak when doing something like "string = str1 + str2 + str3", because "str1 + str2" is a tmp string,
             // is not assigned to any variable, so the memory of str1 + str2 is not freed.
-            Push(vm, thread_id, (intptr_t) NAN_BOX_Null);
+            Push(vm,  (intptr_t) NAN_BOX_Null);
         }
     } else if ((get_own_value_type(obj_x) == OWN_TYPE_NUMBER || get_own_value_type(obj_x) == OWN_TYPE_CHAR) &&
                (get_own_value_type(obj_y) == OWN_TYPE_OBJECT_STRING)) {
@@ -277,7 +277,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
 
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
-            Push(vm, thread_id, (intptr_t) NAN_BOX_Null);
+            Push(vm,  (intptr_t) NAN_BOX_Null);
         }
     } else if ((get_own_value_type(obj_x) == OWN_TYPE_OBJECT_STRING) &&
                (get_own_value_type(obj_y) == OWN_TYPE_NUMBER || get_own_value_type(obj_y) == OWN_TYPE_CHAR)) {
@@ -294,10 +294,10 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
 
             inline_set_obj_x_value(vm,ret, thread_id, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
-            Push(vm, thread_id, (intptr_t) NAN_BOX_Null);
+            Push(vm,  (intptr_t) NAN_BOX_Null);
         }
     } else {
-        Push(vm, thread_id, (intptr_t) NAN_BOX_Null);
+        Push(vm,  (intptr_t) NAN_BOX_Null);
     }
 }
 
@@ -378,7 +378,7 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADD(environment
  */
 STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environment_vm_t *vm, IN std_int_t thread_id, IN const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-    Push(vm, thread_id, Codes[*Pc].i_operand);
+    Push(vm,  Codes[*Pc].i_operand);
 
     return inline_execute_code_ADD_SUB_DIV_MOD(vm,Inp_ADD, thread_id, Codes, Stack, Pc, Fp);
 }
@@ -434,15 +434,15 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_MOD(environment_vm_t *
  */
 STD_CALL static inline std_void_t inline_execute_code_GT(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y = Pop(vm, thread_id);
-    own_value_t obj_x = Pop(vm, thread_id);
+    own_value_t obj_y = Pop(vm);
+    own_value_t obj_x = Pop(vm);
     own_value_t ret;
 
     obj_x = get_VAR(obj_x, NAN_BOX_Null, STD_BOOL_FALSE);
     obj_y = get_VAR(obj_y, NAN_BOX_Null, STD_BOOL_FALSE);
     ret = make_own_value_bool(get_own_value_number(obj_x) > get_own_value_number(obj_y));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 
@@ -453,13 +453,13 @@ STD_CALL static inline std_void_t inline_execute_code_GT(environment_vm_t *vm, I
  */
 STD_CALL static forced_inline std_void_t inline_execute_code_LT(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_bool(get_own_value_number(obj_x_value) < get_own_value_number(obj_y_value));
 
-    Push(vm, thread_id, ret);
+    Push(vm,  ret);
 }
 
 
@@ -470,13 +470,13 @@ STD_CALL static forced_inline std_void_t inline_execute_code_LT(environment_vm_t
  */
 STD_CALL static inline std_void_t inline_execute_code_EQ(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_bool(is_own_value_equal(obj_x_value, obj_y_value));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 /**
@@ -486,13 +486,13 @@ STD_CALL static inline std_void_t inline_execute_code_EQ(environment_vm_t *vm, I
  */
 STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_bool(!is_own_value_equal(obj_x_value, obj_y_value));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 /**
@@ -502,13 +502,13 @@ STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm, 
  */
 STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_bool(get_own_value_number(obj_x_value) >= get_own_value_number(obj_y_value));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 /**
@@ -518,13 +518,13 @@ STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm, 
  */
 STD_CALL static inline std_void_t inline_execute_code_BGE(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_bool(get_own_value_number(obj_x_value) <= get_own_value_number(obj_y_value));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 /**
@@ -535,13 +535,13 @@ STD_CALL static inline std_void_t inline_execute_code_BGE(environment_vm_t *vm, 
  */
 STD_CALL static inline std_void_t inline_execute_code_AND(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_bool(get_own_value_number(obj_x_value) && get_own_value_number(obj_y_value));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 
@@ -554,8 +554,8 @@ STD_CALL static inline std_void_t inline_execute_code_AND(environment_vm_t *vm, 
  */
 STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     if (get_own_value_number(obj_x_value) || get_own_value_number(obj_y_value)) {
@@ -564,7 +564,7 @@ STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm, I
         ret = make_own_value_bool(STD_BOOL_FALSE);
     }
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 /**
@@ -575,13 +575,13 @@ STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm, I
  */
 STD_CALL static inline std_void_t inline_execute_code_XOR(environment_vm_t *vm, IN std_int_t thread_id)
 {
-    own_value_t obj_y_value = Pop(vm, thread_id);
-    own_value_t obj_x_value = Pop(vm, thread_id);
+    own_value_t obj_y_value = Pop(vm);
+    own_value_t obj_x_value = Pop(vm);
     own_value_t ret;
 
     ret = make_own_value_number(get_own_value_number(obj_x_value) ^ get_own_value_number(obj_y_value));
 
-    Push(vm, thread_id, (intptr_t) ret);
+    Push(vm,  (intptr_t) ret);
 }
 
 
@@ -594,7 +594,7 @@ STD_CALL static inline std_void_t inline_execute_code_XOR(environment_vm_t *vm, 
  */
 STD_CALL static forced_inline std_bool_t inline_execute_code_BEQ0(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_int_t *Pc)
 {
-    const own_value_t obj_x = Pop(vm, thread_id);
+    const own_value_t obj_x = Pop(vm);
 
     if (get_own_value_bool(obj_x) == STD_BOOL_FALSE) {
         *Pc = (std_int_t) Codes[*Pc].i_operand;
@@ -620,20 +620,20 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
     own_value_t obj_value;
 
 #if GPR
-        if (likely(Codes[*Pc].gpr_idx != 0 && vm[thread_id].gpr[Codes[*Pc].gpr_idx] != NAN_BOX_Null)) {
-            obj_value = vm[thread_id].gpr[Codes[*Pc].gpr_idx];
+        if (likely(Codes[*Pc].gpr_idx != 0 && vm->gpr[Codes[*Pc].gpr_idx] != NAN_BOX_Null)) {
+            obj_value = vm->gpr[Codes[*Pc].gpr_idx];
         } else {
         own_value_t object = Codes[*Pc].i_operand;
         Codes[*Pc].gpr_idx = (std_int_t)(3 + Codes[*Pc].i_operand_ex);
         obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
-        vm[thread_id].gpr[Codes[*Pc].gpr_idx] = obj_value;
+        vm->gpr[Codes[*Pc].gpr_idx] = obj_value;
     }
 #else
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX];
     obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 #endif
 
-    Push(vm, thread_id, obj_value);
+    Push(vm,  obj_value);
 }
 
 
@@ -652,20 +652,20 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
     own_value_t obj_value;
 
 #if GPR
-    if (likely(Codes[*Pc].gpr_idx != 0 && vm[thread_id].gpr[Codes[*Pc].gpr_idx] != NAN_BOX_Null)) {
-        obj_value = vm[thread_id].gpr[Codes[*Pc].gpr_idx];
+    if (likely(Codes[*Pc].gpr_idx != 0 && vm->gpr[Codes[*Pc].gpr_idx] != NAN_BOX_Null)) {
+        obj_value = vm->gpr[Codes[*Pc].gpr_idx];
     }else {
         own_value_t object = Codes[*Pc].i_operand;
                     Codes[*Pc].gpr_idx = (std_int_t)(11 + Codes[*Pc].i_operand_ex);
 
-        vm[thread_id].gpr[Codes[*Pc].gpr_idx] = obj_value;
+        vm->gpr[Codes[*Pc].gpr_idx] = obj_value;
     }
 #else
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
     obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 #endif
 
-    Push(vm, thread_id, obj_value);
+    Push(vm,  obj_value);
 }
 
 
@@ -681,9 +681,9 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
 STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand + STACK_ARG_INDEX];
-    set_VAR(object, NAN_BOX_Null, Top(vm, thread_id));
+    set_VAR(object, NAN_BOX_Null, Top(vm));
 #if GPR
-    vm[thread_id].gpr[3 + Codes[*Pc].i_operand] = Top(thread_id);
+    vm->gpr[3 + Codes[*Pc].i_operand] = Top(thread_id);
 #endif
 }
 
@@ -702,7 +702,7 @@ STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *v
 
     switch (Codes[*Pc].i_operand_ex) {
         case VAR_LINK:
-            object = Pop(vm, thread_id);
+            object = Pop(vm);
             break;
 
         default:
@@ -710,10 +710,10 @@ STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *v
             break;
     }
 
-    set_VAR(object, NAN_BOX_Null, Top(vm, thread_id));
+    set_VAR(object, NAN_BOX_Null, Top(vm));
 
 #if GPR
-    vm[thread_id].gpr[STACK_LOCAL_INDEX + Codes[*Pc].i_operand] = Top(thread_id);
+    vm->gpr[STACK_LOCAL_INDEX + Codes[*Pc].i_operand] = Top(thread_id);
 #endif
 }
 
@@ -738,7 +738,7 @@ STD_CALL static inline std_void_t inline_execute_code_JUMP(environment_vm_t *vm,
  */
 STD_CALL static inline std_void_t inline_execute_code_CALL(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, std_int_t *Pc)
 {
-    Push(vm, thread_id, *Pc + 1);
+    Push(vm,  *Pc + 1);
     *Pc = (std_int_t) Codes[*Pc].i_operand;
 }
 
@@ -753,7 +753,7 @@ STD_CALL static inline std_void_t inline_execute_code_CALL(environment_vm_t *vm,
 STD_CALL static inline std_void_t inline_execute_code_LOADF(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc)
 {
     std_int_t func_addr = (std_int_t) Codes[*Pc].i_operand;
-    Push(vm, thread_id, func_addr);
+    Push(vm,  func_addr);
 }
 
 
@@ -774,7 +774,7 @@ STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm
 
     switch (ex) {
         case VAR_LINK:
-            object = Pop(vm, thread_id);
+            object = Pop(vm);
             break;
 
         case VAR_ARG:
@@ -793,7 +793,7 @@ STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm
     value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
     func_addr = (std_int_t)get_own_value_number(value);
 
-    Push(vm, thread_id, *Pc + 1);
+    Push(vm,  *Pc + 1);
     *Pc = func_addr;
 }
 
@@ -814,8 +814,8 @@ STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, I
 
     *Sp = *Fp;
 
-    *Fp = (std_int_t) Pop(vm, thread_id);
-    *Pc = (std_int_t) Pop(vm, thread_id);
+    *Fp = (std_int_t) Pop(vm);
+    *Pc = (std_int_t) Pop(vm);
 
     if (*Sp >= MAX_STACK - 1 || *Sp < 0 || *Pc == 0) {
 #if DUMP_EXEC_CODE
@@ -855,7 +855,7 @@ STD_CALL static inline std_void_t inline_execute_code_POPR(environment_vm_t *vm,
  */
 STD_CALL static inline std_void_t inline_execute_code_FRAME(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_int_t *Pc, std_int_t *Fp, std_int_t *Sp)
 {
-    Push(vm, thread_id, *Fp);
+    Push(vm,  *Fp);
     *Fp = *Sp;
     *Sp -= (std_int_t) Codes[*Pc].i_operand;
 }
@@ -873,7 +873,7 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
     const func_entry_t *func_entry;
 
     snprintf(key, sizeof(key), "%ld", Codes[*Pc].i_operand);
-    func_entry = (func_entry_t *) std_lock_free_key_hash_find(vm[get_std_thread_id()].custom_func_hash, key, std_safe_strlen(key, sizeof(key)));
+    func_entry = (func_entry_t *) std_lock_free_key_hash_find(vm->custom_func_hash, key, std_safe_strlen(key, sizeof(key)));
 
     STD_ASSERT_RV(func_entry != NULL, );
     func_entry->reg_func(vm, thread_id, func_entry->arg_counts);
@@ -945,10 +945,10 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
 
     del_VARS(object, STD_BOOL_TRUE);
 #if GPR
-    vm[thread_id].gpr[3 + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
+    vm->gpr[3 + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
 #endif
     snprintf(key, sizeof(key), "%lu", object);
-    std_lock_free_key_hash_add(vm[get_std_thread_id()].symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
+    std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
 }
 
 /**
@@ -969,11 +969,11 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 
     del_VARS(object, STD_BOOL_TRUE);
 #if GPR
-    vm[thread_id].gpr[STACK_LOCAL_INDEX + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
+    vm->gpr[STACK_LOCAL_INDEX + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
 #endif
 
     snprintf(key, sizeof(key), "%lu", object);
-    std_lock_free_key_hash_add(vm[get_std_thread_id()].symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
+    std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
 }
 
 /**
@@ -991,7 +991,7 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm
     fp_index = (std_int_t) (*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX);
     object = Stack[fp_index];
 
-    Push(vm, thread_id, object);
+    Push(vm,  object);
 }
 
 
@@ -1011,7 +1011,7 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     object = Stack[fp_index];
 
-    Push(vm, thread_id, object);
+    Push(vm,  object);
 }
 
 /**
@@ -1080,8 +1080,8 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_KEY_HASH(environment_v
 STD_CALL static inline std_void_t inline_execute_code_SET_ITEM(environment_vm_t *vm, IN std_int_t thread_id, const code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
     own_value_t object;
-    own_value_t obj_value = Pop(vm, thread_id);
-    own_value_t obj_index = Pop(vm, thread_id);
+    own_value_t obj_value = Pop(vm);
+    own_value_t obj_index = Pop(vm);
 
     GET_OBJECT()
 
@@ -1101,12 +1101,12 @@ STD_CALL static inline std_void_t inline_execute_code_GET_ITEM(environment_vm_t 
 {
     own_value_t object;
     own_value_t value;
-    own_value_t obj_index = Pop(vm, thread_id);
+    own_value_t obj_index = Pop(vm);
 
     GET_OBJECT()
 
     value = get_VAR(object, obj_index, STD_BOOL_FALSE);
-    Push(vm, thread_id, (intptr_t) value);
+    Push(vm,  (intptr_t) value);
 }
 
 /**
@@ -1124,7 +1124,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_ITEM(environment_vm_t 
 
     GET_OBJECT()
 
-    own_value_t obj_value = Pop(vm, thread_id);
+    own_value_t obj_value = Pop(vm);
     set_VAR(object, NAN_BOX_Null, obj_value);
 }
 
@@ -1143,8 +1143,8 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_KEY_ITEM(environment_v
 
     GET_OBJECT()
 
-    own_value_t obj_value = Pop(vm, thread_id);
-    own_value_t obj_key = Pop(vm, thread_id);
+    own_value_t obj_value = Pop(vm);
+    own_value_t obj_key = Pop(vm);
     set_VAR(object, obj_key, obj_value);
 }
 
@@ -1164,10 +1164,10 @@ STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM(environment_vm_t 
 
     GET_OBJECT()
 
-    own_value_t obj_idx = Pop(vm, thread_id);
+    own_value_t obj_idx = Pop(vm);
 
     ret = del_VAR(object, obj_idx, STD_BOOL_FALSE);
-    Push(vm, thread_id, ret);
+    Push(vm,  ret);
 }
 
 
@@ -1187,10 +1187,10 @@ STD_CALL static inline std_void_t inline_execute_code_DEL_ITEM_IDX(environment_v
 
     GET_OBJECT()
 
-    own_value_t obj_idx = Pop(vm, thread_id);
+    own_value_t obj_idx = Pop(vm);
 
     ret = del_VAR(object, obj_idx, STD_BOOL_TRUE);
-    Push(vm, thread_id, ret);
+    Push(vm,  ret);
 }
 
 /**
@@ -1208,10 +1208,10 @@ STD_CALL static inline std_void_t inline_execute_code_FIND_ITEM(environment_vm_t
 
     GET_OBJECT()
 
-    own_value_t obj_key = Pop(vm, thread_id);
+    own_value_t obj_key = Pop(vm);
     own_value_t ret = find_VAR(object, obj_key, STD_BOOL_FALSE);
 
-    Push(vm, thread_id, ret);
+    Push(vm,  ret);
 }
 
 
@@ -1232,7 +1232,7 @@ STD_CALL static inline std_void_t inline_execute_code_SIZE(environment_vm_t *vm,
     GET_OBJECT()
 
     ret = get_VAR_size(object);
-    Push(vm, thread_id, ret);
+    Push(vm,  ret);
 }
 
 /**
@@ -1250,6 +1250,6 @@ STD_CALL static inline std_void_t inline_execute_code_RESIZE_ARRAY(environment_v
 
     GET_OBJECT()
 
-    own_value_t obj_size = Pop(vm, thread_id);
+    own_value_t obj_size = Pop(vm);
     resize_VAR(object, obj_size);
 }

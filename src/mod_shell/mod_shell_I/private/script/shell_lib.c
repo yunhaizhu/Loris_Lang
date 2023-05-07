@@ -92,10 +92,10 @@ STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t thread_id,
     own_value_t ret;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm,thread_id);
-    obj_arg = Pop(vm,thread_id);
-    obj_handle = Pop(vm,thread_id);
-    obj_id = Pop(vm,thread_id);
+    ret_obj = Pop(vm);
+    obj_arg = Pop(vm);
+    obj_handle = Pop(vm);
+    obj_id = Pop(vm);
 
     run_name = get_own_value_object_string(get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE));
     p_handle = get_own_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
@@ -126,8 +126,8 @@ STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t thread_id
     std_char_t *string;
     std_int_t bundle_id;
 
-    ret_obj = Pop(vm, thread_id);
-    object = Pop(vm,thread_id);
+    ret_obj = Pop(vm);
+    object = Pop(vm);
     object = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
     string = get_own_value_object_string(object);
@@ -146,7 +146,7 @@ STD_CALL std_void_t library_uninstall(environment_vm_t *vm, IN std_int_t thread_
 {
     own_value_t object;
 
-    object = Pop(vm,thread_id);
+    object = Pop(vm);
     object = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
     cmd_uninstall((std_uint_t) get_own_value_number(object));
@@ -165,8 +165,8 @@ STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t thread_id, 
     std_char_t *string;
 
     if (args >= 2) {
-        obj_arg = Pop(vm,thread_id);
-        obj_id = Pop(vm,thread_id);
+        obj_arg = Pop(vm);
+        obj_id = Pop(vm);
 
         obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
         obj_arg = get_VAR(obj_arg, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -175,7 +175,7 @@ STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t thread_id, 
         cmd_start((std_uint_t) get_own_value_number(obj_id),
                   string, std_safe_strlen(string, BUF_SIZE_128));
     } else {
-        obj_id = Pop(vm,thread_id);
+        obj_id = Pop(vm);
         obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
 
         cmd_start((std_uint_t) get_own_value_number(obj_id), NULL, 0);
@@ -192,7 +192,7 @@ STD_CALL std_void_t library_stop(environment_vm_t *vm, IN std_int_t thread_id, I
 {
     own_value_t obj_id;
 
-    obj_id = Pop(vm,thread_id);
+    obj_id = Pop(vm);
     obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
 
     cmd_stop((std_uint_t) get_own_value_number(obj_id));
@@ -230,7 +230,7 @@ STD_CALL std_void_t library_debug(IN environment_vm_t *vm, IN std_int_t thread_i
 {
     own_value_t obj_debug;
 
-    obj_debug = Pop(vm,thread_id);
+    obj_debug = Pop(vm);
     obj_debug = get_VAR(obj_debug, NAN_BOX_Null, STD_BOOL_FALSE);
 
     cmd_debug(get_own_value_object_string(obj_debug));
@@ -246,7 +246,7 @@ STD_CALL std_void_t library_show(environment_vm_t *vm, IN std_int_t thread_id, I
 {
     own_value_t obj_id;
 
-    obj_id = Pop(vm,thread_id);
+    obj_id = Pop(vm);
     obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
 
     cmd_show((std_uint_t) get_own_value_number(obj_id));
@@ -278,9 +278,9 @@ STD_CALL std_void_t library_create_instance(IN environment_vm_t *vm, IN std_int_
     std_void_t *p_handle = NULL;
     own_value_t ret_obj;
 
-    ret_obj = Pop(vm, thread_id);
-    obj_args = Pop(vm, thread_id);
-    obj_iid = Pop(vm, thread_id);
+    ret_obj = Pop(vm);
+    obj_args = Pop(vm);
+    obj_iid = Pop(vm);
 
     iid_string = get_own_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
     args_string = get_own_value_object_string(get_VAR(obj_args, NAN_BOX_Null, STD_BOOL_FALSE));
@@ -304,8 +304,8 @@ STD_CALL std_void_t library_delete_instance(IN environment_vm_t *vm, IN std_int_
     const std_char_t *iid_string;
     std_void_t *p_handle = NULL;
 
-    obj_handle = Pop(vm, thread_id);
-    obj_iid = Pop(vm, thread_id);
+    obj_handle = Pop(vm);
+    obj_iid = Pop(vm);
 
     iid_string = get_own_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
     p_handle = get_own_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
@@ -321,19 +321,17 @@ STD_CALL std_void_t library_delete_instance(IN environment_vm_t *vm, IN std_int_
  */
 STD_CALL std_void_t library_init(IN environment_vm_t *vm, std_int_t *register_id)
 {
-    std_int_t thread_id = get_std_thread_id();
-
-    library_func_register(vm, &register_id[thread_id], "package__shell__function__run", 4, library_run);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__install", 2, library_install);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__uninstall", 1, library_uninstall);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__start_1", 1, library_start);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__start_2", 2, library_start);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__stop", 1, library_stop);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__ps", 0, library_ps);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__show", 1, library_show);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__help", 0, library_help);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__debug", 1, library_debug);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__exit", 0, library_exit);
-    library_func_register(vm, &register_id[thread_id], "package__shell__function__create_instance", 3, library_create_instance);
-    library_func_register(vm, &register_id[thread_id], "package__shell__function__delete_instance", 2, library_delete_instance);
+    library_func_register(vm, register_id, "package__shell__function__run", 4, library_run);
+    library_func_register(vm,register_id, "package__shell__function__install", 2, library_install);
+    library_func_register(vm,register_id, "package__shell__function__uninstall", 1, library_uninstall);
+    library_func_register(vm,register_id, "package__shell__function__start_1", 1, library_start);
+    library_func_register(vm,register_id, "package__shell__function__start_2", 2, library_start);
+    library_func_register(vm,register_id, "package__shell__function__stop", 1, library_stop);
+    library_func_register(vm,register_id, "package__shell__function__ps", 0, library_ps);
+    library_func_register(vm,register_id, "package__shell__function__show", 1, library_show);
+    library_func_register(vm,register_id, "package__shell__function__help", 0, library_help);
+    library_func_register(vm,register_id, "package__shell__function__debug", 1, library_debug);
+    library_func_register(vm,register_id, "package__shell__function__exit", 0, library_exit);
+    library_func_register(vm, register_id, "package__shell__function__create_instance", 3, library_create_instance);
+    library_func_register(vm, register_id, "package__shell__function__delete_instance", 2, library_delete_instance);
 }

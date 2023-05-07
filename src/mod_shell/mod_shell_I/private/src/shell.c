@@ -308,9 +308,9 @@ STD_CALL std_rv_t cmd_delete_instance(IN const std_char_t *iid_string, IN std_si
  */
 STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
 {
-    std_u64_t u64_key;
     std_size_t buf_len;
     std_rv_t ret;
+    std_void_t *vm = NULL;
 
     loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, name) == STD_RV_SUC,
@@ -321,16 +321,12 @@ STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
     STD_ASSERT_RV_ACTION(bytecode != NULL,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
-    buf_len = std_safe_strlen(bytecode, MAX_BODY_SIZE);
-    u64_key = XXH64(bytecode, sizeof(char) * buf_len, 0);
-    u64_key += VERSION_NUMBER;
-
-    STD_ASSERT_RV_ACTION(mod_lang_vm_run_init(p_global_mod_lang_vm, name, bytecode) == STD_RV_SUC, STD_RV_ERR_FAIL,
+    STD_ASSERT_RV_ACTION((vm = mod_lang_vm_run_init(p_global_mod_lang_vm, name, bytecode)) != NULL, STD_RV_ERR_FAIL,
                          mod_lang_vm_run_cleanup(p_global_mod_lang_vm, name);
                          mod_lang_parse_close_state(p_global_mod_lang_parse, state);
                          FREE(bytecode););
-    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, name, u64_key, arg);
-    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, name);
+    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, vm, arg);
+    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, vm);
 
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
     FREE(bytecode);
@@ -375,8 +371,7 @@ std_rv_t cmd_script(IN std_char_t *name, const std_char_t *arg)
  */
 STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
 {
-    std_u64_t u64_key;
-    std_size_t buf_len;
+    std_void_t *vm = NULL;
     std_rv_t ret;
 
     loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
@@ -388,16 +383,13 @@ STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
     STD_ASSERT_RV_ACTION(bytecode != NULL,
                          STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
 
-    buf_len = std_safe_strlen(bytecode, MAX_BODY_SIZE);
-    u64_key = XXH64(bytecode, sizeof(char) * buf_len, 0);
-    u64_key += VERSION_NUMBER;
 
-    STD_ASSERT_RV_ACTION(mod_lang_vm_run_init(p_global_mod_lang_vm, "terminal", bytecode) == STD_RV_SUC, STD_RV_ERR_FAIL,
+    STD_ASSERT_RV_ACTION((vm = mod_lang_vm_run_init(p_global_mod_lang_vm, "terminal", bytecode)) != NULL, STD_RV_ERR_FAIL,
                          mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
                          mod_lang_parse_close_state(p_global_mod_lang_parse, state);
                          FREE(bytecode););
-    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, "terminal", u64_key, NULL);
-    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
+    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, vm, NULL);
+    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, vm);
 
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
 
