@@ -52,9 +52,9 @@ STD_CALL std_rv_t cmd_script(IN std_char_t *name, const std_char_t *arg);
  * @brief   
  * @param   bundle_name
  * @param   bundle_name_len
- * @return  STD_CALL std_rv_t
+ * @return  STD_CALL std_int_t
  */
-STD_CALL std_rv_t cmd_install(IN std_char_t *bundle_name, IN std_size_t bundle_name_len);
+STD_CALL std_int_t cmd_install(IN std_char_t *bundle_name, IN std_size_t bundle_name_len);
 
 /**
  * cmd_uninstall

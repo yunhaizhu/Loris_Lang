@@ -76,7 +76,7 @@ def json_data_init(data):
         },
         {
             'template_file': "pri_script_nl.jinja2",
-            'output_file': ORIG_TARGET + '/' + data['instance'] + '/private/script/' + data['instance'] + '_test.nl'
+            'output_file': ORIG_TARGET + '/' + data['instance'] + '/private/script/' + data['instance'] + '_test.ll'
         },
         # {
         #     'template_file': "pri_src_stub_rpc_call_c.jinja2",

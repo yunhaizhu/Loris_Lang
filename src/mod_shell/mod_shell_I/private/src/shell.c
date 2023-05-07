@@ -98,9 +98,9 @@ STD_CALL std_rv_t cmd_ps()
  * @brief   Installs a bundle with the given name
  * @param   bundle_name: the name of the bundle to install
  * @param   bundle_name_len: the length of the bundle name
- * @return  STD_CALL std_rv_t
+ * @return  STD_CALL std_int_t
  */
-STD_CALL std_rv_t cmd_install(IN std_char_t *bundle_name, IN std_size_t bundle_name_len)
+STD_CALL std_int_t cmd_install(IN std_char_t *bundle_name, IN std_size_t bundle_name_len)
 {
     std_uint_t bundle_id = 0;
     std_int_t len;
@@ -108,7 +108,7 @@ STD_CALL std_rv_t cmd_install(IN std_char_t *bundle_name, IN std_size_t bundle_n
     len = std_safe_strip_chars(bundle_name, '"');
     STD_ASSERT(mod_bundle_cmd_install(bundle_name, len, &bundle_id) == STD_RV_SUC);
 
-    return STD_RV_SUC;
+    return (std_int_t)bundle_id;
 }
 
 /**

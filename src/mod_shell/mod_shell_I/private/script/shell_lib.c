@@ -121,14 +121,19 @@ STD_CALL std_void_t library_run(environment_vm_t *vm, IN std_int_t thread_id, IN
  */
 STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t thread_id, IN std_int_t args)
 {
+    own_value_t ret_obj;
     own_value_t object;
     std_char_t *string;
+    std_int_t bundle_id;
 
+    ret_obj = Pop(vm, thread_id);
     object = Pop(vm,thread_id);
     object = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
     string = get_own_value_object_string(object);
-    cmd_install(string, std_safe_strlen(string, BUF_SIZE_128));
+    bundle_id = cmd_install(string, std_safe_strlen(string, BUF_SIZE_128));
+
+    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_number(bundle_id));
 }
 
 /**
@@ -320,7 +325,7 @@ STD_CALL std_void_t library_init(environment_vm_t *vm, std_int_t *register_id)
     std_int_t thread_id = get_std_thread_id();
 
     library_func_register(vm, &register_id[thread_id], "package__shell__function__run", 4, library_run);
-    library_func_register(vm,&register_id[thread_id], "package__shell__function__install", 1, library_install);
+    library_func_register(vm,&register_id[thread_id], "package__shell__function__install", 2, library_install);
     library_func_register(vm,&register_id[thread_id], "package__shell__function__uninstall", 1, library_uninstall);
     library_func_register(vm,&register_id[thread_id], "package__shell__function__start_1", 1, library_start);
     library_func_register(vm,&register_id[thread_id], "package__shell__function__start_2", 2, library_start);

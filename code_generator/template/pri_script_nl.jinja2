@@ -1,4 +1,20 @@
-{%- macro func_implementation() -%}
+load_lib shell_lib
+require "shell", "os"
+import shell.debug,
+    shell.create_instance,
+    shell.delete_instance,
+    shell.install,
+    shell.uninstall,
+    shell.start,
+    shell.stop,
+    shell.run,
+    shell.ps,
+    os.random_number,
+    os.random_string,
+    os.make_json
+
+
+{% macro func_implementation() -%}
     {%- for method in methods -%}
 
 def {{ module }}_{{method.name}}(var root
@@ -16,9 +32,9 @@ def {{ module }}_{{method.name}}(var root
                          {%- endfor -%}>
     var json_args
 
-    make_json(name_value_hash, json_args)
+    os.make_json(name_value_hash, json_args)
 
-    run("{{ module }}_{{method.name}}", root, json_args, ret)
+    shell.run("{{ module }}_{{method.name}}", root, json_args, ret)
 }
 
 
@@ -41,14 +57,14 @@ def run_check(var root, var run_state)
     keys_tuple = run_state.find_item("keys_tuple")
 
     keys_count = keys_tuple.count()
-    print("keys_count:", keys_count)
+    os.print("keys_count:", keys_count)
 
     if (keys_count == 0){
-        print("CHECK IGNORED")
+        os.print("CHECK IGNORED")
         return
     }
 
-    idx = random_number(32) % keys_count
+    idx = os.random_number(32) % keys_count
     check_key = keys_tuple{idx}
 
     {% for arg in method.args %}
@@ -59,7 +75,7 @@ def run_check(var root, var run_state)
                              {{ arg.name }},
                             {%- endfor -%} ret_check)
 
-    assert(ret_check == 1, "ret_check == 1")
+    os.assert(ret_check == 1, "ret_check == 1")
 }
 {%- endmacro -%}
 
@@ -84,7 +100,7 @@ def run_add(var root, var run_state)
     {{ module }}_add(root, {%- for arg in method.args -%}
                              {{ arg.name }},
                            {%- endfor -%} ret_add)
-    assert(ret_add == 0, "ret_add == STD_RV_SUC")
+    os.assert(ret_add == 0, "ret_add == STD_RV_SUC")
 
     keys_tuple.add(key_add)
 }
@@ -102,9 +118,9 @@ def run_{{ func }}(var root, var run_state)
 
     {% for arg in method.args %}
         {% if arg.type == "TYPE_PTR_CHAR" %}
-    random_string (32, {{arg.name}})
+    os.random_string (32, {{arg.name}})
         {% elif arg.type == "TYPE_INT" %}
-    random_number (32, {{arg.name}})
+    os.random_number (32, {{arg.name}})
         {% endif %}
     {% endfor %}
 
@@ -129,6 +145,22 @@ def run_{{ func }}(var root, var run_state)
     {% endif %}
 {% endfor %}
 
+def module_init(var bundle_id)
+{
+    shell.install("{{instance}}", bundle_id)
+    shell.start(bundle_id)
+
+    shell.ps()
+}
+
+def module_cleanup(var bundle_id)
+{
+    shell.stop(bundle_id)
+    shell.uninstall(bundle_id)
+
+    shell.ps()
+}
+
 def main()
 {
     var {{ module }}_test
@@ -139,11 +171,13 @@ def main()
 	var run_state<> = <"keys_tuple": keys_tuple, "hash_key_value":hash_key_value>
     var i
     var run_max = 1000
+    var bundle_id = 0
 
-    debug("ERR")
+    shell.debug("ERR")
+    module_init(bundle_id)
 
-    create_instance(iid, args, {{ module }}_test)
-    print("{{ module }}_test:", {{ module }}_test)
+    shell.create_instance(iid, args, {{ module }}_test)
+    os.print("{{ module }}_test:", {{ module }}_test)
 
 {% for method in methods %}
     run_{{method.name}}({{ module }}_test, run_state)
@@ -154,7 +188,7 @@ def main()
         var k
         var run_random
 
-        random_number(32, run_random)
+        os.random_number(32, run_random)
         k = run_random % {{methods|length}}
 
     {% for method in methods %}
@@ -165,6 +199,7 @@ def main()
     {% endfor %}
     }
 
-    delete_instance(iid, {{ module }}_test)
+    shell.delete_instance(iid, {{ module }}_test)
+    module_cleanup(bundle_id)
 }
-
+#script("script/{{instance}}_test.ll")

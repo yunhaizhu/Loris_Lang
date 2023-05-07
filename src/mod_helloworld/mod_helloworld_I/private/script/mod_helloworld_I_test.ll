@@ -1,17 +1,17 @@
 load_lib shell_lib
-require "shell"
+require "shell", "os"
 import shell.debug,
-    shell.install,
-    shell.start,
-    shell.ps,
-    shell.stop,
-    shell.uninstall,
-    shell.run,
     shell.create_instance,
-    shell.delete_instance
-
-require "os"
-import os.random_number, os.random_string, os.make_json
+    shell.delete_instance,
+    shell.install,
+    shell.uninstall,
+    shell.start,
+    shell.stop,
+    shell.run,
+    shell.ps,
+    os.random_number,
+    os.random_string,
+    os.make_json
 
 def mod_helloworld_say_hello(var root, var str, var ret)
 {
@@ -35,18 +35,18 @@ def run_say_hello(var root, var run_state)
     mod_helloworld_say_hello(root,str,ret_say_hello)
 }
 
-def init()
+def module_init(var bundle_id)
 {
-    shell.install("mod_helloworld_I")
-    shell.start(6)
+    shell.install("mod_helloworld_I", bundle_id)
+    shell.start(bundle_id)
 
     shell.ps()
 }
 
-def cleanup()
+def module_cleanup(var bundle_id)
 {
-    shell.stop(6)
-    shell.uninstall(6)
+    shell.stop(bundle_id)
+    shell.uninstall(bundle_id)
 
     shell.ps()
 }
@@ -61,10 +61,11 @@ def main()
 	var run_state<> = <"keys_tuple": keys_tuple, "hash_key_value":hash_key_value>
     var i
     var run_max = 0
+    var bundle_id = 0
 
     shell.debug("ERR")
 
-    init()
+    module_init(bundle_id)
 
     shell.create_instance(iid, args, mod_helloworld_test)
     os.print("mod_helloworld_test:", mod_helloworld_test)
@@ -85,6 +86,6 @@ def main()
 
     shell.delete_instance(iid, mod_helloworld_test)
 
-    cleanup()
+    module_cleanup(bundle_id)
 }
 #script("script/mod_helloworld_I_test.ll")
