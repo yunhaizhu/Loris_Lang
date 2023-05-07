@@ -361,7 +361,7 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
 
             fp_index = (std_int_t) (*Fp - i);
             Stack[fp_index] = object;
-            declare_VAR(symbol, var_type, 0, vm[thread_id].func_arg_stack[i], STD_BOOL_TRUE);
+            declare_VAR(symbol, var_type, 0, vm[thread_id].func_arg_stack[i]);
         }
 
         //SYM_L

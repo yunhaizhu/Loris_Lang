@@ -86,7 +86,14 @@ def test_var_size()
     os.assert(len == 8, "len == 8")
 }
 
+def test_var_coverage()
+{
+    var safe_1 = "string 1"
+    var var_1
 
+    var_1 = safe_1
+    os.assert(var_1 == "string 1", "string 1 == var_1")
+}
 
 def test_var()
 {
@@ -95,6 +102,7 @@ def test_var()
     test_var_get()
     test_var_set()
     test_var_size()
+    test_var_coverage()
     os.print("TEST VAR SUCCESS")
 }
 

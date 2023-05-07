@@ -124,7 +124,7 @@ STD_CALL std_int_t find_label_ex(environment_vm_t *vm, IN std_char_t *name, IN s
         if (strcmp(Labels[j].name, name) == 0) {
             if (Labels[j].args_count != args_count) {
                 STD_LOG(ERR, "Please check line:[%d], CALL '%s' is not correct!\n", line, name);
-                return STD_RV_ERR_UNEXPECTED;
+                return STD_RV_ERR_FAIL;
             }
             return Labels[j].addr;
         }
@@ -517,17 +517,17 @@ STD_CALL std_rv_t read_code(environment_vm_t *vm,
             case BEQ0:
             case JUMP:
                 Codes[i].i_operand = find_label(vm, Codes[i].s_operand, Codes[i].line);
-                STD_ASSERT_RV(Codes[i].i_operand >= 0, STD_RV_ERR_FAIL);
+                STD_ASSERT_RV_ACTION(Codes[i].i_operand >= 0, STD_RV_ERR_FAIL, FREE(json_string););
                 break;
             case CALL: {
                 std_int_t addr = find_label_ex(vm, Codes[i].s_operand, (std_int_t) Codes[i].i_operand_ex, Codes[i].line);
 
-                if (addr < 0) {
+                if (addr < 0 && addr != STD_RV_ERR_FAIL) {
                     Codes[i].opcode = CALLF;
                     break;
                 }
                 Codes[i].i_operand  = addr;
-                STD_ASSERT_RV(Codes[i].i_operand >= 0, STD_RV_ERR_FAIL);
+                STD_ASSERT_RV_ACTION(Codes[i].i_operand >= 0, STD_RV_ERR_FAIL, FREE(json_string););
                 break;
             }
             case LOADF:

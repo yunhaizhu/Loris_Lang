@@ -899,7 +899,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
 
     fp_index = (std_int_t) (*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX);
     own_value_t init_value = Stack[fp_index];
-    declare_VAR(symbol, var_type, 0, init_value, STD_BOOL_FALSE);
+    declare_VAR(symbol, var_type, 0, init_value);
 
     Stack[fp_index] = object;
 }
@@ -924,7 +924,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm
 
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     Stack[fp_index] = object;
-    declare_VAR(symbol, var_type, 0, NAN_BOX_Null, STD_BOOL_TRUE);
+    declare_VAR(symbol, var_type, 0, NAN_BOX_Null);
 }
 
 /**
@@ -1029,7 +1029,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_ARRAY(environment_vm_t
     ownership_object_symbol_t *symbol = get_own_value_object_symbol(object);
     std_int_t count = (std_int_t) Codes[*Pc].i_operand_ex;
 
-    declare_VAR(symbol, array_type, count, NAN_BOX_Null, STD_BOOL_TRUE);
+    declare_VAR(symbol, array_type, count, NAN_BOX_Null);
 }
 
 /**
@@ -1047,7 +1047,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_LIST(environment_vm_t 
     ownership_object_symbol_t *symbol = get_own_value_object_symbol(object);
     std_int_t key_enable = (std_int_t) Codes[*Pc].i_operand_ex;
 
-    declare_VAR(symbol, tuple_type, key_enable, NAN_BOX_Null, STD_BOOL_TRUE);
+    declare_VAR(symbol, tuple_type, key_enable, NAN_BOX_Null);
 }
 
 /**
@@ -1064,7 +1064,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEW_KEY_HASH(environment_v
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand];
     ownership_object_symbol_t *symbol = get_own_value_object_symbol(object);
 
-    declare_VAR(symbol, hash_type, 0, NAN_BOX_Null, STD_BOOL_TRUE);
+    declare_VAR(symbol, hash_type, 0, NAN_BOX_Null);
 }
 
 

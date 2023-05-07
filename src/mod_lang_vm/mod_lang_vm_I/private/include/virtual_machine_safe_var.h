@@ -32,10 +32,9 @@
  * @param   symbol_type
  * @param   size
  * @param   init_value
- * @param   copy
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size, own_value_t init_value, std_bool_t copy);
+STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size, own_value_t init_value);
 
 /**
  * set_VAR

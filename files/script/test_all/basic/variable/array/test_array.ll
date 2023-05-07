@@ -53,17 +53,44 @@ def test_array_3()
     k += 1
     os.assert(k == 4, "k == 4")
 }
+
+def test_array_coverage2(var array, var index)
+{
+    var k
+    var arr{} = {index}
+    var j = arr{0}
+
+    k = array[arr{0}]
+
+    k = k + 1
+    os.assert(k == 4, "k == 4")
+}
+
+def test_array_coverage1(var array, var index)
+{
+    test_array_coverage2(array, index)
+}
+
+def test_array_coverage()
+{
+    var safe_array[] = [1, 2, 4, 3, 5, 7, "hello string"]
+    var index = 3
+
+    test_array_coverage1(safe_array, index)
+}
+
 def test_array()
 {
     os.print("TEST ARRAY BEGIN")
     test_array_1()
     test_array_2()
     test_array_3()
+    test_array_coverage()
     os.print("TEST ARRAY SUCCESS")
 }
 
 #def main()
 #{
-#    test_array_3()
+#    test_array_coverage()
 #}
-#script("test/basic/variable/array/test_array.nl")
+#script("script/test_all/basic/variable/array/test_array.ll")

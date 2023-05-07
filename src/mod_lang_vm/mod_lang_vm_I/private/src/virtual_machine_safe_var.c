@@ -28,7 +28,7 @@
  * @param   copy
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size_or_enable, own_value_t init_value, std_bool_t copy)
+STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size_or_enable, own_value_t init_value)
 {
     STD_ASSERT_RV(symbol != NULL, );
 
@@ -36,7 +36,7 @@ STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t
 
     switch (symbol_type) {
         case var_type:
-            declare_VAR_with_var_type(symbol, init_value, copy);
+            declare_VAR_with_var_type(symbol, init_value);
             break;
 
         case array_type:

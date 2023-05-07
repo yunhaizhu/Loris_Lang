@@ -116,7 +116,7 @@ STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN
     own_value_type_t new_value_type;
     ownership_object_t *new_value_obj;
 
-    assert(symbol != NULL);
+    STD_ASSERT_RV(symbol != NULL, STD_RV_ERR_INVALIDARG);
 
     value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
 
@@ -129,12 +129,12 @@ STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN
     }
 
     if (new_value_type == OWN_TYPE_OBJECT || new_value_type == OWN_TYPE_OBJECT_STRING || new_value_type == OWN_TYPE_OBJECT_SYMBOL) {
-            new_value_obj = get_own_value_object(value);
-            if (new_value_type != OWN_TYPE_OBJECT_SYMBOL && create_ownership_signature(symbol, new_value_obj) != STD_BOOL_TRUE) {
-                new_value = duplicate_ownership_value(symbol, value);
-            } else {
-                new_value = value;
-            }
+        new_value_obj = get_own_value_object(value);
+        if (new_value_type != OWN_TYPE_OBJECT_SYMBOL && create_ownership_signature(symbol, new_value_obj) != STD_BOOL_TRUE) {
+            new_value = duplicate_ownership_value(symbol, value);
+        } else {
+            new_value = value;
+        }
     } else {
         new_value = value;
     }
@@ -185,7 +185,7 @@ STD_CALL std_rv_t move_VAR_with_var_type(IN ownership_object_symbol_t *from_symb
  * @param   copy
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN own_value_t init_value, IN std_bool_t copy)
+STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN own_value_t init_value)
 {
     ownership_object_t *init_value_obj;
     own_value_t dup_value;
@@ -200,21 +200,18 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
         case OWN_TYPE_ADDRESS:
         case OWN_TYPE_CHAR:
             inline_set_var(symbol, init_value);
-            return STD_RV_SUC;
+            break;
         case OWN_TYPE_OBJECT:
         case OWN_TYPE_OBJECT_STRING:
         case OWN_TYPE_OBJECT_SYMBOL:
-            if (copy) {
-                dup_value = duplicate_ownership_value(symbol, init_value);
-            } else {
-                init_value_obj = get_own_value_object(init_value);
-                if (get_own_value_type(init_value) != OWN_TYPE_OBJECT_SYMBOL && create_ownership_signature(symbol, init_value_obj) != STD_BOOL_TRUE) {
-                    init_value = duplicate_ownership_value(symbol, init_value);
-                }
-                dup_value = init_value;
+            init_value_obj = get_own_value_object(init_value);
+            if (get_own_value_type(init_value) != OWN_TYPE_OBJECT_SYMBOL && create_ownership_signature(symbol, init_value_obj) != STD_BOOL_TRUE) {
+                init_value = duplicate_ownership_value(symbol, init_value);
             }
+            dup_value = init_value;
+
             inline_set_var(symbol, dup_value);
-            return STD_RV_SUC;
+            break;
         default:
             break;
     }
