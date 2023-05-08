@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SLOWLORIS_STD_COMMON_H
-#define SLOWLORIS_STD_COMMON_H
+#ifndef LORIS_LANG_STD_COMMON_H
+#define LORIS_LANG_STD_COMMON_H
 
 #ifdef __cplusplus
 extern "C" {

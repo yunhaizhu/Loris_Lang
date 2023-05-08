@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SLOWLORIS_STD_LOCK_H
-#define SLOWLORIS_STD_LOCK_H
+#ifndef LORIS_LANG_STD_LOCK_H
+#define LORIS_LANG_STD_LOCK_H
 
 #define CAS_V(addr, old, x) __sync_val_compare_and_swap(addr, old, x)
 //#define CAS(addr, old, x) (__sync_bool_compare_and_swap(addr, old, x) == TRUE)

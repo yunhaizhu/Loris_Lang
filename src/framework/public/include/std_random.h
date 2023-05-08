@@ -12,8 +12,8 @@
  * @date    2021-10-14
  *
  */
-#ifndef SLOWLORIS_STD_RANDOM_H
-#define SLOWLORIS_STD_RANDOM_H
+#ifndef LORIS_LANG_STD_RANDOM_H
+#define LORIS_LANG_STD_RANDOM_H
 
 #include "std_common.h"
 #include <gsl/gsl_rng.h>

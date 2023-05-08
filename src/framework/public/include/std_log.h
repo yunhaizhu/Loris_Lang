@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SLOWLORIS_STD_LOG_H
-#define SLOWLORIS_STD_LOG_H
+#ifndef LORIS_LANG_STD_LOG_H
+#define LORIS_LANG_STD_LOG_H
 
 #include "std_common.h"
 

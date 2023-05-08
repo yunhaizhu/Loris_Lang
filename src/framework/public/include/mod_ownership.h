@@ -12,8 +12,8 @@
  * @date    2021-10-14
  *
  */
-#ifndef SLOWLORIS_MOD_OWNERSHIP_H
-#define SLOWLORIS_MOD_OWNERSHIP_H
+#ifndef LORIS_LANG_MOD_OWNERSHIP_H
+#define LORIS_LANG_MOD_OWNERSHIP_H
 
 #include "rsa.h"
 #include "std_common.h"

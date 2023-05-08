@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SLOWLORIS_STD_ASSERT_H
-#define SLOWLORIS_STD_ASSERT_H
+#ifndef LORIS_LANG_STD_ASSERT_H
+#define LORIS_LANG_STD_ASSERT_H
 
 #define STD_ASSERT_RV_LEVEL_FORMAT_MSG(cond, rv, level, format, ...)                       \
     do {                                                                                   \

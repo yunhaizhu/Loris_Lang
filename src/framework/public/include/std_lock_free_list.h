@@ -12,8 +12,8 @@
  * @date    2021-09-18
  *
  */
-#ifndef SLOWLORIS_STD_LOCK_FREE_LIST_H
-#define SLOWLORIS_STD_LOCK_FREE_LIST_H
+#ifndef LORIS_LANG_STD_LOCK_FREE_LIST_H
+#define LORIS_LANG_STD_LOCK_FREE_LIST_H
 
 #include "std_common.h"
 #include "std_hazard_ptr.h"

@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SLOWLORIS_STD_DEF_H
-#define SLOWLORIS_STD_DEF_H
+#ifndef LORIS_LANG_STD_DEF_H
+#define LORIS_LANG_STD_DEF_H
 
 #include "config.h"
 

@@ -12,8 +12,8 @@
  * @date    2021-10-19
  *
  */
-#ifndef SLOWLORIS_SHELL_H
-#define SLOWLORIS_SHELL_H
+#ifndef LORIS_LANG_SHELL_H
+#define LORIS_LANG_SHELL_H
 
 #include "std_common.h"
 #include "mod_shell.h"

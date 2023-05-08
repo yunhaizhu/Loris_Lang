@@ -12,8 +12,8 @@
  * @date    2021-10-14
  *
  */
-#ifndef SLOWLORIS_MOD_BUNDLE_IMP_H
-#define SLOWLORIS_MOD_BUNDLE_IMP_H
+#ifndef LORIS_LANG_MOD_BUNDLE_IMP_H
+#define LORIS_LANG_MOD_BUNDLE_IMP_H
 
 #include "mod.h"
 #include "std_common.h"

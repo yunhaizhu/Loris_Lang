@@ -12,8 +12,8 @@
  * @date    2021-09-23
  *
  */
-#ifndef SLOWLORIS_STD_HAZARD_PTR_IMP_H
-#define SLOWLORIS_STD_HAZARD_PTR_IMP_H
+#ifndef LORIS_LANG_STD_HAZARD_PTR_IMP_H
+#define LORIS_LANG_STD_HAZARD_PTR_IMP_H
 
 #include "std_hazard_ptr.h"
 

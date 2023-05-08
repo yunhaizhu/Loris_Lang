@@ -12,8 +12,8 @@
  * @date    2021-09-23
  *
  */
-#ifndef SLOWLORIS_STD_LOCK_FREE_KEY_HASH_H
-#define SLOWLORIS_STD_LOCK_FREE_KEY_HASH_H
+#ifndef LORIS_LANG_STD_LOCK_FREE_KEY_HASH_H
+#define LORIS_LANG_STD_LOCK_FREE_KEY_HASH_H
 
 #ifdef __cplusplus
 extern "C" {

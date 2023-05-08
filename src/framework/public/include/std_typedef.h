@@ -12,8 +12,8 @@
  * @date    2021-09-18
  *
  */
-#ifndef SLOWLORIS_STD_TYPEDEF_H
-#define SLOWLORIS_STD_TYPEDEF_H
+#ifndef LORIS_LANG_STD_TYPEDEF_H
+#define LORIS_LANG_STD_TYPEDEF_H
 
 #define forced_inline inline __attribute__((always_inline))
 #define likely(x) __builtin_expect((x), 1)

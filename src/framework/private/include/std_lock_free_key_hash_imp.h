@@ -12,8 +12,8 @@
  * @date    2021-09-23
  *
  */
-#ifndef SLOWLORIS_STD_LOCK_FREE_KEY_HASH_IMP_H
-#define SLOWLORIS_STD_LOCK_FREE_KEY_HASH_IMP_H
+#ifndef LORIS_LANG_STD_LOCK_FREE_KEY_HASH_IMP_H
+#define LORIS_LANG_STD_LOCK_FREE_KEY_HASH_IMP_H
 
 #include "std_common.h"
 #include "std_lock_free_list.h"

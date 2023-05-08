@@ -12,8 +12,8 @@
  * @date    2021-09-18
  *
  */
-#ifndef SLOWLORIS_MOD_H
-#define SLOWLORIS_MOD_H
+#ifndef LORIS_LANG_MOD_H
+#define LORIS_LANG_MOD_H
 
 #include "mod_ownership.h"
 #include "std_common.h"

@@ -12,8 +12,8 @@
  * @date    2021-10-14
  *
  */
-#ifndef SLOWLORIS_STD_SAFE_H
-#define SLOWLORIS_STD_SAFE_H
+#ifndef LORIS_LANG_STD_SAFE_H
+#define LORIS_LANG_STD_SAFE_H
 
 /**
  * std_safe_strlen
