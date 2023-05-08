@@ -3,7 +3,7 @@
 # Loris_Lang
 Loris is a ownership based memory safe dynamic programming language. 
 
-Safe as Rust, Easy use like Python!
+Safe as Rust, Faster as Lua, Easy use as Python!
 
 ## Install packages
 1. sudo apt-get install -y libunwind-dev libgoogle-perftools-dev libxxhash-dev libjson-c-dev libcjson-dev flex yacc libelf-dev libconfuse-dev fuse libfl-dev libgsl-dev python3-pip indent golang-go graphviz libcurl4-openssl-dev
