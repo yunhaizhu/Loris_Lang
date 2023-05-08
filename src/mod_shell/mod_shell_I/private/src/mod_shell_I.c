@@ -20,7 +20,6 @@
 extern std_lock_free_key_hash_t *global_func_hash;
 mod_lang_parse_t *p_global_mod_lang_parse = NULL;
 mod_lang_compile_t *p_global_mod_lang_compile = NULL;
-mod_lang_vm_t *p_global_mod_lang_vm = NULL;
 
 /**
  * mod_shell_I_init
@@ -35,7 +34,6 @@ STD_CALL std_rv_t mod_shell_I_init(IN mod_shell_t *p_m, IN const std_char_t *arg
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
     mod_iid_t mod_lang_parse_iid = MOD_LANG_PARSE_IID;
     mod_iid_t mod_lang_compile_iid = MOD_LANG_COMPILE_IID;
-    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
 
     p_imp_m->hash_head = global_func_hash;
 
@@ -53,13 +51,6 @@ STD_CALL std_rv_t mod_shell_I_init(IN mod_shell_t *p_m, IN const std_char_t *arg
         p_global_mod_lang_compile = p_imp_m->p_mod_lang_compile;
     }
 
-    if (p_global_mod_lang_vm == NULL) {
-        mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &p_imp_m->p_mod_lang_vm,
-                            (mod_ownership_t *) p_imp_m);
-        mod_lang_vm_init(p_imp_m->p_mod_lang_vm, NULL, 0);
-        p_global_mod_lang_vm = p_imp_m->p_mod_lang_vm;
-    }
-
     return STD_RV_SUC;
 }
 
@@ -74,7 +65,6 @@ STD_CALL std_rv_t mod_shell_I_cleanup(IN mod_shell_t *p_m)
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
     mod_iid_t mod_lang_parse_iid = MOD_LANG_PARSE_IID;
     mod_iid_t mod_lang_compile_iid = MOD_LANG_COMPILE_IID;
-    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
 
     p_imp_m->hash_head = NULL;
 
@@ -87,12 +77,6 @@ STD_CALL std_rv_t mod_shell_I_cleanup(IN mod_shell_t *p_m)
     if (p_imp_m->p_mod_lang_compile) {
         mod_lang_compile_cleanup(p_imp_m->p_mod_lang_compile);
         mod_delete_instance(&mod_lang_compile_iid, (std_void_t **) &p_imp_m->p_mod_lang_compile,
-                            (mod_ownership_t *) p_imp_m);
-    }
-
-    if (p_imp_m->p_mod_lang_vm) {
-        mod_lang_vm_cleanup(p_imp_m->p_mod_lang_vm);
-        mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &p_imp_m->p_mod_lang_vm,
                             (mod_ownership_t *) p_imp_m);
     }
 
@@ -176,9 +160,12 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
  * @param   script_name
  * @return  std_rv_t
  */
-std_void_t *mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_char_t *script_name)
+std_void_t *mod_shell_I_call_script_func_init(IN mod_shell_t *p_m, IN const std_char_t *script_name)
 {
-    std_void_t *ret;
+    mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
+    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
+    mod_lang_vm_t *mod_lang_vm;
+
 
     loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, (std_char_t *)script_name) == STD_RV_SUC,
@@ -186,15 +173,17 @@ std_void_t *mod_shell_I_call_script_func_init(IN mod_shell_t *m, IN const std_ch
 
     std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
-    STD_ASSERT_RV_ACTION(bytecode != NULL,
-                        NULL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
-
-    ret = mod_lang_vm_run_func_init(p_global_mod_lang_vm, script_name, bytecode);
-
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+    STD_ASSERT_RV(bytecode != NULL, NULL);
+
+
+    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
+                        (mod_ownership_t *) p_imp_m);
+    mod_lang_vm_init(mod_lang_vm, script_name, bytecode);
+
     FREE(bytecode);
 
-    return ret;
+    return mod_lang_vm;
 }
 
 /**
@@ -210,7 +199,7 @@ std_rv_t mod_shell_I_call_script_func(IN mod_shell_t *m, IN std_void_t *vm, IN c
 {
     std_rv_t ret;
 
-    ret = mod_lang_vm_run_func_call(p_global_mod_lang_vm, vm, func_name, arg_num);
+    ret = mod_lang_vm_run_func_call((mod_lang_vm_t *)vm, func_name, arg_num);
 
     return ret;
 }
@@ -226,7 +215,7 @@ std_rv_t mod_shell_I_call_script_func_push_int(IN mod_shell_t *m, IN std_void_t 
 {
     std_rv_t ret;
 
-    ret = mod_lang_vm_run_func_push_var_int(p_global_mod_lang_vm, vm, value);
+    ret = mod_lang_vm_run_func_push_var_int((mod_lang_vm_t *)vm, value);
     return ret;
 }
 
@@ -237,9 +226,16 @@ std_rv_t mod_shell_I_call_script_func_push_int(IN mod_shell_t *m, IN std_void_t 
  * @param   script_name
  * @return  std_rv_t
  */
-std_rv_t mod_shell_I_call_script_func_cleanup(IN mod_shell_t *m, IN std_void_t *vm)
+std_rv_t mod_shell_I_call_script_func_cleanup(IN mod_shell_t *p_m, IN std_void_t *vm)
 {
-    return mod_lang_vm_run_func_cleanup(p_global_mod_lang_vm, vm);
+    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
+    mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
+
+    mod_lang_vm_cleanup((mod_lang_vm_t *)vm);
+    mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &vm,
+                        (mod_ownership_t *) p_imp_m);
+
+    return STD_RV_SUC;
 }
 
 struct mod_shell_ops_st mod_shell_I_ops = {

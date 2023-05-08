@@ -370,7 +370,7 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
 
             case CALLF:
                 emit_c_codes("inline_execute_code_CALLF(vm, Codes, Stack, Pc, Fp);\n");
-                emit_c_codes("goto *jump_table[Codes[*Pc].opcode];\n");
+                emit_c_codes("goto *jump_table[*Pc];\n");
                 break;
 
             default:

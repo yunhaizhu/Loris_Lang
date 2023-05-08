@@ -307,7 +307,7 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
     pc = find_label_ex(vm, func_name_with_function, arg_num, 0);
 
     if (pc > 0) {
-#if EXEC_COMPILED_CODE
+#if CALL_EXEC_COMPILED_CODE
         typedef std_rv_t (*execute_compiled_code_t)(environment_vm_t *vm, IN std_int_t start_pc);
 
         std_void_t *dl_handle;

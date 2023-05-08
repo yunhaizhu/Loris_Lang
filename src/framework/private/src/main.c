@@ -61,14 +61,8 @@ STD_CALL std_int_t main(std_int_t argc, std_char_t *argv[])
 {
     // Initialize variables
     std_uint_t bundle_id = 0;
-    mod_lang_parse_t *mod_lang_parse = NULL;
-    mod_lang_compile_t *mod_lang_compile = NULL;
-    mod_lang_vm_t *mod_lang_vm = NULL;
     mod_shell_t *mod_shell = NULL;
     mod_ownership_t main_ownership = {0};
-    mod_iid_t mod_lang_parse_iid = MOD_LANG_PARSE_IID;
-    mod_iid_t mod_lang_compile_iid = MOD_LANG_COMPILE_IID;
-    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
     mod_iid_t mod_shell_iid = MOD_SHELL_IID;
     std_int_t ret;
 
@@ -85,20 +79,15 @@ STD_CALL std_int_t main(std_int_t argc, std_char_t *argv[])
     // Install and start mod_lang_parse
     STD_ASSERT_RV(mod_bundle_cmd_install("mod_lang_parse_II", strlen("mod_lang_parse_II"), &bundle_id) == STD_RV_SUC, STD_RV_ERR_FAIL);
     STD_ASSERT_RV(mod_bundle_cmd_start(bundle_id, "", strlen("")) == STD_RV_SUC, STD_RV_ERR_FAIL);
-    mod_create_instance(&mod_lang_parse_iid, (std_void_t **) &mod_lang_parse, &main_ownership);
-    mod_lang_parse_init(mod_lang_parse, NULL, 0);
 
     // Install and start mod_lang_compile
     STD_ASSERT_RV(mod_bundle_cmd_install("mod_lang_compile_II", strlen("mod_lang_compile_II"), &bundle_id) == STD_RV_SUC, STD_RV_ERR_FAIL);
     STD_ASSERT_RV(mod_bundle_cmd_start(bundle_id, "", strlen("")) == STD_RV_SUC, STD_RV_ERR_FAIL);
-    mod_create_instance(&mod_lang_compile_iid, (std_void_t **) &mod_lang_compile, &main_ownership);
-    mod_lang_compile_init(mod_lang_compile, NULL, 0);
 
     // Install and start mod_lang_vm
     STD_ASSERT_RV(mod_bundle_cmd_install("mod_lang_vm_I", strlen("mod_lang_vm_I"), &bundle_id) == STD_RV_SUC, STD_RV_ERR_FAIL);
     STD_ASSERT_RV(mod_bundle_cmd_start(bundle_id, "", strlen("")) == STD_RV_SUC, STD_RV_ERR_FAIL);
-    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm, &main_ownership);
-    mod_lang_vm_init(mod_lang_vm, NULL, 0);
+
 
     // Install and start mod_shell
     STD_ASSERT_RV(mod_bundle_cmd_install("mod_shell_I", strlen("mod_shell_I"), &bundle_id) == STD_RV_SUC, STD_RV_ERR_FAIL);
@@ -113,15 +102,6 @@ STD_CALL std_int_t main(std_int_t argc, std_char_t *argv[])
     // Cleanup and delete instances
     mod_shell_cleanup(mod_shell);
     mod_delete_instance(&mod_shell_iid, (std_void_t **) &mod_shell, &main_ownership);
-
-    mod_lang_vm_cleanup(mod_lang_vm);
-    mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm, &main_ownership);
-
-    mod_lang_compile_cleanup(mod_lang_compile);
-    mod_delete_instance(&mod_lang_compile_iid, (std_void_t **) &mod_lang_compile, &main_ownership);
-
-    mod_lang_parse_cleanup(mod_lang_parse);
-    mod_delete_instance(&mod_lang_parse_iid, (std_void_t **) &mod_lang_parse, &main_ownership);
 
     // Stop and uninstall all bundles
     for (std_uint_t i = bundle_id ; i >= 1; i--) {

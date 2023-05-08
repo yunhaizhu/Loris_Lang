@@ -24,11 +24,11 @@ def test_func_class()
     os.print("TEST FUNC CLASS BEGIN")
     func = class{"func"}
     func(key, data, ret)
-    os.assert(ret == 100, "ret == 111")
+    os.assert(ret == 100, "ret == 100")
 
     ret = 0
     class{"func"}(key, data, ret)
-    os.assert(ret == 100, "ret == 111")
+    os.assert(ret == 100, "ret == 100 2")
 
     os.print("TEST FUNC CLASS SUCCESS")
 }

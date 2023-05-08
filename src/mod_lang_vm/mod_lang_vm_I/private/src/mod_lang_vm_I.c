@@ -19,16 +19,18 @@ std_lock_free_key_hash_t *global_symbol_hash = NULL;
  * @param   arg_len Length of the argument
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t *arg, IN std_int_t arg_len)
+STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t *file_name,
+                                     IN const std_char_t *bytecode_buffer)
 {
-    if (global_symbol_hash == NULL){
-        global_symbol_hash = std_lock_free_key_hash_create(128);
-    }
+    mod_lang_vm_imp_t *p_imp = (mod_lang_vm_imp_t *)p_m;
+
+
+    p_imp->vm = vm_init(file_name, bytecode_buffer);
+    STD_ASSERT_RV(p_imp->vm != NULL, STD_RV_ERR_FAIL);
 
     return STD_RV_SUC;
 }
 
-STD_CALL std_void_t cleanup_symbol_object_callback(IN std_void_t *value, IN const std_void_t *callback_arg);
 /**
  * @brief   Cleanup the mod_lang_vm_t instance
  * @param   p_m     Pointer to the mod_lang_vm_t instance
@@ -36,30 +38,13 @@ STD_CALL std_void_t cleanup_symbol_object_callback(IN std_void_t *value, IN cons
  */
 STD_CALL std_rv_t mod_lang_vm_I_cleanup(IN mod_lang_vm_t *p_m)
 {
+    mod_lang_vm_imp_t *p_imp = (mod_lang_vm_imp_t *)p_m;
 
-    if (global_symbol_hash){
-        std_lock_free_key_hash_value_callback_destroy(global_symbol_hash, cleanup_symbol_object_callback, NULL);
-        global_symbol_hash = NULL;
-    }
-
-    return STD_RV_SUC;
+    return vm_cleanup(p_imp->vm);
 }
 
 
 /***func_implementation***/
-
-/**
- * @brief   Initialize the virtual machine
- * @param   p_m             Pointer to the mod_lang_vm_t instance
- * @param   file_name       Pointer to the file name
- * @param   bytecode_buffer Pointer to the bytecode buffer
- * @return  STD_CALL        std_int_t
- */
-STD_CALL std_void_t *mod_lang_vm_I_run_init(IN mod_lang_vm_t *p_m, IN const std_char_t *file_name,
-                                          IN const std_char_t *bytecode_buffer)
-{
-    return vm_init(file_name, bytecode_buffer);
-}
 
 /**
  * @brief   Execute the virtual machine
@@ -68,35 +53,12 @@ STD_CALL std_void_t *mod_lang_vm_I_run_init(IN mod_lang_vm_t *p_m, IN const std_
  * @param   u64_key         64-bit key
  * @return  STD_CALL        std_int_t
  */
-STD_CALL std_int_t mod_lang_vm_I_run_execute(IN mod_lang_vm_t *p_m, IN std_void_t *vm, IN const std_char_t *arg)
+STD_CALL std_int_t mod_lang_vm_I_run_execute(IN mod_lang_vm_t *p_m, IN const std_char_t *arg)
 {
-    return vm_execute(vm, arg);
+    mod_lang_vm_imp_t *p_imp = (mod_lang_vm_imp_t *)p_m;
+    return vm_execute(p_imp->vm, arg);
 }
 
-/**
- * @brief   Cleanup the virtual machine
- * @param   p_m     Pointer to the mod_lang_vm_t instance
- * @param   file_name       Pointer to the file name
- * @return  STD_CALL        std_int_t
- */
-STD_CALL std_int_t mod_lang_vm_I_run_cleanup(IN mod_lang_vm_t *p_m, IN std_void_t *vm)
-{
-    return vm_cleanup(vm);
-}
-
-
-/**
- * mod_lang_vm_I_func_init
- * @brief   
- * @param   p_m
- * @param   file_name
- * @param   bytecode_buffer
- * @return  std_int_t
- */
-std_void_t *mod_lang_vm_I_func_init(IN mod_lang_vm_t *p_m, IN const std_char_t *file_name, IN const std_char_t *bytecode_buffer)
-{
-    return vm_init( file_name, bytecode_buffer);
-}
 /**
  * mod_lang_vm_I_func_push_var_int
  * @brief   
@@ -104,9 +66,11 @@ std_void_t *mod_lang_vm_I_func_init(IN mod_lang_vm_t *p_m, IN const std_char_t *
  * @param   value
  * @return  std_rv_t
  */
-std_rv_t mod_lang_vm_I_func_push_var_int(IN mod_lang_vm_t *p_m, IN std_void_t *vm, IN std_int_t value)
+std_rv_t mod_lang_vm_I_func_push_var_int(IN mod_lang_vm_t *p_m, IN std_int_t value)
 {
-    return vm_push_var_int(vm, value);
+    mod_lang_vm_imp_t *p_imp = (mod_lang_vm_imp_t *)p_m;
+
+    return vm_push_var_int(p_imp->vm, value);
 }
 /**
  * mod_lang_vm_I_run_func_call
@@ -116,37 +80,22 @@ std_rv_t mod_lang_vm_I_func_push_var_int(IN mod_lang_vm_t *p_m, IN std_void_t *v
  * @param   arg_num
  * @return  std_rv_t
  */
-std_rv_t mod_lang_vm_I_run_func_call(IN mod_lang_vm_t *p_m, IN std_void_t *vm, IN const std_char_t *func_name, IN std_int_t arg_num)
+std_rv_t mod_lang_vm_I_run_func_call(IN mod_lang_vm_t *p_m, IN const std_char_t *func_name, IN std_int_t arg_num)
 {
-    return vm_call_func(vm, func_name, arg_num);
-}
+    mod_lang_vm_imp_t *p_imp = (mod_lang_vm_imp_t *)p_m;
 
-/**
- * mod_lang_vm_I_run_func_cleanup
- * @brief   
- * @param   p_m
- * @param   file_name
- * @return  std_int_t
- */
-std_int_t mod_lang_vm_I_run_func_cleanup(IN mod_lang_vm_t *p_m, IN std_void_t *vm)
-{
-    return vm_cleanup(vm);
+    return vm_call_func(p_imp->vm, func_name, arg_num);
 }
-
 
 struct mod_lang_vm_ops_st mod_lang_vm_I_ops = {
         mod_lang_vm_I_init,
         mod_lang_vm_I_cleanup,
 
         /***func_ops***/
-        mod_lang_vm_I_run_init,
         mod_lang_vm_I_run_execute,
-        mod_lang_vm_I_run_cleanup,
 
-        mod_lang_vm_I_func_init,
         mod_lang_vm_I_func_push_var_int,
         mod_lang_vm_I_run_func_call,
-        mod_lang_vm_I_run_func_cleanup
 };
 
 /**

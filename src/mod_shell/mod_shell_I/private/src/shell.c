@@ -306,11 +306,12 @@ STD_CALL std_rv_t cmd_delete_instance(IN const std_char_t *iid_string, IN std_si
  * @param   name
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
+STD_CALL std_rv_t cmd_execute( IN std_char_t *name, const std_char_t *arg)
 {
     std_size_t buf_len;
     std_rv_t ret;
-    std_void_t *vm = NULL;
+    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
+    mod_lang_vm_t *mod_lang_vm;
 
     loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, name) == STD_RV_SUC,
@@ -318,17 +319,22 @@ STD_CALL std_rv_t cmd_execute(IN std_char_t *name, const std_char_t *arg)
 
     std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
-    STD_ASSERT_RV_ACTION(bytecode != NULL,
-                         STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
-
-    STD_ASSERT_RV_ACTION((vm = mod_lang_vm_run_init(p_global_mod_lang_vm, name, bytecode)) != NULL, STD_RV_ERR_FAIL,
-                         mod_lang_vm_run_cleanup(p_global_mod_lang_vm, name);
-                         mod_lang_parse_close_state(p_global_mod_lang_parse, state);
-                         FREE(bytecode););
-    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, vm, arg);
-    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, vm);
-
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+    STD_ASSERT_RV(bytecode != NULL, STD_RV_ERR_FAIL);
+
+    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
+                        (mod_ownership_t *) p_mod_shell);
+    mod_lang_vm_init(mod_lang_vm, name, bytecode);
+
+    STD_ASSERT_RV_ACTION(mod_lang_vm != NULL, STD_RV_ERR_FAIL,
+                         mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
+                         FREE(bytecode););
+    ret = mod_lang_vm_run_execute(mod_lang_vm, arg);
+
+    mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
+    mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
+                        (mod_ownership_t *) p_mod_shell);
+
     FREE(bytecode);
 
     STD_LOG(INFO, "%s EXECUTE SUCCESS\n", name);
@@ -371,8 +377,9 @@ std_rv_t cmd_script(IN std_char_t *name, const std_char_t *arg)
  */
 STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
 {
-    std_void_t *vm = NULL;
     std_rv_t ret;
+    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
+    mod_lang_vm_t *mod_lang_vm;
 
     loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
     STD_ASSERT_RV_ACTION(mod_lang_parse_load_body(p_global_mod_lang_parse, state, body) == STD_RV_SUC,
@@ -380,22 +387,27 @@ STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
 
     std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
 
-    STD_ASSERT_RV_ACTION(bytecode != NULL,
-                         STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
-
-
-    STD_ASSERT_RV_ACTION((vm = mod_lang_vm_run_init(p_global_mod_lang_vm, "terminal", bytecode)) != NULL, STD_RV_ERR_FAIL,
-                         mod_lang_vm_run_cleanup(p_global_mod_lang_vm, "terminal");
-                         mod_lang_parse_close_state(p_global_mod_lang_parse, state);
-                         FREE(bytecode););
-    ret = mod_lang_vm_run_execute(p_global_mod_lang_vm, vm, NULL);
-    mod_lang_vm_run_cleanup(p_global_mod_lang_vm, vm);
-
     mod_lang_parse_close_state(p_global_mod_lang_parse, state);
+    STD_ASSERT_RV(bytecode != NULL, STD_RV_ERR_FAIL);
+
+    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
+                        (mod_ownership_t *) p_mod_shell);
+    mod_lang_vm_init(mod_lang_vm, "cmd", bytecode);
+
+    STD_ASSERT_RV_ACTION(mod_lang_vm != NULL, STD_RV_ERR_FAIL,
+                         mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
+                         FREE(bytecode););
+    ret = mod_lang_vm_run_execute(mod_lang_vm, NULL);
+
+    mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
+    mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
+                        (mod_ownership_t *) p_mod_shell);
+
+
 
     FREE(bytecode);
 
-    STD_LOG(INFO, "%s EXECUTE SUCCESS\n", "terminal");
+    STD_LOG(INFO, "%s EXECUTE SUCCESS\n", "cmd");
     STD_LOG(DISPLAY, "$");
 
     return ret;

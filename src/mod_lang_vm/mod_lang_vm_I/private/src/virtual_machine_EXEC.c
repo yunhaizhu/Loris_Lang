@@ -875,7 +875,7 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
     snprintf(key, sizeof(key), "%ld", Codes[*Pc].i_operand);
     func_entry = (func_entry_t *) std_lock_free_key_hash_find(vm->custom_func_hash, key, std_safe_strlen(key, sizeof(key)));
 
-    STD_ASSERT_RV(func_entry != NULL, );
+    STD_ASSERT_RV_ACTION(func_entry != NULL, , STD_LOG(DISPLAY, "func_entry is NULL PC: %d\n", *Pc););
     func_entry->reg_func(vm, func_entry->arg_counts);
 }
 
