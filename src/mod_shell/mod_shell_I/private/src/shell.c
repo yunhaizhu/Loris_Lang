@@ -38,9 +38,7 @@ static mod_shell_t *p_mod_shell = NULL;
 static mod_thread_pool_t *p_mod_thread_pool = NULL;
 static std_lock_free_key_hash_t *global_compiled_body;
 
-extern mod_lang_parse_t *p_global_mod_lang_parse;
-extern mod_lang_compile_t *p_global_mod_lang_compile;
-extern mod_lang_vm_t *p_global_mod_lang_vm;
+mod_lang_vm_t *parse_compile_vm_init(IN mod_shell_t *p_m, IN const std_char_t *script_name_or_body, IN std_bool_t is_script_or_body);
 
 /**
  * cmd_debug
@@ -313,29 +311,14 @@ STD_CALL std_rv_t cmd_execute( IN std_char_t *name, const std_char_t *arg)
     mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
     mod_lang_vm_t *mod_lang_vm;
 
-    loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
-    STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, name) == STD_RV_SUC,
-                         STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+    mod_lang_vm = parse_compile_vm_init(p_mod_shell, name, STD_BOOL_TRUE);
+    STD_ASSERT_RV(mod_lang_vm != NULL, STD_RV_ERR_FAIL);
 
-    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
-
-    mod_lang_parse_close_state(p_global_mod_lang_parse, state);
-    STD_ASSERT_RV(bytecode != NULL, STD_RV_ERR_FAIL);
-
-    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
-                        (mod_ownership_t *) p_mod_shell);
-    mod_lang_vm_init(mod_lang_vm, name, bytecode);
-
-    STD_ASSERT_RV_ACTION(mod_lang_vm != NULL, STD_RV_ERR_FAIL,
-                         mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
-                         FREE(bytecode););
     ret = mod_lang_vm_run_execute(mod_lang_vm, arg);
 
     mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
     mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
                         (mod_ownership_t *) p_mod_shell);
-
-    FREE(bytecode);
 
     STD_LOG(INFO, "%s EXECUTE SUCCESS\n", name);
     STD_LOG(DISPLAY, "$");
@@ -381,31 +364,14 @@ STD_CALL std_rv_t cmd_cmd(IN std_char_t *body)
     mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
     mod_lang_vm_t *mod_lang_vm;
 
-    loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
-    STD_ASSERT_RV_ACTION(mod_lang_parse_load_body(p_global_mod_lang_parse, state, body) == STD_RV_SUC,
-                         STD_RV_ERR_FAIL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
+    mod_lang_vm = parse_compile_vm_init(p_mod_shell, body, STD_BOOL_FALSE);
+    STD_ASSERT_RV(mod_lang_vm != NULL, STD_RV_ERR_FAIL);
 
-    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
-
-    mod_lang_parse_close_state(p_global_mod_lang_parse, state);
-    STD_ASSERT_RV(bytecode != NULL, STD_RV_ERR_FAIL);
-
-    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
-                        (mod_ownership_t *) p_mod_shell);
-    mod_lang_vm_init(mod_lang_vm, "cmd", bytecode);
-
-    STD_ASSERT_RV_ACTION(mod_lang_vm != NULL, STD_RV_ERR_FAIL,
-                         mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
-                         FREE(bytecode););
     ret = mod_lang_vm_run_execute(mod_lang_vm, NULL);
 
     mod_lang_vm_cleanup((mod_lang_vm_t *)mod_lang_vm);
     mod_delete_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
                         (mod_ownership_t *) p_mod_shell);
-
-
-
-    FREE(bytecode);
 
     STD_LOG(INFO, "%s EXECUTE SUCCESS\n", "cmd");
     STD_LOG(DISPLAY, "$");

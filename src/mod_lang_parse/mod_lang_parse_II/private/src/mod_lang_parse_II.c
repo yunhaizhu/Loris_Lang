@@ -24,8 +24,11 @@
  * @param   arg_len
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t mod_lang_parse_II_init(IN mod_lang_parse_t * p_m, IN const std_char_t * arg, IN std_int_t arg_len)
+STD_CALL std_rv_t mod_lang_parse_II_init(IN mod_lang_parse_t * p_m)
 {
+    mod_lang_parse_imp_t *p_imp_m = (mod_lang_parse_imp_t *) p_m;
+
+    p_imp_m->state = (lang_state_t *) CALLOC(1, sizeof(lang_state_t));
     return STD_RV_SUC;
 }
 
@@ -37,25 +40,34 @@ STD_CALL std_rv_t mod_lang_parse_II_init(IN mod_lang_parse_t * p_m, IN const std
  */
 STD_CALL std_rv_t mod_lang_parse_II_cleanup(IN mod_lang_parse_t * p_m)
 {
-	return STD_RV_SUC;
+    mod_lang_parse_imp_t *p_imp_m = (mod_lang_parse_imp_t *) p_m;
+    lang_state_t *state = p_imp_m->state;
+
+    lang_lex_cleanup((lang_state_t *)state);
+    cleanup_lang_ast_symbol((lang_state_t *)state);
+
+    for(std_int_t j = 0; j < state->global_func_compile_ast_idx; j++){
+        FREE(state->global_func_compile_ast[j]);
+    }
+
+    for (std_int_t i = 0; i < state->required_states_idx; ++i) {
+        lang_lex_cleanup((lang_state_t *)state->required_states[i]);
+        cleanup_lang_ast_symbol((lang_state_t *)state->required_states[i]);
+
+        for(std_int_t j = 0; j < state->required_states[i]->global_func_compile_ast_idx; j++){
+            FREE(state->required_states[i]->global_func_compile_ast[j]);
+        }
+
+        FREE(state->required_states[i]);
+    }
+
+    FREE(state);
+
+    return STD_RV_SUC;
+
 }
 
 /***func_implementation***/
-
-/**
- * mod_lang_parse_II_new_state
- * @brief   
- * @param   p_m
- * @return  STD_CALL             loris_state_t *
- */
-STD_CALL loris_state_t *mod_lang_parse_II_new_state(IN mod_lang_parse_t * p_m)
-{
-    lang_state_t *p_state = NULL;
-
-    p_state = (lang_state_t *) CALLOC(1, sizeof(lang_state_t));
-
-	return (loris_state_t *)p_state;
-}
 
 /**
  * mod_lang_parse_II_load_script
@@ -66,9 +78,11 @@ STD_CALL loris_state_t *mod_lang_parse_II_new_state(IN mod_lang_parse_t * p_m)
  * @return  STD_CALL             std_rv_t
  */
 STD_CALL std_rv_t mod_lang_parse_II_load_script(IN mod_lang_parse_t * p_m,
-                                                 IN loris_state_t * state,
 						                         IN std_char_t * script_name)
 {
+    mod_lang_parse_imp_t *p_imp_m = (mod_lang_parse_imp_t *) p_m;
+    lang_state_t *state = p_imp_m->state;
+
     FILE *fp;
     std_char_t source_buffer[MAX_BODY_SIZE] = {0};
 
@@ -91,9 +105,11 @@ STD_CALL std_rv_t mod_lang_parse_II_load_script(IN mod_lang_parse_t * p_m,
  * @return  STD_CALL             std_rv_t
  */
 STD_CALL std_rv_t mod_lang_parse_II_load_body(IN mod_lang_parse_t * p_m,
-                                                IN loris_state_t * state,
                                                 IN std_char_t * script_body)
 {
+    mod_lang_parse_imp_t *p_imp_m = (mod_lang_parse_imp_t *) p_m;
+    lang_state_t *state = p_imp_m->state;
+
     std_char_t terminal_buffer[MAX_BODY_SIZE] = "require \"shell\"\n"
                                                 "import shell.run, shell.install, shell.uninstall, shell.start, shell.stop, shell.ps, shell.show, shell.help, shell.debug, shell.exit\n\n";
 
@@ -102,47 +118,15 @@ STD_CALL std_rv_t mod_lang_parse_II_load_body(IN mod_lang_parse_t * p_m,
                       (std_int_t)std_safe_strlen(terminal_buffer, MAX_BODY_SIZE));
 }
 
-/**
- * mod_lang_parse_II_close_state
- * @brief   
- * @param   p_m
- * @param   state
- * @return  STD_CALL             std_rv_t
- */
-STD_CALL std_rv_t mod_lang_parse_II_close_state(IN mod_lang_parse_t * p_m, IN loris_state_t * state)
-{
-    lang_lex_cleanup((lang_state_t *)state);
-    cleanup_lang_ast_symbol((lang_state_t *)state);
 
-    for(std_int_t j = 0; j < state->global_func_compile_ast_idx; j++){
-        FREE(state->global_func_compile_ast[j]);
-    }
-
-    for (std_int_t i = 0; i < state->required_states_idx; ++i) {
-        lang_lex_cleanup((lang_state_t *)state->required_states[i]);
-        cleanup_lang_ast_symbol((lang_state_t *)state->required_states[i]);
-
-        for(std_int_t j = 0; j < state->required_states[i]->global_func_compile_ast_idx; j++){
-            FREE(state->required_states[i]->global_func_compile_ast[j]);
-        }
-
-        FREE(state->required_states[i]);
-    }
-
-    FREE(state);
-
-	return STD_RV_SUC;
-}
 
 struct mod_lang_parse_ops_st mod_lang_parse_II_ops = {
 	mod_lang_parse_II_init,
 	mod_lang_parse_II_cleanup,
 
     /***func_ops***/
-	mod_lang_parse_II_new_state,
 	mod_lang_parse_II_load_script,
     mod_lang_parse_II_load_body,
-	mod_lang_parse_II_close_state,
 
 };
 

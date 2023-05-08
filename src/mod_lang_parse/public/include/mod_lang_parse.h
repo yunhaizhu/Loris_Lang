@@ -49,18 +49,16 @@ typedef struct mod_lang_parse_st {
 	mod_ownership_t ownership;
 	std_u64_t unique_id;
 	struct mod_lang_parse_ops_st *p_ops;
+    loris_state_t *state;
 } mod_lang_parse_t;
 
 struct mod_lang_parse_ops_st {
-    std_rv_t(*init) (IN mod_lang_parse_t * m, IN const std_char_t * arg, IN std_int_t arg_len);
+    std_rv_t(*init) (IN mod_lang_parse_t * m);
     std_rv_t(*cleanup) (IN mod_lang_parse_t * m);
 
     /***func_define***/
-	loris_state_t *(*new_state)(IN mod_lang_parse_t * m);
-    std_rv_t(*load_script) (IN mod_lang_parse_t * m, IN loris_state_t * state, IN std_char_t * script_name);
-    std_rv_t(*load_body) (IN mod_lang_parse_t * m, IN loris_state_t * state, IN std_char_t * script_body);
-    std_rv_t(*close_state) (IN mod_lang_parse_t * m, IN loris_state_t * state);
-
+	std_rv_t(*load_script) (IN mod_lang_parse_t * m, IN std_char_t *script_name);
+    std_rv_t(*load_body) (IN mod_lang_parse_t * m,  IN std_char_t *script_body);
 };
 
 /***************************************************
@@ -77,13 +75,11 @@ struct mod_lang_parse_ops_st {
  *                                                 *
  **************************************************/
 
-#define mod_lang_parse_init(m, arg, arg_len) ((m)->p_ops->init((mod_lang_parse_t *)(m), arg, arg_len))
+#define mod_lang_parse_init(m) ((m)->p_ops->init((mod_lang_parse_t *)(m)))
 #define mod_lang_parse_cleanup(m) ((m)->p_ops->cleanup((mod_lang_parse_t *)(m)))
 
 /***interface_define***/
-#define mod_lang_parse_new_state(m) ((m)->p_ops->new_state((mod_lang_parse_t *)(m)))
-#define mod_lang_parse_load_script(m, state, script_name) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), state, script_name))
-#define mod_lang_parse_load_body(m, state, script_body) ((m)->p_ops->load_body((mod_lang_parse_t *)(m), state, script_body))
-#define mod_lang_parse_close_state(m, state) ((m)->p_ops->close_state((mod_lang_parse_t *)(m), state))
+#define mod_lang_parse_load_script(m, script_name) ((m)->p_ops->load_script((mod_lang_parse_t *)(m), script_name))
+#define mod_lang_parse_load_body(m, script_body) ((m)->p_ops->load_body((mod_lang_parse_t *)(m), script_body))
 
 #endif

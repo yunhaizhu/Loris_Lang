@@ -18,8 +18,6 @@
 #include "xxh3.h"
 
 extern std_lock_free_key_hash_t *global_func_hash;
-mod_lang_parse_t *p_global_mod_lang_parse = NULL;
-mod_lang_compile_t *p_global_mod_lang_compile = NULL;
 
 /**
  * mod_shell_I_init
@@ -32,24 +30,8 @@ mod_lang_compile_t *p_global_mod_lang_compile = NULL;
 STD_CALL std_rv_t mod_shell_I_init(IN mod_shell_t *p_m, IN const std_char_t *arg, IN std_int_t arg_len)
 {
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
-    mod_iid_t mod_lang_parse_iid = MOD_LANG_PARSE_IID;
-    mod_iid_t mod_lang_compile_iid = MOD_LANG_COMPILE_IID;
 
     p_imp_m->hash_head = global_func_hash;
-
-    if (p_global_mod_lang_parse == NULL) {
-        mod_create_instance(&mod_lang_parse_iid, (std_void_t **) &p_imp_m->p_mod_lang_parse,
-                            (mod_ownership_t *) p_imp_m);
-        mod_lang_parse_init(p_imp_m->p_mod_lang_parse, NULL, 0);
-        p_global_mod_lang_parse = p_imp_m->p_mod_lang_parse;
-    }
-
-    if (p_global_mod_lang_compile == NULL) {
-        mod_create_instance(&mod_lang_compile_iid, (std_void_t **) &p_imp_m->p_mod_lang_compile,
-                            (mod_ownership_t *) p_imp_m);
-        mod_lang_compile_init(p_imp_m->p_mod_lang_compile, NULL, 0);
-        p_global_mod_lang_compile = p_imp_m->p_mod_lang_compile;
-    }
 
     return STD_RV_SUC;
 }
@@ -63,22 +45,8 @@ STD_CALL std_rv_t mod_shell_I_init(IN mod_shell_t *p_m, IN const std_char_t *arg
 STD_CALL std_rv_t mod_shell_I_cleanup(IN mod_shell_t *p_m)
 {
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
-    mod_iid_t mod_lang_parse_iid = MOD_LANG_PARSE_IID;
-    mod_iid_t mod_lang_compile_iid = MOD_LANG_COMPILE_IID;
 
     p_imp_m->hash_head = NULL;
-
-    if (p_imp_m->p_mod_lang_parse) {
-        mod_lang_parse_cleanup(p_imp_m->p_mod_lang_parse);
-        mod_delete_instance(&mod_lang_parse_iid, (std_void_t **) &p_imp_m->p_mod_lang_parse,
-                            (mod_ownership_t *) p_imp_m);
-    }
-
-    if (p_imp_m->p_mod_lang_compile) {
-        mod_lang_compile_cleanup(p_imp_m->p_mod_lang_compile);
-        mod_delete_instance(&mod_lang_compile_iid, (std_void_t **) &p_imp_m->p_mod_lang_compile,
-                            (mod_ownership_t *) p_imp_m);
-    }
 
     return STD_RV_SUC;
 }
@@ -153,6 +121,65 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
     return ret;
 }
 
+mod_lang_vm_t *parse_compile_vm_init(IN mod_shell_t *p_m, IN const std_char_t *script_name_or_body, IN std_bool_t is_script_or_body)
+{
+    mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
+    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
+    mod_lang_vm_t *mod_lang_vm;
+    mod_lang_parse_t *p_mod_lang_parse = NULL;
+    mod_iid_t mod_lang_parse_iid = MOD_LANG_PARSE_IID;
+    mod_lang_compile_t *p_mod_lang_compile = NULL;
+    mod_iid_t mod_lang_compile_iid = MOD_LANG_COMPILE_IID;
+
+
+    mod_create_instance(&mod_lang_parse_iid, (std_void_t **) &p_mod_lang_parse,
+                        (mod_ownership_t *) p_imp_m);
+    mod_lang_parse_init(p_mod_lang_parse);
+
+    if (is_script_or_body){
+        STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_mod_lang_parse, (std_char_t *)script_name_or_body) == STD_RV_SUC,
+                             NULL,
+                             mod_lang_parse_cleanup(p_mod_lang_parse);
+                             mod_delete_instance(&mod_lang_parse_iid, (std_void_t **) &p_mod_lang_parse,
+                                                 (mod_ownership_t *) p_imp_m););
+    }else {
+        STD_ASSERT_RV_ACTION(mod_lang_parse_load_body(p_mod_lang_parse, (std_char_t *)script_name_or_body) == STD_RV_SUC,
+                             NULL,
+                             mod_lang_parse_cleanup(p_mod_lang_parse);
+                             mod_delete_instance(&mod_lang_parse_iid, (std_void_t **) &p_mod_lang_parse,
+                                                 (mod_ownership_t *) p_imp_m););
+    }
+
+    mod_create_instance(&mod_lang_compile_iid, (std_void_t **) &p_mod_lang_compile,
+                        (mod_ownership_t *) p_imp_m);
+    mod_lang_compile_init(p_mod_lang_compile, NULL, 0);
+
+    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_mod_lang_compile, p_mod_lang_parse->state);
+
+    mod_lang_compile_cleanup(p_mod_lang_compile);
+    mod_delete_instance(&mod_lang_compile_iid, (std_void_t **) &p_mod_lang_compile,
+                        (mod_ownership_t *) p_imp_m);
+
+    mod_lang_parse_cleanup(p_mod_lang_parse);
+    mod_delete_instance(&mod_lang_parse_iid, (std_void_t **) &p_mod_lang_parse,
+                        (mod_ownership_t *) p_imp_m);
+
+    STD_ASSERT_RV(bytecode != NULL, NULL);
+
+    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
+                        (mod_ownership_t *) p_imp_m);
+
+    if (is_script_or_body) {
+        mod_lang_vm_init(mod_lang_vm, script_name_or_body, bytecode);
+    }else {
+        mod_lang_vm_init(mod_lang_vm, "body", bytecode);
+    }
+
+    FREE(bytecode);
+
+    return mod_lang_vm;
+}
+
 /**
  * mod_shell_I_call_script_func_init
  * @brief   
@@ -162,28 +189,7 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
  */
 std_void_t *mod_shell_I_call_script_func_init(IN mod_shell_t *p_m, IN const std_char_t *script_name)
 {
-    mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;
-    mod_iid_t mod_lang_vm_iid = MOD_LANG_VM_IID;
-    mod_lang_vm_t *mod_lang_vm;
-
-
-    loris_state_t *state = mod_lang_parse_new_state(p_global_mod_lang_parse);
-    STD_ASSERT_RV_ACTION(mod_lang_parse_load_script(p_global_mod_lang_parse, state, (std_char_t *)script_name) == STD_RV_SUC,
-                        NULL, mod_lang_parse_close_state(p_global_mod_lang_parse, state););
-
-    std_char_t *bytecode = mod_lang_compile_compile_bytecode(p_global_mod_lang_compile, state);
-
-    mod_lang_parse_close_state(p_global_mod_lang_parse, state);
-    STD_ASSERT_RV(bytecode != NULL, NULL);
-
-
-    mod_create_instance(&mod_lang_vm_iid, (std_void_t **) &mod_lang_vm,
-                        (mod_ownership_t *) p_imp_m);
-    mod_lang_vm_init(mod_lang_vm, script_name, bytecode);
-
-    FREE(bytecode);
-
-    return mod_lang_vm;
+    return parse_compile_vm_init(p_m, script_name, STD_BOOL_TRUE);
 }
 
 /**

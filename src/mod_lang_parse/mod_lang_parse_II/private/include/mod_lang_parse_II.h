@@ -23,6 +23,7 @@ typedef struct mod_lang_parse_imp_st {
 	mod_ownership_t ownership;
 	std_u64_t unique_id;
 	struct mod_lang_parse_ops_st *p_ops;
+    lang_state_t *state;
 } mod_lang_parse_imp_t;
 
 

@@ -29,9 +29,6 @@ typedef struct mod_shell_imp_st {
     std_lock_free_key_hash_t *hash_head;
 
     mod_thread_pool_t *p_mod_thread_pool;
-    mod_lang_parse_t *p_mod_lang_parse;
-    mod_lang_compile_t *p_mod_lang_compile;
-    mod_lang_vm_t *p_mod_lang_vm;
 } mod_shell_imp_t;
 
 typedef struct shell_func_node_st {
