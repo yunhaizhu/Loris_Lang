@@ -1,17 +1,3 @@
-/**
- * Copyright (c) 2021 Yunhai Zhu <yunhaia2@gmail.com>
- *
- * see COPYRIGHT file.  
- */
-     
-/**
- * @file    config.h
- * @brief   define structure & functions
- * @version 1.0
- * @author  Yunhai Zhu
- * @date    2023-05-07
- *
- */
 #define ENABLE_SELF_HEAL FALSE
 #define KEY_NAME_SIZE BUF_SIZE_128
 #define CMD_LINE_SIZE BUF_SIZE_256
@@ -27,7 +13,7 @@
 #define MAX_GEN_CODES 4000
 #define MAX_GEN_BUFFER 128
 
-#define EXEC_COMPILED_CODE 0
+#define EXEC_COMPILED_CODE 1
 #define DUMP_EXEC_CODE 1
 
 #define MAX_DEF_FUNC_COUNT 1024

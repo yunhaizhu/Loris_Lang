@@ -29,7 +29,6 @@
 */
 STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN std_bool_t reset, const std_char_t *main_arg)
 {
-    std_int_t thread_id = get_std_thread_id();
     const code_st *Codes = vm->Codes;
     std_int_t *Sp = &vm->Sp;
     std_int_t *Fp = &vm->Fp;
@@ -221,27 +220,27 @@ OP_CODE_Inp_MOD:
     DISPATCH()
 
 OP_CODE_GT:
-    inline_execute_code_GT(vm, thread_id);
+    inline_execute_code_GT(vm);
     DISPATCH()
 
 OP_CODE_LT:
-    inline_execute_code_LT(vm, thread_id);
+    inline_execute_code_LT(vm);
     DISPATCH()
 
 OP_CODE_EQ:
-    inline_execute_code_EQ(vm, thread_id);
+    inline_execute_code_EQ(vm);
     DISPATCH()
 
 OP_CODE_NEQ:
-    inline_execute_code_NEQ(vm, thread_id);
+    inline_execute_code_NEQ(vm);
     DISPATCH()
 
 OP_CODE_LGE:
-    inline_execute_code_LGE(vm, thread_id);
+    inline_execute_code_LGE(vm);
     DISPATCH()
 
 OP_CODE_BGE:
-    inline_execute_code_BGE(vm, thread_id);
+    inline_execute_code_BGE(vm);
     DISPATCH()
 
 OP_CODE_BEQ0:
@@ -252,15 +251,15 @@ OP_CODE_BEQ0:
     }
 
 OP_CODE_AND:
-    inline_execute_code_AND(vm, thread_id);
+    inline_execute_code_AND(vm);
     DISPATCH()
 
 OP_CODE_OR:
-    inline_execute_code_OR(vm, thread_id);
+    inline_execute_code_OR(vm);
     DISPATCH()
 
 OP_CODE_XOR:
-    inline_execute_code_XOR(vm, thread_id);
+    inline_execute_code_XOR(vm);
     DISPATCH()
 
 OP_CODE_LOADA:

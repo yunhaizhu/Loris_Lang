@@ -21,7 +21,7 @@
 #include "virtual_machine_READ.h"
 #include "virtual_machine_library.h"
 #include <dlfcn.h>
-
+#include "xxh3.h"
 
 
 /**
@@ -33,12 +33,21 @@
 STD_CALL environment_vm_t *vm_init(IN const std_char_t *name, IN const std_char_t *buffer)
 {
     environment_vm_t *vm = (environment_vm_t *)CALLOC(1, sizeof(environment_vm_t));
+    std_u64_t u64_key;
+    std_size_t buf_len;
 
     vm->custom_func_hash = std_lock_free_key_hash_create(128);
     vm->symbol_hash = std_lock_free_key_hash_create(128);
     vm->n_codes = 1;
     snprintf(vm->execute_name,  sizeof(vm->execute_name), "%s", name);
+    std_safe_replace_chars(vm->execute_name, '/', '_');
+
     snprintf(vm->execute_debug_file,   sizeof(vm->execute_debug_file),   "%s.log", name);
+
+    buf_len = std_safe_strlen(buffer, MAX_CODE_SIZE);
+    u64_key = XXH64(buffer, sizeof(char) * buf_len, 0);
+    u64_key += VERSION_NUMBER;
+    vm->u64_key = u64_key;
 
     library_register(vm, &vm->register_id);
     rsa_gen_keys(&vm->global_system_object_symbol.pub, &vm->global_system_object_symbol.pri, PRIME_SOURCE_FILE);
@@ -48,14 +57,14 @@ STD_CALL environment_vm_t *vm_init(IN const std_char_t *name, IN const std_char_
     return vm;
 }
 
-STD_CALL std_void_t dump_codes(IN const std_char_t *name, IN std_int_t start_pc);
+STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, IN std_int_t start_pc);
 
 /**
  * vm_execute
  * @brief   
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t vm_execute(environment_vm_t *vm, const std_char_t *arg)
+STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *arg)
 {
     std_int_t pc;
     std_u64_t tick;
@@ -64,13 +73,14 @@ STD_CALL std_rv_t vm_execute(environment_vm_t *vm, const std_char_t *arg)
     pc = wild_find_label(vm, "function__main", 0);
     if (pc > 0) {
 #if EXEC_COMPILED_CODE
-        typedef std_rv_t (*execute_compiled_code_t)(IN std_int_t start_pc);
+        typedef std_rv_t (*execute_compiled_code_t)(environment_vm_t *vm, IN std_int_t start_pc);
 
         std_void_t *dl_handle;
         execute_compiled_code_t execute_compiled_code;
-        std_char_t dl_name[KEY_NAME_SIZE] = "\0";
+        std_char_t dl_name[2*KEY_NAME_SIZE] = "\0";
 
-        snprintf(dl_name, sizeof(dl_name), "dynamic_exec/obj/lib_%s-%lu.so", name, u64_key);
+        snprintf(dl_name, sizeof(dl_name), "dynamic_exec/lib/lib_%s-%lu.so", vm->execute_name, vm->u64_key);
+        STD_LOG(DISPLAY, "dl_name:%s\n", dl_name);
 
         dl_handle = dlopen(dl_name, RTLD_LAZY | RTLD_LOCAL);
         if (dl_handle != NULL) {
@@ -78,7 +88,7 @@ STD_CALL std_rv_t vm_execute(environment_vm_t *vm, const std_char_t *arg)
 
             if (execute_compiled_code) {
                 TICK(tick);
-                execute_compiled_code(pc);
+                execute_compiled_code(vm, pc);
                 TOCK(tick);
                 STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
             }
@@ -86,14 +96,14 @@ STD_CALL std_rv_t vm_execute(environment_vm_t *vm, const std_char_t *arg)
         } else {
 
             TICK(tick);
-            execute_code(pc, STD_BOOL_TRUE);
+            execute_code(vm, pc, STD_BOOL_TRUE, arg);
             TOCK(tick);
             STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
 
-            dump_codes(name, pc);
-            std_char_t cmd[KEY_NAME_SIZE] = "\0";
-            snprintf(cmd, sizeof(cmd), "make -C dynamic_exec all arg1=%s arg2=%lu", name, u64_key);
-            std_int_t ret = system(cmd);
+            dump_codes(vm, vm->execute_name, pc);
+            std_char_t cmd[CMD_LINE_SIZE] = "\0";
+            snprintf(cmd, sizeof(cmd), "make -C dynamic_exec all arg1=%s arg2=%lu", vm->execute_name, vm->u64_key);
+            ret = system(cmd);
             STD_LOG(DISPLAY, "compile %s %s\n", cmd, ret == 0 ? "SUCCESS" : "FAIL");
         }
 #else
@@ -298,13 +308,13 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
 
     if (pc > 0) {
 #if EXEC_COMPILED_CODE
-        typedef std_rv_t (*execute_compiled_code_t)(IN std_int_t start_pc);
+        typedef std_rv_t (*execute_compiled_code_t)(environment_vm_t *vm, IN std_int_t start_pc);
 
         std_void_t *dl_handle;
         execute_compiled_code_t execute_compiled_code;
-        std_char_t dl_name[KEY_NAME_SIZE] = "\0";
+        std_char_t dl_name[2*KEY_NAME_SIZE] = "\0";
 
-        snprintf(dl_name, sizeof(dl_name), "dynamic_exec/obj/lib_%s-%lu.so", name, u64_key);
+        snprintf(dl_name, sizeof(dl_name), "dynamic_exec/lib/lib_%s-%lu.so", vm->execute_name, vm->u64_key);
 
         dl_handle = dlopen(dl_name, RTLD_LAZY | RTLD_LOCAL);
         if (dl_handle != NULL) {
@@ -312,7 +322,7 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
 
             if (execute_compiled_code) {
                 TICK(tick);
-                execute_compiled_code(pc);
+                execute_compiled_code(vm, pc);
                 TOCK(tick);
                 STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
             }
@@ -320,14 +330,14 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
         } else {
 
             TICK(tick);
-            execute_code(pc, STD_BOOL_TRUE);
+            execute_code(vm, pc, STD_BOOL_TRUE, NULL);
             TOCK(tick);
             STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
 
-            dump_codes(name, pc);
-            std_char_t cmd[KEY_NAME_SIZE] = "\0";
-            snprintf(cmd, sizeof(cmd), "make -C dynamic_exec all arg1=%s arg2=%lu", name, u64_key);
-            std_int_t ret = system(cmd);
+            dump_codes(vm, vm->execute_name, pc);
+            std_char_t cmd[CMD_LINE_SIZE] = "\0";
+            snprintf(cmd, sizeof(cmd), "make -C dynamic_exec all arg1=%s arg2=%lu", vm->execute_name, vm->u64_key);
+            ret = system(cmd);
             STD_LOG(DISPLAY, "compile %s %s\n", cmd, ret == 0 ? "SUCCESS" : "FAIL");
         }
 #else

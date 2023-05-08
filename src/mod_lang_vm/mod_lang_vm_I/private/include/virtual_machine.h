@@ -142,6 +142,7 @@ typedef struct environment_vm_s {
     std_int_t register_id;
     std_int_t error_code;
     std_char_t execute_name[KEY_NAME_SIZE];
+    std_u64_t u64_key;
     std_char_t execute_debug_file[KEY_NAME_SIZE];
 
     std_u64_t func_arg_stack[32];

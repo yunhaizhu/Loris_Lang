@@ -432,7 +432,7 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_MOD(environment_vm_t *
  * @brief
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_GT(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_GT(environment_vm_t *vm)
 {
     own_value_t obj_y = Pop(vm);
     own_value_t obj_x = Pop(vm);
@@ -451,7 +451,7 @@ STD_CALL static inline std_void_t inline_execute_code_GT(environment_vm_t *vm, I
  * @brief
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static forced_inline std_void_t inline_execute_code_LT(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static forced_inline std_void_t inline_execute_code_LT(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -468,7 +468,7 @@ STD_CALL static forced_inline std_void_t inline_execute_code_LT(environment_vm_t
  * @brief
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_EQ(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_EQ(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -484,7 +484,7 @@ STD_CALL static inline std_void_t inline_execute_code_EQ(environment_vm_t *vm, I
  * @brief   
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -500,7 +500,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm, 
  * @brief   
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -516,7 +516,7 @@ STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm, 
  * @brief   
  * @return  STD_CALL static std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_BGE(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_BGE(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -533,7 +533,7 @@ STD_CALL static inline std_void_t inline_execute_code_BGE(environment_vm_t *vm, 
  * @param   thread_id The ID of the thread.
  * @return  A void value.
  */
-STD_CALL static inline std_void_t inline_execute_code_AND(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_AND(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -552,7 +552,7 @@ STD_CALL static inline std_void_t inline_execute_code_AND(environment_vm_t *vm, 
  * @param   thread_id ID of the thread on which the operation is to be performed.
  * @return  std_void_t Returns nothing.
  */
-STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -573,7 +573,7 @@ STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm, I
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
-STD_CALL static inline std_void_t inline_execute_code_XOR(environment_vm_t *vm, IN std_int_t thread_id)
+STD_CALL static inline std_void_t inline_execute_code_XOR(environment_vm_t *vm)
 {
     own_value_t obj_y_value = Pop(vm);
     own_value_t obj_x_value = Pop(vm);
@@ -683,7 +683,7 @@ STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *v
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand + STACK_ARG_INDEX];
     set_VAR(object, NAN_BOX_Null, Top(vm));
 #if GPR
-    vm->gpr[3 + Codes[*Pc].i_operand] = Top(thread_id);
+    vm->gpr[3 + Codes[*Pc].i_operand] = Top();
 #endif
 }
 
@@ -713,7 +713,7 @@ STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *v
     set_VAR(object, NAN_BOX_Null, Top(vm));
 
 #if GPR
-    vm->gpr[STACK_LOCAL_INDEX + Codes[*Pc].i_operand] = Top(thread_id);
+    vm->gpr[STACK_LOCAL_INDEX + Codes[*Pc].i_operand] = Top();
 #endif
 }
 
@@ -809,7 +809,7 @@ STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm
 STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, std_int_t *Pc, std_int_t *Fp, std_int_t *Sp, IN const std_u64_t *x)
 {
 #if FUNC_RET_SUPPORT
-    *x = Pop(thread_id);
+    *x = Pop();
 #endif
 
     *Sp = *Fp;
