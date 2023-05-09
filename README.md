@@ -19,3 +19,19 @@ find ./src -name *.[ch] |xargs python3 add_doxygen_comment.py
 3. cmake --install build/
 4. cd ./deploy/Debug/
 5. ./Loris_Lang -b script/test_all/selfcheck.batch
+
+## Performace finetune
+Loris time cost: First run cost 2.74s, Second run cost 2.4226s
+1. cd ./deploy/Debug/ 
+2. ./Loris_Lang -s script/test_all/advanced/test_profile.ll 
+3. ./Loris_Lang -s script/test_all/advanced/test_profile.ll 
+
+
+Python 3
+Total time taken: 11.582136392593384 seconds, j = 200000000
+1. python3 script/test_all/advanced/profile.py
+
+
+Lua 5.3.5
+Total time taken: 2.45 seconds, j = 200000000
+1. lua script/test_all/advanced/profile.lua
