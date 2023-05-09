@@ -29,7 +29,7 @@
 */
 STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN std_bool_t reset, const std_char_t *main_arg)
 {
-    const code_st *Codes = vm->Codes;
+    code_st *Codes = vm->Codes;
     std_int_t *Sp = &vm->Sp;
     std_int_t *Fp = &vm->Fp;
     std_int_t *Pc = &vm->Pc;
@@ -39,6 +39,10 @@ STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN
     if (reset) {
         *Sp = *Fp = MAX_STACK - 1;
         vm->error_code = STD_RV_SUC;
+
+        for (std_int_t i = 0; i < 64; ++i) {
+            vm->LOCAL_GPR[i] = NAN_BOX_Null;
+        }
     }
 
     *Pc = start_pc;

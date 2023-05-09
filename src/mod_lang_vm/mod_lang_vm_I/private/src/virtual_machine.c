@@ -67,7 +67,7 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
 STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *arg)
 {
     std_int_t pc;
-    std_u64_t tick;
+    std_u128_t tick;
     std_rv_t ret = STD_RV_SUC;
 
     pc = wild_find_label(vm, "function__main", 0);
@@ -75,15 +75,15 @@ STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *arg)
 #if EXEC_COMPILED_CODE
         typedef std_rv_t (*execute_compiled_code_t)(environment_vm_t *vm, IN std_int_t start_pc);
 
-        std_void_t *dl_handle;
+        std_void_t *dl_handle = NULL;
         execute_compiled_code_t execute_compiled_code;
         std_char_t dl_name[2*KEY_NAME_SIZE] = "\0";
 
         snprintf(dl_name, sizeof(dl_name), "dynamic_exec/lib/lib_%s-%lu.so", vm->execute_name, vm->u64_key);
-        STD_LOG(DISPLAY, "dl_name:%s\n", dl_name);
 
         dl_handle = dlopen(dl_name, RTLD_LAZY | RTLD_LOCAL);
         if (dl_handle != NULL) {
+            STD_LOG(DISPLAY, "dl_name:%s\n", dl_name);
             execute_compiled_code = dlsym(dl_handle, "execute_compiled_code");
 
             if (execute_compiled_code) {
@@ -93,6 +93,7 @@ STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *arg)
                 STD_LOG(DISPLAY, "time cost:%.4fms %.4fs\n", tick / (1000.0 * 1000), tick / (1000.0 * 1000 * 1000));
             }
             STD_LOG(DISPLAY, "executed_compiled_code\n");
+            dlclose(dl_handle);
         } else {
 
             TICK(tick);

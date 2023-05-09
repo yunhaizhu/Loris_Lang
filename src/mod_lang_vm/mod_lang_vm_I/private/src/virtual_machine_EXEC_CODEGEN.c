@@ -62,7 +62,11 @@ STD_CALL std_void_t emit_c_codes_define_start(environment_vm_t *vm, IN const std
                  "std_u64_t x = 0;\n"
                  "\n"
                  "*Sp = *Fp = MAX_STACK - 1;\n"
-                 "*Pc = start_pc;\n");
+                 "*Pc = start_pc;\n"
+                 "for (std_int_t i = 0; i < 64; ++i) {\n"
+                 "    vm->LOCAL_GPR[i] = NAN_BOX_Null;\n"
+                 "}\n"
+                 );
 
     std_strcat_s(line_buf, sizeof(line_buf), "void *jump_table[] = {NULL, ", std_safe_strlen("void *jump_table[] = {NULL, ", KEY_NAME_SIZE));
 
@@ -111,7 +115,10 @@ STD_CALL std_void_t emit_c_codes_define_end(IN const std_char_t *name)
         fclose(fp);
         std_char_t cmd[2*CMD_LINE_SIZE] = "\0";
         snprintf(cmd, sizeof(cmd), "indent -kr -i8 -ts8 -sob -l80 -ss -ncs -cp1 %s", file_name);
-        system(cmd);
+        std_int_t ret = system(cmd);
+        if (ret != 0) {
+            STD_LOG(WARN, "system(%s) failed\n", cmd);
+        }
     }
 }
 
