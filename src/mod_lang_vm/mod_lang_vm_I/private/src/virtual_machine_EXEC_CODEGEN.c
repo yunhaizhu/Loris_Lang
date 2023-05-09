@@ -111,7 +111,10 @@ STD_CALL std_void_t emit_c_codes_define_end(IN const std_char_t *name)
         fclose(fp);
         std_char_t cmd[2*CMD_LINE_SIZE] = "\0";
         snprintf(cmd, sizeof(cmd), "indent -kr -i8 -ts8 -sob -l80 -ss -ncs -cp1 %s", file_name);
-        system(cmd);
+        std_int_t ret = system(cmd);
+        if (ret != 0) {
+            STD_LOG(WARN, "system(%s) failed, ret:%d\n", cmd, ret);
+        }
     }
 }
 

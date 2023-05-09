@@ -82,7 +82,11 @@ STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t args)
     string_file_y = get_own_value_object_string(file_y);
     snprintf(cmd,sizeof(cmd), "diff %s %s |colordiff", string_file_x, string_file_y );
 
-    system(cmd);
+    std_int_t ret = system(cmd);
+    if (ret != 0) {
+        STD_LOG(ERR, "diff file %s %s failed\n", string_file_x, string_file_y);
+        return;
+    }
 }
 
 /**

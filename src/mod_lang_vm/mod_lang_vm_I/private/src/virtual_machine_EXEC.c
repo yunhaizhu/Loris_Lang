@@ -122,7 +122,7 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 
 /**
  * inline_execute_code_ADD_SUB_DIV_MOD
- * @brief   
+ * @brief
  * @param   vm
  * @param   type
  * @param   thread_id
@@ -332,7 +332,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
 
 /**
  * inline_execute_code_ADD
- * @brief   
+ * @brief
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
@@ -364,7 +364,7 @@ STD_CALL static inline std_void_t inline_execute_code_MUL(environment_vm_t *vm, 
 
 /**
  * execute_code_DIV
- * @brief   
+ * @brief
  * @return  STD_CALL static std_void_t
  */
 STD_CALL static inline std_void_t inline_execute_code_DIV(environment_vm_t *vm, IN  code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
@@ -375,7 +375,7 @@ STD_CALL static inline std_void_t inline_execute_code_DIV(environment_vm_t *vm, 
 
 /**
  * execute_code_MOD
- * @brief   
+ * @brief
  * @return  STD_CALL static std_void_t
  */
 STD_CALL static inline std_void_t inline_execute_code_MOD(environment_vm_t *vm, IN  code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
@@ -397,7 +397,7 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADD(environment
 
 /**
  * inline_execute_code_Inp_ADDI
- * @brief   
+ * @brief
  * @param   thread_id
  * @param   Codes
  * @param   Stack
@@ -428,7 +428,7 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environmen
 
 /**
  * inline_execute_code_Inp_SUB
- * @brief   
+ * @brief
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
@@ -439,7 +439,7 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_SUB(environment_vm_t *
 
 /**
  * inline_execute_code_Inp_MUL
- * @brief   
+ * @brief
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
@@ -450,7 +450,7 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_MUL(environment_vm_t *
 
 /**
  * inline_execute_code_Inp_DIV
- * @brief   
+ * @brief
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
@@ -461,7 +461,7 @@ STD_CALL static inline std_void_t inline_execute_code_Inp_DIV(environment_vm_t *
 
 /**
  * inline_execute_code_Inp_MOD
- * @brief   
+ * @brief
  * @param   thread_id
  * @return  STD_CALL static inline std_void_t
  */
@@ -524,7 +524,7 @@ STD_CALL static inline std_void_t inline_execute_code_EQ(environment_vm_t *vm)
 
 /**
  * execute_code_NEQ
- * @brief   
+ * @brief
  * @return  STD_CALL static std_void_t
  */
 STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm)
@@ -540,7 +540,7 @@ STD_CALL static inline std_void_t inline_execute_code_NEQ(environment_vm_t *vm)
 
 /**
  * execute_code_LGE
- * @brief   
+ * @brief
  * @return  STD_CALL static std_void_t
  */
 STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm)
@@ -556,7 +556,7 @@ STD_CALL static inline std_void_t inline_execute_code_LGE(environment_vm_t *vm)
 
 /**
  * execute_code_BGE
- * @brief   
+ * @brief
  * @return  STD_CALL static std_void_t
  */
 STD_CALL static inline std_void_t inline_execute_code_BGE(environment_vm_t *vm)
