@@ -499,11 +499,8 @@ STD_CALL std_rv_t cmd_shell(mod_shell_t *p_m, IN std_int_t shell_type, IN std_ch
             if (ret != STD_RV_SUC && ENABLE_SELF_HEAL) {
                 //launch self_heal.ll
                 std_char_t new_cmd[CMD_LINE_SIZE];
-                snprintf(new_cmd, sizeof(new_cmd), "mv test_need_verify.log debug_%s.log", filename);
-                std_int_t ret = system(new_cmd);
-                if (ret != 0) {
-                    STD_LOG(WARN, "Failed to execute %s\n", new_cmd);
-                }
+                snprintf(new_cmd, sizeof(new_cmd), "mv test.log debug_%s.log", filename);
+                system(new_cmd);
                 cmd_script("self_heal.ll", filename);
             }
         } else if (strncmp(cmd, "batch", std_safe_strlen("batch", BUF_SIZE_32)) == 0) {

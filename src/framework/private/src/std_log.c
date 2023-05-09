@@ -32,7 +32,7 @@ STD_CALL std_void_t STD_LOG_INIT(IN std_int_t log_level)
     if (global_log_file){
         fclose(global_log_file);
     }
-    global_log_file = fopen("test_need_verify.log", "w");
+    global_log_file = fopen("test.log", "w");
 }
 
 /**

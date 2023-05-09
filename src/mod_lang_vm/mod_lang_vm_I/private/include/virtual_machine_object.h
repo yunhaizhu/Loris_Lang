@@ -160,6 +160,7 @@ typedef struct ownership_object_symbol_s {
 
     struct public_key_class pub;
     struct private_key_class pri;
+    std_bool_t GPR_USED;
 } ownership_object_symbol_t;
 
 /**

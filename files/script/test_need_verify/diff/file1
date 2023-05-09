@@ -1,0 +1,11 @@
+
+def diff_file(var file1, var file2)
+{
+    diff(file1, file2)
+}
+
+def main()
+{
+    var file1 = ""
+    var file2 =
+}
