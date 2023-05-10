@@ -247,7 +247,6 @@ std_void_t compile_declare_array_var(lang_compile_environment_t *compile_env, sy
            if (count <= 0) {
                STD_LOG(ERR, "array size can not be zero %d\n", count);
                compile_error(compile_env);
-               return;
            }
 
            gen_codeIUDSE(compile_env->generate_code_env,NEW_ARRAY, Env[i].pos, 0, 0, NULL, count, line);

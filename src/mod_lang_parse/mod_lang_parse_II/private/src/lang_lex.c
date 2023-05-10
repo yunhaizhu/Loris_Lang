@@ -598,23 +598,17 @@ STD_CALL static inline std_int_t lex_handle_char(lang_state_t *state)
  */
 STD_CALL std_int_t lang_lex_token(lang_state_t *state)
 {
-    std_int_t loop_max = 1;
-
-    while (loop_max <= RECURSIVE_LOOP_MAX) {
-        while (state->lex_char == ' ' || state->lex_char == '\t') {
-            lang_lex_next(state);
-        }
-        if (lang_lex_accept(state, '\n')) {
-            state->source_line++;
-            return TOKEN_lang;
-        }else if (isdigit(state->lex_char)) {
-            return inline_handle_digit(state);
-        }else {
-            return lex_handle_char(state);
-        }
-        loop_max++;
+    while (state->lex_char == ' ' || state->lex_char == '\t') {
+        lang_lex_next(state);
     }
-    return TOKEN_EOF;
+    if (lang_lex_accept(state, '\n')) {
+        state->source_line++;
+        return TOKEN_lang;
+    }else if (isdigit(state->lex_char)) {
+        return inline_handle_digit(state);
+    }else {
+        return lex_handle_char(state);
+    }
 }
 
 /**
