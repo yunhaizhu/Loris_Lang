@@ -1,9 +1,21 @@
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=yunhaizhu_Loris_Lang)](https://sonarcloud.io/summary/new_code?id=yunhaizhu_Loris_Lang)
 
 # Loris_Lang
-Loris is a ownership based memory safe dynamic programming language. 
+Loris is a dynamic programming language that prioritizes memory safety through 
+an lifetime ownership-based system. It eliminates the need for a garbage collector by ensuring that variables
+only exist within their designated lifetimes and are automatically freed once their 
+lifetimes expire. 
 
-Safe as Rust, Faster as Lua, Easy use as Python!
+Ownership ensures memory safety of variables - no double frees, no use-after-frees, and no memory leaks.
+
+Loris is:
+
+- As safe as Rust 
+- As fast as Lua
+- As easy to use as Python
+
+Loris offers a comfortable programming experience!
+
 
 ## Install packages
 1. sudo apt-get install -y clang libunwind-dev libgoogle-perftools-dev libxxhash-dev libjson-c-dev libcjson-dev flex yacc libelf-dev libconfuse-dev fuse libfl-dev libgsl-dev python3-pip indent golang-go graphviz libcurl4-openssl-dev
