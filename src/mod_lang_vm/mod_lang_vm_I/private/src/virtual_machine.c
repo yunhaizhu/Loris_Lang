@@ -67,7 +67,7 @@ STD_CALL std_void_t dump_codes(environment_vm_t *vm, IN const std_char_t *name, 
 STD_CALL std_rv_t vm_execute(environment_vm_t *vm, IN const std_char_t *arg)
 {
     std_int_t pc;
-    std_u128_t tick;
+    std_u128_t tick = 0;
     std_rv_t ret = STD_RV_SUC;
 
     pc = wild_find_label(vm, "function__main", 0);

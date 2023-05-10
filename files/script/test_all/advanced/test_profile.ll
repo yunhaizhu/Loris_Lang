@@ -7,7 +7,7 @@ def test_profile()
     var n
 
     i = 0
-    n = 200*1000*1000
+    n = 2000*1000*1000
 
     while (i < n) {
         i += 1

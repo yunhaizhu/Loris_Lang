@@ -2,27 +2,53 @@ cmake_minimum_required(VERSION 3.16)
 set(PROJECT_CUSTOM_NAME "Loris_Lang")
 project(${PROJECT_CUSTOM_NAME} C)
 
-set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_C_COMPILER "clang")
 set(CMAKE_VERBOSE_MAKEFILE ON)
-
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     message(" ")
     message("CMAKE IN DEBUG MODE")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -O3 -D_USE_JIT_ -DSOFT_FPU -g -Wall -D_DEBUG -Werror -fPIC -fno-stack-protector -fno-common -march=native")
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-enum-compare -DDEBUG_JIT -fsanitize=address -fno-omit-frame-pointer")
-    message(" ")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -Wall -Werror -fPIC -march=native -fsanitize=address")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+    set(LINK_PROFILER "profiler")
 elseif (CMAKE_BUILD_TYPE MATCHES Release)
     message(" ")
     message("CMAKE IN RELEASE MODE")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -D_USE_JIT_ -DSOFT_FPU -g -Wall -DNDEBUG -D_DEBUG -Werror -fPIC -fno-stack-protector -fno-common -march=native")
-    message(" ")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Werror -fPIC -march=native")
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -D_USE_JIT_ -DSOFT_FPU -g -Wall -D_DEBUG -Werror -fPIC -fno-stack-protector -fno-common -march=native")
 endif ()
 
 set(CMAKE_ENABLE_EXPORTS ON)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
-set(LINK_PROFILER "profiler")
+
+set(ENABLE_SELF_HEAL FALSE)
+set(KEY_NAME_SIZE BUF_SIZE_128)
+set(CMD_LINE_SIZE BUF_SIZE_256)
+set(MAX_BODY_SIZE BUF_SIZE_8192*10)
+set(LINE_BUF_SIZE BUF_SIZE_1024)
+set(MAX_STRING_SIZE BUF_SIZE_4096)
+
+#recursive may exceed this limit. BE CAREFUL.
+set(RECURSIVE_LOOP_MAX 1024)
+set(MAX_CODE 2000*10)
+set(MAX_LABEL 200*5)
+set(MAX_STACK 6000*2)
+set(MAX_CODE_SIZE MAX_BODY_SIZE*10)
+
+set(THREAD_MAX 128)
+
+set(MAX_GEN_CODES 4000)
+set(MAX_GEN_BUFFER 128)
+
+set(EXEC_COMPILED_CODE 1)
+set(DUMP_EXEC_CODE 0)
+
+set(MAX_DEF_FUNC_COUNT 1024)
+set(MAX_LOAD_LIB_COUNT 128)
+set(MAX_REQUIRED_STATE_COUNT 128)
+
+# Configure a header file with preprocessor definitions
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/framework/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/framework/public/include/config.h)
 
 add_subdirectory(src)
 add_subdirectory(code_generator)

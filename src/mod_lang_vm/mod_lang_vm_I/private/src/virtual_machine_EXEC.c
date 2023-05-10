@@ -17,6 +17,7 @@
 #include "virtual_machine_safe_var.h"
 
 #define GPR_PLUS_ENABLE 1
+#define GPR_ENABLE_COUNT 10
 
 #define GET_OBJECT()                                                      \
     switch (Codes[*Pc].i_operand_ex) {                                    \
@@ -81,12 +82,12 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 
     reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
 
-    if (Codes[*Pc].GPR_ENABLE <= 254) {
+    if (Codes[*Pc].GPR_ENABLE <= GPR_ENABLE_COUNT) {
         fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
         obj_x = Stack[fp_index];
         set_VAR(obj_x, NAN_BOX_Null, ret);
 
-        if (reg_id >= STACK_LOCAL_INDEX && Codes[*Pc].GPR_ENABLE == 254) {
+        if (reg_id >= STACK_LOCAL_INDEX && Codes[*Pc].GPR_ENABLE == GPR_ENABLE_COUNT) {
             vm->LOCAL_GPR[reg_id - STACK_LOCAL_INDEX] = ret;
 
             ownership_object_symbol_t *objx_symbol;
@@ -99,7 +100,6 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
     }else {
         if (reg_id >= STACK_LOCAL_INDEX) {
             vm->LOCAL_GPR[reg_id - STACK_LOCAL_INDEX] = ret;
-
         } else {
             fp_index =  (*Fp + reg_id);
             obj_x = Stack[fp_index];
@@ -695,7 +695,9 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
 #if GPR_PLUS_ENABLE
     own_value_t obj_value;
 
-    if (Codes[*Pc].GPR_ENABLE <= 254) {
+    if (__builtin_expect(Codes[*Pc].GPR_ENABLE > GPR_ENABLE_COUNT, 1)) {
+        obj_value = vm->LOCAL_GPR[Codes[*Pc].local_gpr_idx];
+    } else {
         own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
         obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
@@ -704,8 +706,6 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
         vm->LOCAL_GPR[Codes[*Pc].local_gpr_idx] = obj_value;
 
         Codes[*Pc].GPR_ENABLE++;
-    }else {
-        obj_value = vm->LOCAL_GPR[Codes[*Pc].local_gpr_idx];
     }
 
     Push(vm,  obj_value);

@@ -1,6 +1,6 @@
 local start_time = os.clock() -- store start time
 j = 0
-for i = 1, 200*1000*1000 do
+for i = 1, 2000*1000*1000 do
   j = j + 1
 end
 local end_time = os.clock() -- store end time

@@ -1,32 +1,5 @@
 # Define a CMake variable
-set(ENABLE_SELF_HEAL FALSE)
-set(KEY_NAME_SIZE BUF_SIZE_128)
-set(CMD_LINE_SIZE BUF_SIZE_256)
-set(MAX_BODY_SIZE BUF_SIZE_8192*10)
-set(LINE_BUF_SIZE BUF_SIZE_1024)
-set(MAX_STRING_SIZE BUF_SIZE_4096)
 
-#recursive may exceed this limit. BE CAREFUL.
-set(RECURSIVE_LOOP_MAX 1024)
-set(MAX_CODE 2000*10)
-set(MAX_LABEL 200*5)
-set(MAX_STACK 6000*2)
-set(MAX_CODE_SIZE MAX_BODY_SIZE*10)
-
-set(THREAD_MAX 128)
-
-set(MAX_GEN_CODES 4000)
-set(MAX_GEN_BUFFER 128)
-
-set(EXEC_COMPILED_CODE 1)
-set(DUMP_EXEC_CODE 0)
-
-set(MAX_DEF_FUNC_COUNT 1024)
-set(MAX_LOAD_LIB_COUNT 128)
-set(MAX_REQUIRED_STATE_COUNT 128)
-
-# Configure a header file with preprocessor definitions
-configure_file(config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/public/include/config.h)
 
 add_executable(${PROJECT_CUSTOM_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/private/src/main.c

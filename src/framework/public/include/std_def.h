@@ -72,7 +72,7 @@ typedef enum std_rv_error_code_e {
 
 #define TOCK(t)         \
     do {                \
-        std_u64_t t1;   \
+        std_u128_t t1;   \
         TICK(t1);       \
         (t) = t1 - (t); \
     } while (0)

@@ -281,7 +281,7 @@ STD_CALL std_rv_t gen_buffer_output(generate_code_env_t *generate_code_env, IN s
        }
    }
 
-   STD_LOG(DISPLAY, "%s: %s\n", __FUNCTION__, ptr_output_buffer);
+   STD_LOG(INFO, "%s: %s\n", __FUNCTION__, ptr_output_buffer);
 
    return ret;
 }
