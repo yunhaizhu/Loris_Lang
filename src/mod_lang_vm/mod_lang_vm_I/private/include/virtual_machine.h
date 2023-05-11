@@ -111,9 +111,10 @@ typedef struct code {
     std_64_t i_operand;
     std_64_t i_operand_ex;
     std_char_t *s_operand;
-    std_int_t arg_gpr_idx;
-    std_int_t local_gpr_idx;
-    std_u8_t GPR_ENABLE;
+#if GPR_PLUS_ENABLE
+    std_u8_t GPR_ENABLE[RECURSIVE_LOOP_MAX];
+#endif
+
     std_int_t line;
 } code_st;
 
@@ -139,9 +140,11 @@ typedef struct environment_vm_s {
     std_lock_free_key_hash_t *symbol_hash;
     ownership_object_symbol_t global_system_object_symbol;
 
-    std_u64_t ARG_GPR[64];
-    std_u64_t LOCAL_GPR[64];
-
+#if GPR_PLUS_ENABLE
+    std_u64_t ARG_GPR[RECURSIVE_LOOP_MAX][64];
+    std_u64_t LOCAL_GPR[RECURSIVE_LOOP_MAX][64];
+    std_int_t stack_gpr_idx;
+#endif
 
     std_int_t register_id;
     std_int_t error_code;
