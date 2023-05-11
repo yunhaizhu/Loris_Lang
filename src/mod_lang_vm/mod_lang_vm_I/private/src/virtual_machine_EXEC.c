@@ -16,8 +16,6 @@
 #include "virtual_machine_object.h"
 #include "virtual_machine_safe_var.h"
 
-#define GPR_ENABLE_COUNT 0
-
 #define GET_OBJECT()                                                      \
     switch (Codes[*Pc].i_operand_ex) {                                    \
         case VAR_LINK:                                                    \
@@ -80,9 +78,9 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
     own_value_t obj_x;
 
     reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
+
     fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
     obj_x = Stack[fp_index];
-
     ownership_object_symbol_t const *object_symbol = get_own_value_object_symbol(obj_x);
     if (reg_id >= STACK_LOCAL_INDEX ){
         vm->LOCAL_GPR[vm->stack_gpr_idx][reg_id - STACK_LOCAL_INDEX] = ret;
@@ -656,8 +654,8 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
         obj_value = vm->ARG_GPR[vm->stack_gpr_idx][Codes[*Pc].i_operand_ex];
     }else {
         obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
-        object_symbol->GPR_USED = STD_BOOL_TRUE;
         vm->ARG_GPR[vm->stack_gpr_idx][Codes[*Pc].i_operand_ex] = obj_value;
+        object_symbol->GPR_USED = STD_BOOL_TRUE;
     }
 
     Push(vm,  obj_value);
@@ -683,6 +681,7 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
 STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm, IN  code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
 #if GPR_PLUS_ENABLE
+
     own_value_t obj_value;
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
     ownership_object_symbol_t *object_symbol = get_own_value_object_symbol(object);
@@ -690,13 +689,14 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
     if (__builtin_expect(object_symbol->GPR_USED == STD_BOOL_TRUE, 1)){
         obj_value = vm->LOCAL_GPR[vm->stack_gpr_idx][Codes[*Pc].i_operand_ex];
     }else {
-        object_symbol->GPR_USED = STD_BOOL_TRUE;
         obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
         vm->LOCAL_GPR[vm->stack_gpr_idx][Codes[*Pc].i_operand_ex] = obj_value;
+        object_symbol->GPR_USED = STD_BOOL_TRUE;
     }
 
     Push(vm,  obj_value);
+
 #else
     own_value_t obj_value;
 

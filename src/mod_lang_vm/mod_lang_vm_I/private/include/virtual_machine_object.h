@@ -601,38 +601,7 @@ STD_CALL static inline own_value_type_t get_own_value_type(IN own_value_t value)
     std_u64_t signature;
     std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
 
-#if 0
-    STD_LOG(ERR, "%ld \n",  value);
-    STD_LOG(ERR, "value 0x%04x %04x %04x %04x\n",
-            (unsigned)(value >> 48ULL) & 0xFFFF,
-            (unsigned)(value >> 32ULL) & 0xFFFF,
-            (unsigned)(value >> 16) & 0xFFFF,
-            (unsigned)value & 0xFFFF);
-
-    STD_LOG(ERR, "isNaN 0x%04x %04x %04x %04x\n",
-            (unsigned)(isNaN >> 48ULL) & 0xFFFF,
-            (unsigned)(isNaN >> 32ULL) & 0xFFFF,
-            (unsigned)(isNaN >> 16) & 0xFFFF,
-            (unsigned)isNaN & 0xFFFF);
-
-    STD_LOG(ERR, "NAN_BOX_SIGNATURE_NAN 0x%04x %04x %04x %04x\n",
-            (unsigned)(NAN_BOX_SIGNATURE_NAN >> 48ULL) & 0xFFFF,
-            (unsigned)(NAN_BOX_SIGNATURE_NAN >> 32ULL) & 0xFFFF,
-            (unsigned)(NAN_BOX_SIGNATURE_NAN >> 16) & 0xFFFF,
-            (unsigned)NAN_BOX_SIGNATURE_NAN & 0xFFFF);
-#endif
-
-
-
     signature = value & NAN_BOX_MASK_SIGNATURE;
-
-#if 0
-    STD_LOG(ERR, "signature 0x%04x %04x %04x %04x\n",
-            (unsigned)(signature >> 48ULL) & 0xFFFF,
-            (unsigned)(signature >> 32ULL) & 0xFFFF,
-            (unsigned)(signature >> 16) & 0xFFFF,
-            (unsigned)signature & 0xFFFF);
-#endif
 
     if (isNaN != NAN_BOX_SIGNATURE_NAN) {
         if (signature == NAN_BOX_MASK_TYPE_NAN){
