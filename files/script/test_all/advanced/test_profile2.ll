@@ -1,7 +1,7 @@
 require "os"
 import os.print, os.assert
 
-def test_profile(var i)
+def test_profile2(var i)
 {
     var n
 
@@ -18,7 +18,7 @@ def test_profile(var i)
 
 def main()
 {
-    test_profile(0)
+    test_profile2(0)
 }
 
 #script("script/test_all/advanced/test_profile2.ll")

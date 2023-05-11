@@ -111,10 +111,6 @@ typedef struct code {
     std_64_t i_operand;
     std_64_t i_operand_ex;
     std_char_t *s_operand;
-#if GPR_PLUS_ENABLE
-    std_u8_t GPR_ENABLE[RECURSIVE_LOOP_MAX];
-#endif
-
     std_int_t line;
 } code_st;
 

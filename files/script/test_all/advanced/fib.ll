@@ -18,14 +18,14 @@ def fib(var n, var ret_sum)
     fib(n-1, sum1)
     fib(n-2, sum2)
     ret_sum = sum1 + sum2
-    os.print("ret_sum:", sum1, sum2, ret_sum)
+#    os.print("ret_sum:", sum1, sum2, ret_sum)
 }
 
 def main()
 {
     var ret_sum = 0
 
-    fib(8, ret_sum)
+    fib(20, ret_sum)
     os.print("ret_sum", ret_sum)
 }
 #script("script/test_all/advanced/fib.ll")

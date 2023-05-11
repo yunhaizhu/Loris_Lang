@@ -67,7 +67,7 @@ typedef enum std_rv_error_code_e {
     do {                                                \
         struct timespec x;                              \
         clock_gettime(CLOCK_REALTIME, &x);              \
-        t = x.tv_nsec + 1000000000 * (x.tv_sec & 0xff); \
+        t = x.tv_nsec + 1000000000 * (x.tv_sec & 0xffffffff); \
     } while (0)
 
 #define TOCK(t)         \
