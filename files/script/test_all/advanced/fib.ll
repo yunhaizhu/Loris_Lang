@@ -2,31 +2,41 @@ package test21
 require "os"
 import os.print, os.assert
 
-def fib(var n, var ret_sum)
-{
-    var sum1 = 0
-    var sum2 = 0
 
-    if (n == 1){
-        ret_sum = 1
-        return
+def fib_helper(var n, var a, var b, var ret)
+{
+    if (n == 0) {
+        ret = a
+    } else {
+        fib_helper(n-1, b, a+b, ret)
     }
-    if (n == 2){
-        ret_sum = 2
-        return
+}
+
+def fib(var n, var ret)
+{
+    fib_helper(n, 0, 1, ret)
+}
+
+def fib2(var n, var ret)
+{
+    if (n <= 1){
+        ret += n
+    }else{
+         fib2(n-1, ret)
+         fib2(n-2, ret)
     }
-    fib(n-1, sum1)
-    fib(n-2, sum2)
-    ret_sum = sum1 + sum2
-#    os.print("ret_sum:", sum1, sum2, ret_sum)
 }
 
 def main()
 {
     var ret_sum = 0
+    var n = 20
 
-    fib(20, ret_sum)
-    os.print("ret_sum", ret_sum)
+    fib(n, ret_sum)
+    os.print(n, "ret_sum", ret_sum)
+
+    fib2(n, ret_sum)
+    os.print(n, "ret_sum", ret_sum/2)
 }
 #script("script/test_all/advanced/fib.ll")
 /*

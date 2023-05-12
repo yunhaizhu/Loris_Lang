@@ -8,8 +8,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_C_COMPILER "gcc")
     message(" ")
     message("CMAKE IN DEBUG MODE")
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -O0 -Wall -Werror -fPIC -march=native -fsanitize=address")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -DNDEBUG -O3 -Wall -Werror -fPIC -march=native")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -Wall -Werror -fPIC -march=native -fsanitize=address")
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -DNDEBUG -O3 -Wall -Werror -fPIC -march=native")
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-enum-compare -DDEBUG_JIT -fsanitize=address -fno-omit-frame-pointer")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
 #    set(LINK_PROFILER "profiler")
@@ -44,12 +44,14 @@ set(MAX_GEN_CODES 4000)
 set(MAX_GEN_BUFFER 128)
 
 set(EXEC_COMPILED_CODE 1)
-set(DUMP_EXEC_CODE 0)
+set(DUMP_EXEC_CODE 1)
 
 set(MAX_DEF_FUNC_COUNT 1024)
 set(MAX_LOAD_LIB_COUNT 128)
 set(MAX_REQUIRED_STATE_COUNT 128)
 set(GPR_PLUS_ENABLE 1)
+set(GPR_PLUS_NUMBER 32)
+
 
 # Configure a header file with preprocessor definitions
 configure_file(${${PROJECT_CUSTOM_NAME}_SOURCE_DIR}/src/framework/config.h.in ${${PROJECT_CUSTOM_NAME}_SOURCE_DIR}/src/framework/public/include/config.h)

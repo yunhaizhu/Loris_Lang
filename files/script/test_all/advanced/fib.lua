@@ -11,4 +11,4 @@ start_time = os.clock()
 result = fibonacci(20)
 end_time = os.clock()
 
-print(string.format("The 40th Fibonacci number is %d, elapsed time: %.6f seconds", result, end_time - start_time))
+print(string.format("The 20th Fibonacci number is %d, elapsed time: %.6f seconds", result, end_time - start_time))

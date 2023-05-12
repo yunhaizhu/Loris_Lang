@@ -11,4 +11,4 @@ start_time = time.time()
 result = fibonacci(20)
 end_time = time.time()
 
-print(f"The 40th Fibonacci number is {result}, elapsed time: {end_time - start_time:.6f} seconds")
+print(f"The 20th Fibonacci number is {result}, elapsed time: {end_time - start_time:.6f} seconds")

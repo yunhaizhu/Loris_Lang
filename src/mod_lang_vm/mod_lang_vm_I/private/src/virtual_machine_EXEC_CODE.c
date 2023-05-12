@@ -41,9 +41,9 @@ STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN
         vm->error_code = STD_RV_SUC;
 #if GPR_PLUS_ENABLE
         for (std_int_t i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
-            for (int j = 0; j < 64; ++j) {
-                vm->ARG_GPR[i][j] = NAN_BOX_Null;
-                vm->LOCAL_GPR[i][j] = NAN_BOX_Null;
+            for (int j = 0; j < GPR_PLUS_NUMBER; ++j) {
+                vm->ARG_GPR[i*GPR_PLUS_NUMBER + j] = NAN_BOX_Null;
+                vm->LOCAL_GPR[i*GPR_PLUS_NUMBER + j] = NAN_BOX_Null;
             }
         }
 #endif

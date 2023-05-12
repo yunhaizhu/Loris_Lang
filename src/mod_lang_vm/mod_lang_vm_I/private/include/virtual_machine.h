@@ -137,8 +137,8 @@ typedef struct environment_vm_s {
     ownership_object_symbol_t global_system_object_symbol;
 
 #if GPR_PLUS_ENABLE
-    std_u64_t ARG_GPR[RECURSIVE_LOOP_MAX][64];
-    std_u64_t LOCAL_GPR[RECURSIVE_LOOP_MAX][64];
+    std_u64_t ARG_GPR[RECURSIVE_LOOP_MAX*GPR_PLUS_NUMBER];
+    std_u64_t LOCAL_GPR[RECURSIVE_LOOP_MAX*GPR_PLUS_NUMBER];
     std_int_t stack_gpr_idx;
 #endif
 
