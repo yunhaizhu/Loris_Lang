@@ -38,12 +38,10 @@ find ./src -name *.[ch] |xargs python3 add_doxygen_comment.py
 
 ## Performance finetune
 Loris time cost: \
-First time using interpreter mode, time cost:20935.9490ms 20.9359s \
-Second time using compiled binary mode, time cost:21721.8899ms 21.7219s
+time cost:23348.9645ms 23.3490s
 
 1. cd ./deploy/Release/ 
 2. ./Loris_Lang -s script/test_all/advanced/test_profile.ll 
-3. ./Loris_Lang -s script/test_all/advanced/test_profile.ll 
 
 
 Python 3 \

@@ -19,7 +19,7 @@ def fib(var n, var ret)
 
 def fib2(var n, var ret)
 {
-    if (n <= 1){
+    if (n <= 2){
         ret += n
     }else{
          fib2(n-1, ret)
@@ -30,7 +30,7 @@ def fib2(var n, var ret)
 def main()
 {
     var ret_sum = 0
-    var n = 20
+    var n = 8
 
     fib(n, ret_sum)
     os.print(n, "ret_sum", ret_sum)

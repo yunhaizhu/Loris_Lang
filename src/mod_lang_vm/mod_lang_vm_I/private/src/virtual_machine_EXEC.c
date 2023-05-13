@@ -79,17 +79,12 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 
     reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
 
-    fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
-    obj_x = Stack[fp_index];
-
     if (reg_id >= STACK_LOCAL_INDEX ){
         vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + reg_id - STACK_LOCAL_INDEX] = ret;
-
-        ownership_object_symbol_t const *object_symbol = get_own_value_object_symbol(obj_x);
-        if (__builtin_expect(object_symbol->GPR_USED == STD_BOOL_FALSE, 0)){
-            set_VAR(obj_x, NAN_BOX_Null, ret);
-        }
     }else {
+        fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
+        obj_x = Stack[fp_index];
+
         vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + reg_id - STACK_ARG_INDEX ] = ret;
         set_VAR(obj_x, NAN_BOX_Null, ret);
     }
@@ -652,7 +647,7 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX];
     ownership_object_symbol_t *object_symbol = get_own_value_object_symbol(object);
 
-    if (__builtin_expect(object_symbol->GPR_USED == STD_BOOL_TRUE, 1)){
+    if (likely(object_symbol->GPR_USED == STD_BOOL_TRUE)){
         obj_value = vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex];
     }else {
         obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -683,12 +678,11 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
 STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm, IN  code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
 #if GPR_PLUS_ENABLE
-
     own_value_t obj_value;
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
     ownership_object_symbol_t *object_symbol = get_own_value_object_symbol(object);
 
-    if (__builtin_expect(object_symbol->GPR_USED == STD_BOOL_TRUE, 1)){
+    if (likely(object_symbol->GPR_USED == STD_BOOL_TRUE)){
         obj_value = vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex];
     }else {
         obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -698,7 +692,6 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
     }
 
     Push(vm,  obj_value);
-
 #else
     own_value_t obj_value;
 
@@ -1050,13 +1043,12 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm
 
     Push(vm,  object);
 
-#if GPR_PLUS_ENABLE1
-    ownership_object_symbol_t *root_symbol;
-
+#if GPR_PLUS_ENABLE
+    const ownership_object_symbol_t *root_symbol;
     root_symbol = get_own_value_object_symbol(object);
 
-    if (root_symbol->GPR_USED && vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex][Codes[*Pc].i_operand_ex] != NAN_BOX_Null) {
-        set_VAR(object, NAN_BOX_Null, vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex][Codes[*Pc].i_operand_ex]);
+    if (root_symbol->GPR_USED && vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] != NAN_BOX_Null) {
+        set_VAR(object, NAN_BOX_Null, vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex]);
     }
 #endif
 }
@@ -1081,8 +1073,7 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm
     Push(vm,  object);
 
 #if GPR_PLUS_ENABLE
-    ownership_object_symbol_t *root_symbol;
-
+    ownership_object_symbol_t const *root_symbol;
     root_symbol = get_own_value_object_symbol(object);
 
     if (root_symbol->GPR_USED && vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] != NAN_BOX_Null) {

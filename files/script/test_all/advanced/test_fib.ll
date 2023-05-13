@@ -20,6 +20,19 @@ def fib(var n, var ret_sum)
     ret_sum = sum1 + sum2
 }
 
+def fib2(var n, var ret)
+{
+    var ret_sum1
+
+    if (n <= 2){
+        ret = n
+    }else{
+         fib2(n-1, ret_sum1)
+         fib2(n-2, ret)
+         ret += ret_sum1
+    }
+}
+
 def test_fib()
 {
     var ret_sum = 0
@@ -27,5 +40,9 @@ def test_fib()
     os.print("TEST FIB BEGIN")
     fib(8, ret_sum)
     os.assert(ret_sum == 34, "8 fib ret_sum is 34")
+
+    ret_sum = 0
+    fib2(8, ret_sum)
+    os.assert(ret_sum == 34, "8 fib2 ret_sum is 34")
     os.print("TEST FIB SUCCESS")
 }
