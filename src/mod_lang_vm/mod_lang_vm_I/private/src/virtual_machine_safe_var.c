@@ -105,8 +105,10 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
     root_symbol = get_own_value_object_symbol(root);
 
 #if GPR_PLUS_ENABLE
-    if (root_symbol->GPR_USED == STD_BOOL_TRUE){
-        root_symbol->GPR_USED = STD_BOOL_FALSE;
+    ownership_object_t *own_object = get_own_value_object(root);
+
+    if (own_object->GPR_USED == STD_BOOL_TRUE){
+        own_object->GPR_USED = STD_BOOL_FALSE;
     }
 #endif
 

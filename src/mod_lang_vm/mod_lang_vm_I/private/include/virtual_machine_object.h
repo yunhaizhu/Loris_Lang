@@ -109,6 +109,7 @@ typedef struct ownership_object_s {
     own_value_t own_value;
     ownership_token_signature_t owner_token_signature;
     std_lock_free_list_head_t list;
+    std_bool_t GPR_USED;
 } ownership_object_t;
 
 typedef enum {
@@ -161,7 +162,6 @@ typedef struct ownership_object_symbol_s {
 
     struct public_key_class pub;
     struct private_key_class pri;
-    std_bool_t GPR_USED;
 } ownership_object_symbol_t;
 
 /**
