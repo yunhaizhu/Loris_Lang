@@ -87,9 +87,32 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 
         vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + reg_id - STACK_ARG_INDEX ] = ret;
         set_VAR(obj_x, NAN_BOX_Null, ret);
+        ownership_object_t *own_object = get_own_value_object(obj_x);
+        own_object->GPR_USED = STD_BOOL_TRUE;
     }
 
 #else
+
+#if FAST_VAR_ENABLE
+    std_int_t reg_id;
+    std_int_t fp_index;
+    own_value_t obj_x;
+
+    reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
+    fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
+    obj_x = Stack[fp_index];
+    ownership_object_t *own_object = get_own_value_object(obj_x);
+    if (reg_id >= STACK_LOCAL_INDEX ){
+        own_object->fast_value = ret;
+    }else {
+        set_VAR(obj_x, NAN_BOX_Null, ret);
+        own_object->fast_value = ret;
+    }
+
+
+
+#else
+
     std_int_t reg_id;
     std_int_t fp_index;
     own_value_t obj_x;
@@ -98,6 +121,9 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
     fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
     obj_x = Stack[fp_index];
     set_VAR(obj_x, NAN_BOX_Null, ret);
+
+#endif
+
 #endif
 }
 
@@ -659,8 +685,21 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
 #else
     own_value_t obj_value;
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX];
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    if (own_object->fast_value != NAN_BOX_Null) {
+        obj_value = own_object->fast_value;
+    } else {
+        obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
+        own_object->fast_value = obj_value;
+    }
+#else
     obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
+#endif
+
     Push(vm,  obj_value);
+
 #endif
 }
 
@@ -694,9 +733,19 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
     Push(vm,  obj_value);
 #else
     own_value_t obj_value;
-
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    if (own_object->fast_value != NAN_BOX_Null) {
+        obj_value = own_object->fast_value;
+    } else {
+        obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
+        own_object->fast_value = obj_value;
+    }
+#else
     obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
+#endif
 
     Push(vm,  obj_value);
 #endif
@@ -716,6 +765,11 @@ STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *v
 {
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand + STACK_ARG_INDEX];
     set_VAR(object, NAN_BOX_Null, Top(vm));
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    own_object->fast_value = Top(vm);
+#endif
 
 #if GPR_PLUS_ENABLE
     vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand] = Top(vm);
@@ -749,6 +803,11 @@ STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *v
     }
 
     set_VAR(object, NAN_BOX_Null, Top(vm));
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    own_object->fast_value = Top(vm);
+#endif
 }
 
 /**
@@ -949,6 +1008,12 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
 #if GPR_PLUS_ENABLE
     vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = init_value;
 #endif
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    own_object->fast_value = NAN_BOX_Null;
+#endif
+
 }
 
 /**
@@ -972,6 +1037,11 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     Stack[fp_index] = object;
     declare_VAR(symbol, var_type, 0, NAN_BOX_Null);
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    own_object->fast_value = NAN_BOX_Null;
+#endif
 }
 
 /**
@@ -995,6 +1065,12 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
 #if GPR_PLUS_ENABLE
     vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
 #endif
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    own_object->fast_value = NAN_BOX_Null;
+#endif
+
 
     snprintf(key, sizeof(key), "%lu", object);
     std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
@@ -1020,6 +1096,11 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 
 #if GPR_PLUS_ENABLE
     vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
+#endif
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(object);
+    own_object->fast_value = NAN_BOX_Null;
 #endif
 
     snprintf(key, sizeof(key), "%lu", object);
@@ -1049,6 +1130,15 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm
         set_VAR(object, NAN_BOX_Null, vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex]);
     }
 #endif
+
+#if FAST_VAR_ENABLE
+    const ownership_object_t *own_object = get_own_value_object(object);
+
+    if (own_object->fast_value != NAN_BOX_Null){
+        set_VAR(object, NAN_BOX_Null, own_object->fast_value);
+    }
+#endif
+
 }
 
 
@@ -1077,6 +1167,14 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm
         set_VAR(object, NAN_BOX_Null, vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex]);
     }
 
+#endif
+
+#if FAST_VAR_ENABLE
+    const ownership_object_t *own_object = get_own_value_object(object);
+
+    if (own_object->fast_value != NAN_BOX_Null){
+        set_VAR(object, NAN_BOX_Null, own_object->fast_value);
+    }
 #endif
 
 }

@@ -78,7 +78,7 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
 
     root_value_type = get_own_value_type(root_value);
 
-    if (root_value_type == OWN_TYPE_OBJECT_SYMBOL) {
+    if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
         if (set_VAR(root_value, index_key, value) != STD_RV_SUC){
             set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
         }
@@ -109,6 +109,14 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
 
     if (own_object->GPR_USED == STD_BOOL_TRUE){
         own_object->GPR_USED = STD_BOOL_FALSE;
+    }
+#endif
+
+#if FAST_VAR_ENABLE
+    ownership_object_t *own_object = get_own_value_object(root);
+
+    if (own_object->fast_value != NAN_BOX_Null){
+        own_object->fast_value = NAN_BOX_Null;
     }
 #endif
 

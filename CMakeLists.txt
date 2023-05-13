@@ -49,9 +49,10 @@ set(DUMP_EXEC_CODE 0)
 set(MAX_DEF_FUNC_COUNT 1024)
 set(MAX_LOAD_LIB_COUNT 128)
 set(MAX_REQUIRED_STATE_COUNT 128)
-set(GPR_PLUS_ENABLE 1)
+set(GPR_PLUS_ENABLE 0)
 set(GPR_PLUS_NUMBER 32)
 
+set(FAST_VAR_ENABLE 1)
 
 # Configure a header file with preprocessor definitions
 configure_file(${${PROJECT_CUSTOM_NAME}_SOURCE_DIR}/src/framework/config.h.in ${${PROJECT_CUSTOM_NAME}_SOURCE_DIR}/src/framework/public/include/config.h)

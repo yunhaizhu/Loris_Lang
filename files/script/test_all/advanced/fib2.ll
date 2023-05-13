@@ -36,7 +36,7 @@ def fib2(var n, var ret)
 def main()
 {
     var ret_sum = 0
-    var n = 8
+    var n = 20
 
     fib(n, ret_sum)
     os.print(n, "ret_sum", ret_sum)
