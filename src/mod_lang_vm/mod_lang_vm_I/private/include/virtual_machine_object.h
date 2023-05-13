@@ -109,9 +109,7 @@ typedef struct ownership_object_s {
     own_value_t own_value;
     ownership_token_signature_t owner_token_signature;
     std_lock_free_list_head_t list;
-#if GPR_PLUS_ENABLE
-    std_bool_t GPR_USED;
-#endif
+
 #if FAST_VAR_ENABLE
     own_value_t fast_value;
 #endif

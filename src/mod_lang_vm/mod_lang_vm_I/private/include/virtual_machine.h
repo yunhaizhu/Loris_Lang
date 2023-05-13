@@ -136,11 +136,6 @@ typedef struct environment_vm_s {
     std_lock_free_key_hash_t *symbol_hash;
     ownership_object_symbol_t global_system_object_symbol;
 
-#if GPR_PLUS_ENABLE
-    std_u64_t GPR[RECURSIVE_LOOP_MAX*GPR_PLUS_NUMBER];
-    std_int_t stack_gpr_idx;
-#endif
-
     std_int_t register_id;
     std_int_t error_code;
     std_char_t execute_name[KEY_NAME_SIZE];

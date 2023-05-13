@@ -72,26 +72,7 @@ STD_CALL static inline std_void_t inline_execute_code_PUSHIUAS(environment_vm_t 
  */
 STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t *vm, IN own_value_t ret, IN code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-#if GPR_PLUS_ENABLE
-    std_int_t reg_id;
-    std_int_t fp_index;
-    own_value_t obj_x;
 
-    reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
-
-    if (reg_id >= STACK_LOCAL_INDEX ){
-        vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + reg_id - STACK_LOCAL_INDEX] = ret;
-    }else {
-        fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
-        obj_x = Stack[fp_index];
-
-        vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + reg_id - STACK_ARG_INDEX ] = ret;
-        set_VAR(obj_x, NAN_BOX_Null, ret);
-        ownership_object_t *own_object = get_own_value_object(obj_x);
-        own_object->GPR_USED = STD_BOOL_TRUE;
-    }
-
-#else
 
 #if FAST_VAR_ENABLE
     std_int_t reg_id;
@@ -108,11 +89,7 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
         set_VAR(obj_x, NAN_BOX_Null, ret);
         own_object->fast_value = ret;
     }
-
-
-
 #else
-
     std_int_t reg_id;
     std_int_t fp_index;
     own_value_t obj_x;
@@ -121,9 +98,6 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
     fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
     obj_x = Stack[fp_index];
     set_VAR(obj_x, NAN_BOX_Null, ret);
-
-#endif
-
 #endif
 }
 
@@ -668,21 +642,7 @@ STD_CALL static forced_inline std_bool_t inline_execute_code_BEQ0(environment_vm
  */
 STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm, IN  code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-#if GPR_PLUS_ENABLE
-    own_value_t obj_value;
-    own_value_t object = Stack[*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX];
 
-    ownership_object_t *own_object = get_own_value_object(object);
-    if (likely(own_object->GPR_USED == STD_BOOL_TRUE)){
-        obj_value = vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex];
-    }else {
-        obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
-        vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = obj_value;
-        own_object->GPR_USED = STD_BOOL_TRUE;
-    }
-
-    Push(vm,  obj_value);
-#else
     own_value_t obj_value;
     own_value_t object = Stack[*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX];
 
@@ -700,7 +660,6 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
 
     Push(vm,  obj_value);
 
-#endif
 }
 
 
@@ -716,22 +675,6 @@ STD_CALL static inline std_void_t inline_execute_code_LOADA(environment_vm_t *vm
  */
 STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm, IN  code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-#if GPR_PLUS_ENABLE
-    own_value_t obj_value;
-    own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
-
-    ownership_object_t *own_object = get_own_value_object(object);
-    if (likely(own_object->GPR_USED == STD_BOOL_TRUE)){
-        obj_value = vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex];
-    }else {
-        obj_value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
-
-        vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = obj_value;
-        own_object->GPR_USED = STD_BOOL_TRUE;
-    }
-
-    Push(vm,  obj_value);
-#else
     own_value_t obj_value;
     own_value_t object = Stack[*Fp - Codes[*Pc].i_operand_ex];
 
@@ -748,7 +691,6 @@ STD_CALL static inline std_void_t inline_execute_code_LOADL(environment_vm_t *vm
 #endif
 
     Push(vm,  obj_value);
-#endif
 }
 
 
@@ -769,10 +711,6 @@ STD_CALL static inline std_void_t inline_execute_code_STOREA(environment_vm_t *v
 #if FAST_VAR_ENABLE
     ownership_object_t *own_object = get_own_value_object(object);
     own_object->fast_value = Top(vm);
-#endif
-
-#if GPR_PLUS_ENABLE
-    vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand] = Top(vm);
 #endif
 }
 
@@ -796,9 +734,6 @@ STD_CALL static inline std_void_t inline_execute_code_STOREL(environment_vm_t *v
 
         default:
             object = Stack[*Fp - Codes[*Pc].i_operand];
-#if GPR_PLUS_ENABLE
-            vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand] = Top(vm);
-#endif
             break;
     }
 
@@ -1005,10 +940,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
 
     Stack[fp_index] = object;
 
-#if GPR_PLUS_ENABLE
-    vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = init_value;
-#endif
-
 #if FAST_VAR_ENABLE
     ownership_object_t *own_object = get_own_value_object(object);
     own_object->fast_value = NAN_BOX_Null;
@@ -1062,10 +993,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
 
     del_VARS(object, STD_BOOL_TRUE);
 
-#if GPR_PLUS_ENABLE
-    vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
-#endif
-
 #if FAST_VAR_ENABLE
     ownership_object_t *own_object = get_own_value_object(object);
     own_object->fast_value = NAN_BOX_Null;
@@ -1094,10 +1021,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 
     del_VARS(object, STD_BOOL_TRUE);
 
-#if GPR_PLUS_ENABLE
-    vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] = NAN_BOX_Null;
-#endif
-
 #if FAST_VAR_ENABLE
     ownership_object_t *own_object = get_own_value_object(object);
     own_object->fast_value = NAN_BOX_Null;
@@ -1123,13 +1046,6 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_A(environment_vm_t *vm
     object = Stack[fp_index];
 
     Push(vm,  object);
-
-#if GPR_PLUS_ENABLE
-    const ownership_object_t *own_object = get_own_value_object(object);
-    if (own_object->GPR_USED && vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] != NAN_BOX_Null) {
-        set_VAR(object, NAN_BOX_Null, vm->GPR[(RECURSIVE_LOOP_MAX - vm->stack_gpr_idx)*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex]);
-    }
-#endif
 
 #if FAST_VAR_ENABLE
     const ownership_object_t *own_object = get_own_value_object(object);
@@ -1159,15 +1075,6 @@ STD_CALL static inline std_void_t inline_execute_code_SYM_L(environment_vm_t *vm
     object = Stack[fp_index];
 
     Push(vm,  object);
-
-#if GPR_PLUS_ENABLE
-    const ownership_object_t *own_object = get_own_value_object(object);
-
-    if (own_object->GPR_USED && vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex] != NAN_BOX_Null) {
-        set_VAR(object, NAN_BOX_Null, vm->GPR[vm->stack_gpr_idx*GPR_PLUS_NUMBER + Codes[*Pc].i_operand_ex]);
-    }
-
-#endif
 
 #if FAST_VAR_ENABLE
     const ownership_object_t *own_object = get_own_value_object(object);

@@ -39,13 +39,7 @@ STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN
     if (reset) {
         *Sp = *Fp = MAX_STACK - 1;
         vm->error_code = STD_RV_SUC;
-#if GPR_PLUS_ENABLE
-        for (std_int_t i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
-            for (int j = 0; j < GPR_PLUS_NUMBER; ++j) {
-                vm->GPR[i*GPR_PLUS_NUMBER + j] = NAN_BOX_Null;
-            }
-        }
-#endif
+
     }
 
     *Pc = start_pc;
