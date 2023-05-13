@@ -144,6 +144,8 @@ typedef struct environment_vm_s {
 
     std_u64_t func_arg_stack[32];
     std_int_t func_arg_stack_index;
+
+    own_value_t symbol_head[RECURSIVE_LOOP_MAX];
 } environment_vm_t;
 
 #define Push(vm, x) vm->Stack[(vm)->Sp--] = (x)

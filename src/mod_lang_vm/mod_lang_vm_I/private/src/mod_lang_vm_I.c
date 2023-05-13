@@ -12,6 +12,8 @@
 
 std_lock_free_key_hash_t *global_symbol_hash = NULL;
 
+
+
 /**
  * @brief   Initialize the mod_lang_vm_t instance
  * @param   p_m     Pointer to the mod_lang_vm_t instance
@@ -28,9 +30,13 @@ STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t 
     p_imp->vm = vm_init(file_name, bytecode_buffer);
     STD_ASSERT_RV(p_imp->vm != NULL, STD_RV_ERR_FAIL);
 
+    for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
+         p_imp->vm->symbol_head[i] = make_own_value_object_symbol();
+    }
     return STD_RV_SUC;
 }
 
+STD_CALL std_void_t cleanup_symbol_object_callback(IN std_void_t *value, IN const std_void_t *callback_arg);
 /**
  * @brief   Cleanup the mod_lang_vm_t instance
  * @param   p_m     Pointer to the mod_lang_vm_t instance
@@ -40,6 +46,9 @@ STD_CALL std_rv_t mod_lang_vm_I_cleanup(IN mod_lang_vm_t *p_m)
 {
     mod_lang_vm_imp_t *p_imp = (mod_lang_vm_imp_t *)p_m;
 
+    for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
+        cleanup_symbol_object_callback((std_void_t *)p_imp->vm->symbol_head[i], NULL);
+    }
     return vm_cleanup(p_imp->vm);
 }
 

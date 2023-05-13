@@ -325,6 +325,8 @@ STD_CALL static inline own_value_t make_own_value_char(IN std_char_t chr)
 #endif
 }
 
+
+
 /**
  * make_own_value_object_symbol
  * @brief   

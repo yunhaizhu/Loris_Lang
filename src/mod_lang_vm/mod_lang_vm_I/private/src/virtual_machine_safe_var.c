@@ -353,7 +353,7 @@ STD_CALL static inline own_value_t inline_find_VAR_switch_hash(IN own_value_t ro
  * @param   find
  * @return  STD_CALL own_value_t
  */
-STD_CALL own_value_t get_find_VAR_internal(own_value_t root, own_value_t index_key, std_bool_t reenter, std_bool_t get)
+STD_CALL static inline own_value_t get_find_VAR_internal(own_value_t root, own_value_t index_key, std_bool_t reenter, std_bool_t get)
 {
     own_value_t value = root;
     std_bool_t keep_loop;

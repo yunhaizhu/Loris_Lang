@@ -72,8 +72,6 @@ STD_CALL static inline std_void_t inline_execute_code_PUSHIUAS(environment_vm_t 
  */
 STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t *vm, IN own_value_t ret, IN code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
-
-
 #if FAST_VAR_ENABLE
     std_int_t reg_id;
     std_int_t fp_index;
@@ -845,10 +843,6 @@ STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, s
     *Fp = (std_int_t) Pop(vm);
     *Pc = (std_int_t) Pop(vm);
 
-#if GPR_PLUS_ENABLE
-    vm->stack_gpr_idx--;
-#endif
-
     if (*Sp >= MAX_STACK - 1 || *Sp < 0 || *Pc == 0) {
 #if DUMP_EXEC_CODE
         STD_LOG(DISPLAY, "Sp:%d Fp:%d Pc:%d\n", *Sp, *Fp, *Pc);
@@ -890,11 +884,6 @@ STD_CALL static inline std_void_t inline_execute_code_FRAME(environment_vm_t *vm
     Push(vm,  *Fp);
     *Fp = *Sp;
     *Sp -= (std_int_t) Codes[*Pc].i_operand;
-
-#if GPR_PLUS_ENABLE
-    vm->stack_gpr_idx++;
-#endif
-
 }
 
 /**
@@ -916,6 +905,28 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
     func_entry->reg_func(vm, func_entry->arg_counts);
 }
 
+STD_CALL static inline own_value_t pick_own_value_object_symbol(environment_vm_t *vm)
+{
+    for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
+        if (vm->symbol_head[i] != NAN_BOX_Null){
+            own_value_t ret = vm->symbol_head[i];
+            vm->symbol_head[i] = NAN_BOX_Null;
+            return ret;
+        }
+    }
+    return NAN_BOX_Null;
+}
+
+STD_CALL static inline std_void_t return_own_value_object_symbol(environment_vm_t *vm, own_value_t ownvalue)
+{
+    for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
+        if (vm->symbol_head[i] == NAN_BOX_Null){
+            vm->symbol_head[i] = ownvalue;
+            return;
+        }
+    }
+}
+
 /**
  * execute_code_VAR_A
  * @brief
@@ -931,7 +942,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
     ownership_object_symbol_t *symbol;
     std_int_t fp_index;
 
-    object = make_own_value_object_symbol();
+    object = pick_own_value_object_symbol(vm);
     symbol = get_own_value_object_symbol(object);
 
     fp_index = (std_int_t) (*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX);
@@ -962,7 +973,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm
     ownership_object_symbol_t *symbol;
     std_int_t fp_index;
 
-    object = make_own_value_object_symbol();
+    object = pick_own_value_object_symbol(vm);
     symbol = get_own_value_object_symbol(object);
 
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
@@ -986,7 +997,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
 {
     std_int_t fp_index;
     own_value_t object;
-    std_char_t key[KEY_NAME_SIZE] = "\0";
 
     fp_index = (std_int_t) (*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX);
     object = Stack[fp_index];
@@ -998,9 +1008,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
     own_object->fast_value = NAN_BOX_Null;
 #endif
 
-
-    snprintf(key, sizeof(key), "%lu", object);
-    std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
+    return_own_value_object_symbol(vm, object);
 }
 
 /**
@@ -1014,7 +1022,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 {
     std_int_t fp_index;
     own_value_t object;
-    std_char_t key[KEY_NAME_SIZE] = "\0";
 
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     object = Stack[fp_index];
@@ -1026,8 +1033,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
     own_object->fast_value = NAN_BOX_Null;
 #endif
 
-    snprintf(key, sizeof(key), "%lu", object);
-    std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)), (std_void_t *) object);
+    return_own_value_object_symbol(vm, object);
 }
 
 /**
