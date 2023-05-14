@@ -98,7 +98,34 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 #endif
 }
 
+STD_CALL static forced_inline std_void_t inline_set_obj_x_value_SET(environment_vm_t *vm, IN own_value_t ret, IN code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
+{
+#if FAST_VAR_ENABLE
+    std_int_t reg_id;
+    std_int_t fp_index;
+    own_value_t obj_x;
 
+    reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
+    fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
+    obj_x = Stack[fp_index];
+    ownership_object_t *own_object = get_own_value_object(obj_x);
+    if (reg_id >= STACK_LOCAL_INDEX ){
+        set_VAR(obj_x, NAN_BOX_Null, ret);
+        own_object->fast_value = ret;
+    }else {
+        set_VAR(obj_x, NAN_BOX_Null, ret);
+    }
+#else
+    std_int_t reg_id;
+    std_int_t fp_index;
+    own_value_t obj_x;
+
+    reg_id = (std_int_t) Codes[*Pc].i_operand_ex;
+    fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
+    obj_x = Stack[fp_index];
+    set_VAR(obj_x, NAN_BOX_Null, ret);
+#endif
+}
 /**
  * inline_execute_code_ADD_SUB_DIV_MOD
  * @brief
@@ -264,7 +291,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
 
-            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value_SET(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
             //to avoid memory leak when doing something like "string = str1 + str2 + str3", because "str1 + str2" is a tmp string,
             // is not assigned to any variable, so the memory of str1 + str2 is not freed.
@@ -283,7 +310,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
 
-            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value_SET(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
@@ -300,7 +327,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             ret = make_own_value_object_string(new_string);
             FREE(new_string);
 
-            inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
+            inline_set_obj_x_value_SET(vm,ret, Codes, Stack, Pc, Fp);
         } else if (type == ADD) {
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
@@ -1024,13 +1051,12 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     object = Stack[fp_index];
 
-    del_VARS(object, STD_BOOL_TRUE);
-
 #if FAST_VAR_ENABLE1
     ownership_object_t *own_object = get_own_value_object(object);
     own_object->fast_value = NAN_BOX_Null;
 #endif
 
+    del_VARS(object, STD_BOOL_TRUE);
     return_own_value_object_symbol(vm, object);
 }
 

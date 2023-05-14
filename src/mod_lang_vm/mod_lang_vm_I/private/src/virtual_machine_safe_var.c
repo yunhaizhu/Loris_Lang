@@ -85,7 +85,6 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
     } else {
         set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
     }
-
 }
 
 
