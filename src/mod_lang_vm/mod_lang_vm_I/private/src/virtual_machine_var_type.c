@@ -49,11 +49,12 @@ STD_CALL static inline std_void_t inline_set_var(IN ownership_object_symbol_t *s
  * @param   read_write
  * @return  STD_CALL object_t *
  */
-STD_CALL own_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index)
+STD_CALL own_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t *symbol, IN own_value_t index_key)
 {
     own_value_t value = inline_get_var(symbol);
 
-    if (unlikely(index != 20230511 && get_own_value_type(value) == OWN_TYPE_OBJECT_STRING)) {
+    if (unlikely(index_key != NAN_BOX_Null && get_own_value_type(value) == OWN_TYPE_OBJECT_STRING)) {
+        std_int_t index = (std_int_t)get_own_value_number(index_key);
         const std_char_t *string = get_own_value_object_string(value);
         STD_ASSERT_RV_WARN(string != NULL, NAN_BOX_Null);
         STD_ASSERT_RV_WARN(index >= 0, NAN_BOX_Null);
@@ -116,7 +117,7 @@ STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN
 
     value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    old_value = get_VAR_with_var_type(symbol, 20230511);
+    old_value = get_VAR_with_var_type(symbol, NAN_BOX_Null);
     old_value_type = get_own_value_type(old_value);
     new_value_type = get_own_value_type(value);
 

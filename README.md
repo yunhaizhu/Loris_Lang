@@ -28,6 +28,11 @@ Loris offers a comfortable programming experience!
 ## Add Doxgen
 find ./src -name *.[ch] |xargs python3 add_doxygen_comment.py
 
+## performance google pprof
+1. LD_PRELOAD=/lib/x86_64-linux-gnu/libprofiler.so.0 CPUPROFILE=/tmp/prof.out ./Loris_Lang
+2. ~/go/bin/pprof -pdf /tmp/prof.out
+
+
 ## Build and Run loris language
 1. mkdir build
 2. cmake -DCMAKE_BUILD_TYPE=Release -S . -B build

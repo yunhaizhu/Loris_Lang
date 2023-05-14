@@ -24,7 +24,7 @@
  * @param   symbol
  * @return  STD_CALL own_value_t
  */
-STD_CALL own_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index);
+STD_CALL own_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t *symbol, IN own_value_t index_key);
 
 /**
  * get_VAR_total_with_var_type

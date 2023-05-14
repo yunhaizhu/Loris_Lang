@@ -68,9 +68,8 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
 {
     own_value_t root_value;
     own_value_type_t root_value_type;
-    std_int_t index = (std_int_t)get_own_value_number(index_key);
 
-    root_value = get_VAR_with_var_type(root_symbol, index);
+    root_value = get_VAR_with_var_type(root_symbol, index_key);
 
     if (root_value == value) {
         return;
@@ -88,6 +87,122 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
 }
 
 
+STD_CALL std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_value_t value)
+{
+    std_int_t idx;
+    ownership_object_symbol_t *root_symbol;
+    std_bool_t keep_loop;
+    std_int_t loop_max = 1;
+    ownership_object_symbol_t *fail_back_symbol = NULL;
+
+    do {
+#if FAST_VAR_ENABLE
+        ownership_object_t *own_object = get_own_value_object(root);
+
+        if (own_object->fast_value != NAN_BOX_Null){
+            own_object->fast_value = value;
+        }
+#endif
+        root_symbol = get_own_value_object_symbol(root);
+        switch (root_symbol->env_value.symbol_type) {
+            case var_type:
+            {
+                own_value_t root_value;
+                own_value_type_t root_value_type;
+
+                root_value = get_VAR_with_var_type(root_symbol, index_key);
+
+                if (root_value == value) {
+                    return STD_RV_SUC;
+                }
+
+                root_value_type = get_own_value_type(root_value);
+
+                if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
+                    root = root_value;
+                    keep_loop = STD_BOOL_TRUE;
+
+                    //recursive may exceed this limit. BE CAREFUL.
+                    if (loop_max++ >= RECURSIVE_LOOP_MAX){
+                        STD_LOG(ERR, "exceed max %d, please increase RECURSIVE_LOOP_MAX \n", RECURSIVE_LOOP_MAX);
+                        keep_loop = STD_BOOL_FALSE;
+                        break;
+                    }
+
+                    fail_back_symbol = root_symbol;
+                    break ;
+                } else {
+                    set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
+                    keep_loop = STD_BOOL_FALSE;
+                }
+                break;
+            }
+
+
+            case array_type:
+                if (index_key != NAN_BOX_Null) {
+                    if (get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                        index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
+                    }
+                    idx = (std_int_t) get_own_value_number(index_key);
+                    if (set_VAR_with_array_type(root_symbol, idx, value) == NAN_BOX_Null){
+                        if (fail_back_symbol){
+                            set_VAR_with_var_type(fail_back_symbol, value, STD_BOOL_TRUE);
+                            return STD_RV_SUC;
+                        }
+                        return STD_RV_ERR_FAIL;
+                    }
+                }else {
+                    value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
+                    append_VARS_with_array_type(root_symbol, value);
+                }
+                keep_loop = STD_BOOL_FALSE;
+                break;
+
+            case tuple_type:
+                if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                    index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
+                }
+
+                if (add_VAR_with_tuple_type(root_symbol, index_key, value)!= STD_RV_SUC){
+                    if (fail_back_symbol){
+                        set_VAR_with_var_type(fail_back_symbol, value, STD_BOOL_TRUE);
+                        return STD_RV_SUC;
+                    }
+                    return STD_RV_ERR_FAIL;
+                }
+                keep_loop = STD_BOOL_FALSE;
+                break;
+
+            case hash_type:
+                if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                    index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
+                }else if (index_key == NAN_BOX_Null){
+                    if (fail_back_symbol){
+                        set_VAR_with_var_type(fail_back_symbol, value, STD_BOOL_TRUE);
+                        return STD_RV_SUC;
+                    }
+                    return STD_RV_ERR_FAIL;
+                }
+                if (add_VAR_with_hash_type(root_symbol, index_key, value) != STD_RV_SUC){
+                    if (fail_back_symbol){
+                        set_VAR_with_var_type(fail_back_symbol, value, STD_BOOL_TRUE);
+                        return STD_RV_SUC;
+                    }
+                    return STD_RV_ERR_FAIL;
+                }
+                keep_loop = STD_BOOL_FALSE;
+                break;
+
+            default:
+                keep_loop = STD_BOOL_FALSE;
+                break;
+        }
+    } while (keep_loop);
+
+    return STD_RV_SUC;
+}
+
 /**
  * set_VAR
  * @brief   
@@ -97,6 +212,11 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
  * @return  STD_CALL std_void_t
  */
 STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t value)
+{
+    return set_VAR_internal(root, index_key, value);
+}
+
+STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t value)
 {
     std_int_t idx = 0;
     ownership_object_symbol_t *root_symbol;
@@ -151,7 +271,6 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
             if (add_VAR_with_hash_type(root_symbol, index_key, value) != STD_RV_SUC){
                 return STD_RV_ERR_FAIL;
             }
-
             break;
 
         default:
@@ -171,23 +290,15 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
  */
 STD_CALL static inline own_value_t inline_get_VAR_switch_var(IN own_value_t root, IN own_value_t index_key, IN std_bool_t reenter)
 {
-    std_int_t idx = 20230511;
-
     if (reenter) {
         return root;
     }
 
-    if (likely(index_key == NAN_BOX_Null)){
-        return get_VAR_with_var_type(get_own_value_object_symbol(root), idx);
-    }
-    if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+   if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
-        idx = (std_int_t) get_own_value_number(index_key);
-    } else if (index_key != NAN_BOX_Null) {
-        idx = (std_int_t) get_own_value_number(index_key);
     }
 
-    return get_VAR_with_var_type(get_own_value_object_symbol(root), idx);
+    return get_VAR_with_var_type(get_own_value_object_symbol(root), index_key);
 }
 
 
