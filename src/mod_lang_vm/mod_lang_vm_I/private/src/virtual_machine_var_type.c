@@ -24,11 +24,7 @@
  */
 STD_CALL static inline own_value_t inline_get_var(IN const ownership_object_symbol_t *symbol)
 {
-    own_value_t var;
-
-    var = symbol->env_value.data.val.value;
-
-    return var;
+    return symbol->env_value.data.val.value;
 }
 
 
@@ -57,7 +53,7 @@ STD_CALL own_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t *s
 {
     own_value_t value = inline_get_var(symbol);
 
-    if (index != 20230511 && get_own_value_type(value) == OWN_TYPE_OBJECT_STRING) {
+    if (unlikely(index != 20230511 && get_own_value_type(value) == OWN_TYPE_OBJECT_STRING)) {
         const std_char_t *string = get_own_value_object_string(value);
         STD_ASSERT_RV_WARN(string != NULL, NAN_BOX_Null);
         STD_ASSERT_RV_WARN(index >= 0, NAN_BOX_Null);

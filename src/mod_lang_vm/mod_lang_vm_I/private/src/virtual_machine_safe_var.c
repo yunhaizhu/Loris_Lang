@@ -108,7 +108,7 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
     ownership_object_t *own_object = get_own_value_object(root);
 
     if (own_object->fast_value != NAN_BOX_Null){
-        own_object->fast_value = NAN_BOX_Null;
+        own_object->fast_value = value;
     }
 #endif
 
@@ -178,6 +178,9 @@ STD_CALL static inline own_value_t inline_get_VAR_switch_var(IN own_value_t root
         return root;
     }
 
+    if (likely(index_key == NAN_BOX_Null)){
+        return get_VAR_with_var_type(get_own_value_object_symbol(root), idx);
+    }
     if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
         idx = (std_int_t) get_own_value_number(index_key);
