@@ -26,8 +26,6 @@ STD_CALL std_void_t declare_VAR_with_hash_type(IN ownership_object_symbol_t *sym
 {
     const std_lock_free_key_hash_t *hash_head = NULL;
 
-    STD_ASSERT_RV(symbol != NULL, );
-
     if (hash_head == NULL) {
         symbol->env_value.symbol_type = hash_type;
         symbol->env_value.data.hash.hash_head = std_lock_free_key_hash_create(LOCK_FREE_HASH_TABLE_SIZE);

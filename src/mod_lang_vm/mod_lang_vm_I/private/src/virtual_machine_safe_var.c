@@ -56,36 +56,6 @@ STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t
     }
 }
 
-/**
- * inline_set_VAR_copy_with_var_type
- * @brief   
- * @param   root
- * @param   value
- * @param   copy
- * @return  STD_CALL inline std_void_t
- */
-STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_object_symbol_t *root_symbol, own_value_t index_key, IN own_value_t value)
-{
-    own_value_t root_value;
-    own_value_type_t root_value_type;
-
-    root_value = get_VAR_with_var_type(root_symbol, index_key);
-
-    if (root_value == value) {
-        return;
-    }
-
-    root_value_type = get_own_value_type(root_value);
-
-    if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
-        if (set_VAR(root_value, index_key, value) != STD_RV_SUC){
-            set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
-        }
-    } else {
-        set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
-    }
-}
-
 
 STD_CALL std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_value_t value)
 {
@@ -98,10 +68,10 @@ STD_CALL std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_
     do {
 #if FAST_VAR_ENABLE
         ownership_object_t *own_object = get_own_value_object(root);
-
-        if (own_object->fast_value != NAN_BOX_Null){
-            own_object->fast_value = value;
-        }
+        own_object->fast_value = NAN_BOX_Null;
+//        if (own_object->fast_value != NAN_BOX_Null){
+//            own_object->fast_value = value;
+//        }
 #endif
         root_symbol = get_own_value_object_symbol(root);
         switch (root_symbol->env_value.symbol_type) {
@@ -213,6 +183,37 @@ STD_CALL std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_
 STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t value)
 {
     return set_VAR_internal(root, index_key, value);
+}
+
+
+/**
+ * inline_set_VAR_copy_with_var_type
+ * @brief
+ * @param   root
+ * @param   value
+ * @param   copy
+ * @return  STD_CALL inline std_void_t
+ */
+STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_object_symbol_t *root_symbol, own_value_t index_key, IN own_value_t value)
+{
+    own_value_t root_value;
+    own_value_type_t root_value_type;
+
+    root_value = get_VAR_with_var_type(root_symbol, index_key);
+
+    if (root_value == value) {
+        return;
+    }
+
+    root_value_type = get_own_value_type(root_value);
+
+    if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
+        if (set_VAR(root_value, index_key, value) != STD_RV_SUC){
+            set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
+        }
+    } else {
+        set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
+    }
 }
 
 STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t value)

@@ -17,7 +17,13 @@ elseif (CMAKE_BUILD_TYPE MATCHES Release)
     set(CMAKE_C_COMPILER "clang")
     message(" ")
     message("CMAKE IN RELEASE MODE")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG -O3 -Wall -Werror -fPIC -march=native")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG -Ofast -Wall -Werror -fPIC -march=native  -funroll-loops -mtune=native -flto -ftree-vectorize -flax-vector-conversions -fomit-frame-pointer -finline-functions")
+
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG -O3 -Wall -Werror -fPIC -march=native  -funroll-loops -mtune=native -flto  -ftree-vectorize -flax-vector-conversions -fomit-frame-pointer ")
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG -Ofast -Wall -Werror -fPIC -march=native  -funroll-loops -mtune=native -flto  -ftree-vectorize -flax-vector-conversions -fomit-frame-pointer -finline-functions -fprofile-instr-generate -fcoverage-mapping ")
+#llvm-profdata merge -output=default.profdata default.profraw
+#     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG -Ofast -Wall -fPIC -march=native -Werror -Wno-profile-instr-unprofiled -Wno-profile-instr-out-of-date -funroll-loops -mtune=native -flto -ftree-vectorize -flax-vector-conversions -fomit-frame-pointer -finline-functions -fprofile-instr-use=/home/yunhai/CLionProject/Loris_Lang/deploy/Release/default.profdata ")
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNDEBUG -O3 -Wall -Werror -fPIC -march=native -fno-stack-protector -funroll-loops -mtune=native -flto")
 #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -D_USE_JIT_ -DSOFT_FPU -g -Wall -D_DEBUG -Werror -fPIC -fno-stack-protector -fno-common -march=native")
 endif ()
 

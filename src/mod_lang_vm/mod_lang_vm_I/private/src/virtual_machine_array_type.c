@@ -25,8 +25,6 @@
  */
 STD_CALL std_void_t declare_VAR_with_array_type(IN ownership_object_symbol_t *symbol, IN std_int_t count, IN own_value_t var)
 {
-    STD_ASSERT_RV(symbol != NULL, );
-
     symbol->env_value.symbol_type = array_type;
     symbol->env_value.data.array.array_length = count;
     symbol->env_value.data.array.array = (own_value_t *) CALLOC(sizeof(own_value_t), count);

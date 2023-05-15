@@ -38,11 +38,11 @@ def test_fib()
     var ret_sum = 0
 
     os.print("TEST FIB BEGIN")
-    fib(8, ret_sum)
-    os.assert(ret_sum == 34, "8 fib ret_sum is 34")
+    fib(20, ret_sum)
+    os.assert(ret_sum == 10946,, "20 fib ret_sum is 10946,")
 
     ret_sum = 0
-    fib2(8, ret_sum)
-    os.assert(ret_sum == 34, "8 fib2 ret_sum is 34")
+    fib2(20, ret_sum)
+    os.assert(ret_sum == 10946,, "20 fib2 ret_sum is 10946,")
     os.print("TEST FIB SUCCESS")
 }

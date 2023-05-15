@@ -85,6 +85,7 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
         own_object->fast_value = ret;
     }else {
         set_VAR(obj_x, NAN_BOX_Null, ret);
+        own_object->fast_value = ret;
     }
 #else
     std_int_t reg_id;
@@ -114,6 +115,7 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value_SET(environment_
         own_object->fast_value = ret;
     }else {
         set_VAR(obj_x, NAN_BOX_Null, ret);
+        own_object->fast_value = ret;
     }
 #else
     std_int_t reg_id;

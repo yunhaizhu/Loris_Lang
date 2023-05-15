@@ -192,8 +192,6 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
     ownership_object_t *init_value_obj;
     own_value_t dup_value;
 
-    STD_ASSERT_RV(symbol != NULL, STD_RV_ERR_INVALIDARG);
-
     switch (get_own_value_type(init_value)) {
         case OWN_TYPE_NULL:
         case OWN_TYPE_NUMBER:

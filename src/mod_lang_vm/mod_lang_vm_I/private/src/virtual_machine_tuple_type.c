@@ -28,8 +28,6 @@ STD_CALL std_void_t declare_VAR_with_tuple_type(IN ownership_object_symbol_t *sy
     std_int_t offset;
     std_lock_free_list_head_t *tuples = NULL;
 
-    STD_ASSERT_RV(symbol != NULL, );
-
     tuples = (std_lock_free_list_head_t *) CALLOC(sizeof(std_lock_free_list_head_t), 1);
     offset = std_lock_free_list_head_entry_offset(ownership_object_t, list);
     std_lock_free_list_init(tuples, offset, STD_BOOL_FALSE, key_enable);
