@@ -110,13 +110,10 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value_SET(environment_
     fp_index = reg_id >= STACK_LOCAL_INDEX ? (*Fp - (reg_id - STACK_LOCAL_INDEX)) : (*Fp + reg_id);
     obj_x = Stack[fp_index];
     ownership_object_t *own_object = get_own_value_object(obj_x);
-    if (reg_id >= STACK_LOCAL_INDEX ){
-        set_VAR(obj_x, NAN_BOX_Null, ret);
-        own_object->fast_value = ret;
-    }else {
-        set_VAR(obj_x, NAN_BOX_Null, ret);
-        own_object->fast_value = ret;
-    }
+
+    set_VAR(obj_x, NAN_BOX_Null, ret);
+    own_object->fast_value = ret;
+
 #else
     std_int_t reg_id;
     std_int_t fp_index;
