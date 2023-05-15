@@ -39,10 +39,10 @@ def test_fib()
 
     os.print("TEST FIB BEGIN")
     fib(20, ret_sum)
-    os.assert(ret_sum == 10946,, "20 fib ret_sum is 10946,")
+    os.assert(ret_sum == 10946, "20 fib ret_sum is 10946,")
 
     ret_sum = 0
     fib2(20, ret_sum)
-    os.assert(ret_sum == 10946,, "20 fib2 ret_sum is 10946,")
+    os.assert(ret_sum == 10946, "20 fib2 ret_sum is 10946,")
     os.print("TEST FIB SUCCESS")
 }
