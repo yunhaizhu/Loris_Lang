@@ -30,6 +30,7 @@ STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t 
     p_imp->vm = vm_init(file_name, bytecode_buffer);
     STD_ASSERT_RV(p_imp->vm != NULL, STD_RV_ERR_FAIL);
 
+    p_imp->vm->symbol_head_index = 0;
     for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
          p_imp->vm->symbol_head[i] = make_own_value_object_symbol();
     }

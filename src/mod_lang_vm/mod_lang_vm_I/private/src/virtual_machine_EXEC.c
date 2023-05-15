@@ -933,10 +933,11 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
 
 STD_CALL static inline own_value_t pick_own_value_object_symbol(environment_vm_t *vm)
 {
-    for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
+    for (int i = vm->symbol_head_index; i < RECURSIVE_LOOP_MAX; i++) {
         if (vm->symbol_head[i] != NAN_BOX_Null){
             own_value_t ret = vm->symbol_head[i];
             vm->symbol_head[i] = NAN_BOX_Null;
+            vm->symbol_head_index = i;
             return ret;
         }
     }
@@ -945,9 +946,10 @@ STD_CALL static inline own_value_t pick_own_value_object_symbol(environment_vm_t
 
 STD_CALL static inline std_void_t return_own_value_object_symbol(environment_vm_t *vm, own_value_t ownvalue)
 {
-    for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
+    for (int i = vm->symbol_head_index; i >= 0; i--) {
         if (vm->symbol_head[i] == NAN_BOX_Null){
             vm->symbol_head[i] = ownvalue;
+            vm->symbol_head_index = i;
             return;
         }
     }

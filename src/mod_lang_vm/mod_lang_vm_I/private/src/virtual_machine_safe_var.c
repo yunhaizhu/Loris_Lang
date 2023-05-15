@@ -217,7 +217,7 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
 
 STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t value)
 {
-    std_int_t idx = 0;
+    std_int_t idx;
     ownership_object_symbol_t *root_symbol;
 
     root_symbol = get_own_value_object_symbol(root);
@@ -370,7 +370,7 @@ STD_CALL static inline own_value_t inline_find_VAR_switch_array(IN own_value_t r
 STD_CALL static inline own_value_t inline_get_VAR_switch_tuple(IN own_value_t root, own_value_t index_key, IN std_bool_t reenter)
 {
     own_value_t value = NAN_BOX_Null;
-    std_int_t idx = 0;
+    std_int_t idx;
 
     if (reenter) {
         return root;

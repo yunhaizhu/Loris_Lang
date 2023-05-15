@@ -113,8 +113,11 @@ STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN
 
     STD_ASSERT_RV(symbol != NULL, STD_RV_ERR_INVALIDARG);
 
-    value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
     new_value_type = get_own_value_type(value);
+    if (new_value_type == OWN_TYPE_OBJECT_SYMBOL){
+        value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
+        new_value_type = get_own_value_type(value);
+    }
 
     if (del) {
         own_value_t old_value = NAN_BOX_Null;
