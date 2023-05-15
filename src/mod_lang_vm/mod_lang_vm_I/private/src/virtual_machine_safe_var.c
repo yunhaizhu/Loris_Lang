@@ -68,10 +68,10 @@ STD_CALL std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_
     do {
 #if FAST_VAR_ENABLE
         ownership_object_t *own_object = get_own_value_object(root);
-        own_object->fast_value = NAN_BOX_Null;
-//        if (own_object->fast_value != NAN_BOX_Null){
-//            own_object->fast_value = value;
-//        }
+//        own_object->fast_value = NAN_BOX_Null;
+        if (own_object->fast_value != NAN_BOX_Null){
+            own_object->fast_value = value;
+        }
 #endif
         root_symbol = get_own_value_object_symbol(root);
         switch (root_symbol->env_value.symbol_type) {
