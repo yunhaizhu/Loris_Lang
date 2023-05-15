@@ -130,14 +130,13 @@ STD_CALL std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_
                     }
 
                     fail_back_symbol = root_symbol;
-                    break ;
+                    break;
                 } else {
                     set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
                     keep_loop = STD_BOOL_FALSE;
                 }
                 break;
             }
-
 
             case array_type:
                 if (index_key != NAN_BOX_Null) {
@@ -469,14 +468,11 @@ STD_CALL static inline own_value_t inline_find_VAR_switch_hash(IN own_value_t ro
 STD_CALL static inline own_value_t get_find_VAR_internal(own_value_t root, own_value_t index_key, std_bool_t reenter, std_bool_t get)
 {
     own_value_t value = root;
-    std_bool_t keep_loop;
+    std_bool_t keep_loop = STD_BOOL_FALSE;
     std_int_t loop_max = 1;
     own_value_type_t value_type;
-    std_int_t loop_max_count = RECURSIVE_LOOP_MAX; //recursive may exceed this limit. BE CAREFUL.
 
     do {
-        keep_loop = STD_BOOL_FALSE;
-
         value_type = get_own_value_type(value);
 
         if (value_type == OWN_TYPE_OBJECT_SYMBOL) {
@@ -488,9 +484,9 @@ STD_CALL static inline own_value_t get_find_VAR_internal(own_value_t root, own_v
                     value = inline_get_VAR_switch_var(value, index_key, reenter);
 
                     keep_loop = STD_BOOL_TRUE;
-                    loop_max++;
 
-                    if (loop_max > loop_max_count) {
+                    //recursive may exceed this limit. BE CAREFUL.
+                    if (loop_max++ > RECURSIVE_LOOP_MAX) {
                         STD_LOG(ERR, "exceed max %d, please increase RECURSIVE_LOOP_MAX \n", RECURSIVE_LOOP_MAX);
                         keep_loop = STD_BOOL_FALSE;
                         break;

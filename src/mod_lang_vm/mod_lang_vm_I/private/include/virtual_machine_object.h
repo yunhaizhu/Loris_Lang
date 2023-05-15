@@ -605,10 +605,8 @@ STD_CALL static inline ownership_object_t *get_own_value_object(IN const own_val
  */
 STD_CALL static inline own_value_type_t get_own_value_type(IN own_value_t value)
 {
-    std_u64_t signature;
+    std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
     std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
-
-    signature = value & NAN_BOX_MASK_SIGNATURE;
 
     if (isNaN != NAN_BOX_SIGNATURE_NAN) {
         if (signature == NAN_BOX_MASK_TYPE_NAN){

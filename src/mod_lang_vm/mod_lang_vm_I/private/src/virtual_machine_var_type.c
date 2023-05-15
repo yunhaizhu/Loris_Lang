@@ -107,22 +107,24 @@ STD_CALL std_int_t get_VAR_total_with_var_type(IN const ownership_object_symbol_
  */
 STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN own_value_t value, IN std_bool_t del)
 {
-    own_value_t old_value = NAN_BOX_Null;
     own_value_t new_value = NAN_BOX_Null;
-    own_value_type_t old_value_type;
     own_value_type_t new_value_type;
     ownership_object_t *new_value_obj;
 
     STD_ASSERT_RV(symbol != NULL, STD_RV_ERR_INVALIDARG);
 
     value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
-
-    old_value = get_VAR_with_var_type(symbol, NAN_BOX_Null);
-    old_value_type = get_own_value_type(old_value);
     new_value_type = get_own_value_type(value);
 
-    if ((old_value_type == OWN_TYPE_OBJECT || old_value_type == OWN_TYPE_OBJECT_STRING) && del) {
-        free_ownership_ownvalue(symbol, old_value);
+    if (del) {
+        own_value_t old_value = NAN_BOX_Null;
+        own_value_type_t old_value_type;
+
+        old_value = get_VAR_with_var_type(symbol, NAN_BOX_Null);
+        old_value_type = get_own_value_type(old_value);
+        if (old_value_type == OWN_TYPE_OBJECT || old_value_type == OWN_TYPE_OBJECT_STRING){
+            free_ownership_ownvalue(symbol, old_value);
+        }
     }
 
     if (new_value_type == OWN_TYPE_OBJECT || new_value_type == OWN_TYPE_OBJECT_STRING || new_value_type == OWN_TYPE_OBJECT_SYMBOL) {
