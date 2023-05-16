@@ -123,7 +123,7 @@ STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN
     }
 
     if (value == NAN_BOX_Null){
-//        inline_set_var(symbol, value);
+        inline_set_var(symbol, value);
         return STD_RV_SUC;
     }
 

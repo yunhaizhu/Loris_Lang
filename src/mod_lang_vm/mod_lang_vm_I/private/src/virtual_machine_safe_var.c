@@ -330,7 +330,7 @@ STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t 
  * @param   reenter
  * @return  STD_CALL inline object_t *
  */
-STD_CALL static inline own_value_t inline_get_VAR_switch_var(IN own_value_t root, IN own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline own_value_t inline_get_VAR_switch_var(const ownership_object_symbol_t *root_symbol, IN own_value_t root, IN own_value_t index_key, IN std_bool_t reenter)
 {
     if (reenter) {
         return root;
@@ -340,7 +340,7 @@ STD_CALL static inline own_value_t inline_get_VAR_switch_var(IN own_value_t root
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     }
 
-    return get_VAR_with_var_type(get_own_value_object_symbol(root), index_key);
+    return get_VAR_with_var_type(root_symbol, index_key);
 }
 
 
@@ -524,7 +524,7 @@ STD_CALL static inline own_value_t get_find_VAR_internal(own_value_t root, own_v
 
             switch (value_symbol->env_value.symbol_type) {
                 case var_type:
-                    value = inline_get_VAR_switch_var(value, index_key, reenter);
+                    value = inline_get_VAR_switch_var(value_symbol, value, index_key, reenter);
 
                     keep_loop = STD_BOOL_TRUE;
 
