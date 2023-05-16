@@ -742,38 +742,35 @@ STD_CALL own_value_t resize_VAR(own_value_t root, own_value_t index_key)
  */
 STD_CALL std_void_t del_VARS(IN own_value_t root, IN std_bool_t del_tuple_or_hash)
 {
-    own_value_type_t root_type;
     ownership_object_symbol_t *root_symbol;
 
-    root_type = get_own_value_type(root);
-    if (root_type == OWN_TYPE_OBJECT_SYMBOL) {
-        root_symbol = get_own_value_object_symbol(root);
+    root_symbol = get_own_value_object_symbol(root);
 
-        switch (root_symbol->env_value.symbol_type) {
-            case var_type:
-                del_VAR_with_var_type(root_symbol);
-                break;
+    switch (root_symbol->env_value.symbol_type) {
+        case var_type:
+            del_VAR_with_var_type(root_symbol);
+            break;
 
-            case array_type:
-                if (del_tuple_or_hash) {
-                    del_VARS_with_array_type(root_symbol);
-                }
-                break;
+        case array_type:
+            if (del_tuple_or_hash) {
+                del_VARS_with_array_type(root_symbol);
+            }
+            break;
 
-            case tuple_type:
-                if (del_tuple_or_hash) {
-                    del_VARS_with_tuple_type(root_symbol);
-                }
-                break;
+        case tuple_type:
+            if (del_tuple_or_hash) {
+                del_VARS_with_tuple_type(root_symbol);
+            }
+            break;
 
-            case hash_type:
-                if (del_tuple_or_hash) {
-                    del_VARS_with_hash_type(root_symbol);
-                }
-                break;
+        case hash_type:
+            if (del_tuple_or_hash) {
+                del_VARS_with_hash_type(root_symbol);
+            }
+            break;
 
-            default:
-                break;
-        }
+        default:
+            break;
     }
+
 }

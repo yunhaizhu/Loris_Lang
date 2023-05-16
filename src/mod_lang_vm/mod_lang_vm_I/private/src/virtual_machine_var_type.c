@@ -111,7 +111,7 @@ STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN
     own_value_type_t new_value_type;
     ownership_object_t *new_value_obj;
 
-    STD_ASSERT_RV(symbol != NULL, STD_RV_ERR_INVALIDARG);
+//    STD_ASSERT_RV(symbol != NULL, STD_RV_ERR_INVALIDARG);
 
     if (del) {
         own_value_t old_value = NAN_BOX_Null;
