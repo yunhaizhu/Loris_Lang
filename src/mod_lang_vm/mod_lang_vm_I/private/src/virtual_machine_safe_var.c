@@ -16,7 +16,14 @@
 #include "virtual_machine_array_type.h"
 #include "virtual_machine_tuple_type.h"
 #include "virtual_machine_hash_type.h"
+#include "virtual_machine_var_type.h"
 
+STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *own_object, own_value_t init_value)
+{
+    STD_ASSERT_RV(symbol != NULL, );
+
+    declare_VAR_with_fast_var_type(symbol, own_object, init_value);
+}
 
 /**
  * declare_VAR

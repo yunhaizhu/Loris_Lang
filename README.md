@@ -29,7 +29,7 @@ Loris offers a comfortable programming experience!
 find ./src -name *.[ch] |xargs python3 add_doxygen_comment.py
 
 ## performance google pprof
-1. LD_PRELOAD=/lib/x86_64-linux-gnu/libprofiler.so.0 CPUPROFILE=/tmp/prof.out ./Loris_Lang
+1. LD_PRELOAD=/lib/x86_64-linux-gnu/libprofiler.so.0 CPUPROFILE=/tmp/prof.out ./Loris_Lang -s script/test_all/advanced/test_profile.ll
 2. ~/go/bin/pprof -pdf /tmp/prof.out
 
 

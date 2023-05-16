@@ -36,6 +36,7 @@
  */
 STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size, own_value_t init_value);
 
+STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *own_object, own_value_t init_value);
 /**
  * set_VAR
  * @brief   
