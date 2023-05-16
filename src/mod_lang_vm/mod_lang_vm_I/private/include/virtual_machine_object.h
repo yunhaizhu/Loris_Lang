@@ -114,6 +114,10 @@ typedef struct ownership_object_s {
     own_value_t fast_value;
 #endif
 
+#if FAST_SYMBOL_ENABLE
+    own_value_t fast_symbol;
+#endif
+
 } ownership_object_t;
 
 typedef enum {
@@ -340,6 +344,11 @@ STD_CALL static inline own_value_t make_own_value_object_symbol()
     rsa_gen_keys(&symbol->pub, &symbol->pri, PRIME_SOURCE_FILE);
 
     object->value = NAN_BOX_SIGNATURE_ADDRESS | (uint64_t) symbol;
+
+
+#if FAST_SYMBOL_ENABLE
+    object->fast_symbol = NAN_BOX_Null;
+#endif
 
     return NAN_BOX_SIGNATURE_OBJECT_SYMBOL | (uint64_t) object;
 #else
