@@ -121,6 +121,14 @@ STD_CALL std_rv_t mod_shell_I_shell(IN mod_shell_t *p_m, IN std_int_t shell_type
     return ret;
 }
 
+/**
+ * parse_compile_vm_init
+ * @brief   
+ * @param   p_m
+ * @param   script_name_or_body
+ * @param   is_script_or_body
+ * @return  mod_lang_vm_t *
+ */
 mod_lang_vm_t *parse_compile_vm_init(IN mod_shell_t *p_m, IN const std_char_t *script_name_or_body, IN std_bool_t is_script_or_body)
 {
     mod_shell_imp_t *p_imp_m = (mod_shell_imp_t *) p_m;

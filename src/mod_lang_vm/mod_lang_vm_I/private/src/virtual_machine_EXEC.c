@@ -98,6 +98,17 @@ STD_CALL static forced_inline std_void_t inline_set_obj_x_value(environment_vm_t
 #endif
 }
 
+/**
+ * inline_set_obj_x_value_SET
+ * @brief   
+ * @param   vm
+ * @param   ret
+ * @param   Codes
+ * @param   Stack
+ * @param   Pc
+ * @param   Fp
+ * @return  STD_CALL static forced_inline std_void_t
+ */
 STD_CALL static forced_inline std_void_t inline_set_obj_x_value_SET(environment_vm_t *vm, IN own_value_t ret, IN code_st *Codes, const std_u64_t *Stack, const std_int_t *Pc, const std_int_t *Fp)
 {
 #if FAST_VAR_ENABLE
@@ -916,6 +927,12 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
     func_entry->reg_func(vm, func_entry->arg_counts);
 }
 
+/**
+ * pick_own_value_object_symbol
+ * @brief   
+ * @param   vm
+ * @return  STD_CALL static inline own_value_t
+ */
 STD_CALL static inline own_value_t pick_own_value_object_symbol(environment_vm_t *vm)
 {
     for (int i = vm->symbol_head_index; i < RECURSIVE_LOOP_MAX; i++) {
@@ -929,6 +946,13 @@ STD_CALL static inline own_value_t pick_own_value_object_symbol(environment_vm_t
     return NAN_BOX_Null;
 }
 
+/**
+ * return_own_value_object_symbol
+ * @brief   
+ * @param   vm
+ * @param   ownvalue
+ * @return  STD_CALL static inline std_void_t
+ */
 STD_CALL static inline std_void_t return_own_value_object_symbol(environment_vm_t *vm, own_value_t ownvalue)
 {
     for (int i = vm->symbol_head_index; i >= 0; i--) {

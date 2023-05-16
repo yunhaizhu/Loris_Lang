@@ -18,6 +18,14 @@
 #include "virtual_machine_hash_type.h"
 #include "virtual_machine_var_type.h"
 
+/**
+ * declare_fast_VAR
+ * @brief   
+ * @param   symbol
+ * @param   own_object
+ * @param   init_value
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *own_object, own_value_t init_value)
 {
     STD_ASSERT_RV(symbol != NULL, );
@@ -64,6 +72,15 @@ STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t
 }
 
 
+/**
+ * set_VAR_internal
+ * @brief   
+ * @param   root
+ * @param   index_key
+ * @param   value
+ * @param   fast_value_enable
+ * @return  STD_CALL static forced_inline std_rv_t
+ */
 STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_value_t value, std_bool_t fast_value_enable)
 {
     std_int_t idx;
@@ -222,6 +239,14 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
     return set_VAR_internal(root, index_key, value, STD_BOOL_FALSE);
 }
 
+/**
+ * set_fast_VAR
+ * @brief   
+ * @param   root
+ * @param   index_key
+ * @param   value
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t set_fast_VAR(own_value_t root, own_value_t index_key, own_value_t value)
 {
     return set_VAR_internal(root, index_key, value, STD_BOOL_TRUE);
@@ -258,6 +283,14 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
     }
 }
 
+/**
+ * set_VAR2
+ * @brief   
+ * @param   root
+ * @param   index_key
+ * @param   value
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t value)
 {
     std_int_t idx;

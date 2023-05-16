@@ -239,6 +239,14 @@ STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t args)
 }
 
 
+/**
+ * keys_walk_callback
+ * @brief   
+ * @param   key
+ * @param   data
+ * @param   callback_arg
+ * @return  std_void_t
+ */
 std_void_t keys_walk_callback(const std_char_t *key, IN std_void_t **data, IN std_void_t *callback_arg)
 {
     const std_char_t *arg_name = key;

@@ -71,5 +71,13 @@ STD_CALL std_rv_t move_VAR_with_var_type(IN ownership_object_symbol_t *from_symb
  */
 STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN own_value_t init_value);
 
+/**
+ * declare_VAR_with_fast_var_type
+ * @brief   
+ * @param   symbol
+ * @param   own_object
+ * @param   init_value
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *symbol, ownership_object_t *own_object, IN own_value_t init_value);
 #endif

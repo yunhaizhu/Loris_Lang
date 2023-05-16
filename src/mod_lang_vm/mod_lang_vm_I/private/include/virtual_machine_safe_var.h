@@ -36,6 +36,14 @@
  */
 STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size, own_value_t init_value);
 
+/**
+ * declare_fast_VAR
+ * @brief   
+ * @param   symbol
+ * @param   own_object
+ * @param   init_value
+ * @return  STD_CALL std_void_t
+ */
 STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *own_object, own_value_t init_value);
 /**
  * set_VAR
@@ -48,6 +56,14 @@ STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownershi
 STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t value);
 
 
+/**
+ * set_fast_VAR
+ * @brief   
+ * @param   root
+ * @param   index_key
+ * @param   value
+ * @return  STD_CALL std_rv_t
+ */
 STD_CALL std_rv_t set_fast_VAR(own_value_t root, own_value_t index_key, own_value_t value);
 
 /**
