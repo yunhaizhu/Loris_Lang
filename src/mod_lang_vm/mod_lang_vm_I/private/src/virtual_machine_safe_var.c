@@ -750,7 +750,6 @@ STD_CALL std_void_t del_VARS(IN own_value_t root, IN std_bool_t del_tuple_or_has
         root_symbol = get_own_value_object_symbol(root);
 
         switch (root_symbol->env_value.symbol_type) {
-
             case var_type:
                 del_VAR_with_var_type(root_symbol);
                 break;
