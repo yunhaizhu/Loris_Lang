@@ -966,7 +966,12 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
 
 #if FAST_VAR_ENABLE
     ownership_object_t *own_object = get_own_value_object(object);
-    own_object->fast_value = NAN_BOX_Null;
+
+    if (get_own_value_type(init_value) == OWN_TYPE_NUMBER) {
+        own_object->fast_value = init_value;
+    } else {
+        own_object->fast_value = NAN_BOX_Null;
+    }
 #endif
 
 #if FAST_SYMBOL_ENABLE
@@ -1022,11 +1027,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
     fp_index = (std_int_t) (*Fp + Codes[*Pc].i_operand_ex + STACK_ARG_INDEX);
     object = Stack[fp_index];
 
-#if FAST_VAR_ENABLE1
-    ownership_object_t *own_object = get_own_value_object(object);
-    own_object->fast_value = NAN_BOX_Null;
-#endif
-
     del_VARS(object, STD_BOOL_TRUE);
     return_own_value_object_symbol(vm, object);
 }
@@ -1045,11 +1045,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     object = Stack[fp_index];
-
-#if FAST_VAR_ENABLE1
-    ownership_object_t *own_object = get_own_value_object(object);
-    own_object->fast_value = NAN_BOX_Null;
-#endif
 
     del_VARS(object, STD_BOOL_TRUE);
     return_own_value_object_symbol(vm, object);

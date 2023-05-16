@@ -21,7 +21,9 @@
 #include "virtual_machine_safe_var.h"
 
 
-STD_CALL std_void_t read_code(environment_vm_t *vm, std_int_t *register_id, IN std_char_t *buffer, IN std_char_t *entry);
+STD_CALL std_rv_t read_code(environment_vm_t *vm,
+                            std_int_t *register_id,
+                            IN const std_char_t *json_str);
 
 #define DUMP_JSON_IUDSEXL(vop, vi, vu, vd, vs, vex, vline) \
     dest = json_str(dest, "opcode", vop);                  \
@@ -98,7 +100,7 @@ STD_CALL std_void_t library_func_register(environment_vm_t *vm, IN std_int_t *re
     func_entry->reg_func = func;
 
     std_lock_free_key_hash_add(vm->custom_func_hash, key, std_safe_strlen(key, sizeof(key)), func_entry);
-    read_code(vm, reg_id, buffer, func_name);
+    read_code(vm, reg_id, buffer);
 }
 
 

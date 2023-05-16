@@ -89,32 +89,6 @@ STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t args)
     }
 }
 
-/**
- * write_callback
- * @brief   
- * @param   ptr
- * @param   size
- * @param   nmemb
- * @param   response
- * @return  size_t
- */
-size_t write_callback(char *ptr, size_t size, size_t nmemb, char **response)
-{
-    size_t len = size * nmemb;
-
-    if (*response == NULL) {
-        *response = malloc(len + 1);
-        memcpy(*response, ptr, len);
-        (*response)[len] = '\0';
-    } else {
-        *response = realloc(*response, std_safe_strlen(*response, len) + len + 1);
-        memcpy(*response + std_safe_strlen(*response, len), ptr, len);
-        (*response)[std_safe_strlen(*response, len) + len] = '\0';
-    }
-
-    return len;
-}
-
 
 /* Function to make HTTP POST request to OpenAI GPT API */
 int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, char *message, float temperature, char **response)
@@ -167,7 +141,6 @@ int make_request(char *API_KEY, char *API_ENDPOINT, char *prompt, char *model, c
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
 
 
     /* Make HTTP request */
