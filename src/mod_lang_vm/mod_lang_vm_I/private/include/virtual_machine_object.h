@@ -589,7 +589,7 @@ STD_CALL static inline ownership_object_symbol_t *get_own_value_symbol(IN const 
  * @param   value
  * @return  STD_CALL static inline ownership_object_t *
  */
-STD_CALL static inline ownership_object_t *get_own_value_object(IN const own_value_t value)
+STD_CALL static forced_inline ownership_object_t *get_own_value_object(IN const own_value_t value)
 {
 #ifdef NAN_BOX
     ownership_object_t *object;

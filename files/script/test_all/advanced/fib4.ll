@@ -8,7 +8,7 @@ def fib4(var n, var ret)
     var ret_sum1
     var ret_sum2
 
-    if (n <= 2){
+    if (n < 2){
         ret = n
     }else{
          fib4(n-1, ret_sum1)

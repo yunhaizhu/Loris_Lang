@@ -7,17 +7,13 @@ def fib1(var n, var ret_sum)
     var sum1
     var sum2
 
-    if (n == 1){
-        ret_sum = 1
-        return
+    if (n < 2){
+        ret_sum = n
+    }else {
+        fib1(n-1, sum1)
+        fib1(n-2, sum2)
+        ret_sum = sum1 + sum2
     }
-    if (n == 2){
-        ret_sum = 2
-        return
-    }
-    fib1(n-1, sum1)
-    fib1(n-2, sum2)
-    ret_sum = sum1 + sum2
 }
 
 def main()

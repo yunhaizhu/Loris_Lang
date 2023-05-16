@@ -7,7 +7,7 @@ def fib5(var n, var ret)
 {
     var ret_sum1
 
-    if (n <= 2){
+    if (n < 2){
         ret = n
     }else{
          fib5(n-1, ret_sum1)
