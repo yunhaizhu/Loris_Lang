@@ -254,51 +254,6 @@ STD_CALL owner_value_t copy_ownership_object(ownership_object_t *item)
     return copy_value;
 }
 
-/**
- * check_support_owner_value_type
- * @brief   
- * @param   value
- * @return  STD_CALL std_bool_t
- */
-STD_CALL std_bool_t check_support_owner_value_type(IN owner_value_t value)
-{
-    switch (get_owner_value_type(value)) {
-        case OWNER_TYPE_NULL:
-        case OWNER_TYPE_NUMBER:
-        case OWNER_TYPE_DOUBLE:
-        case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_ADDRESS:
-        case OWNER_TYPE_CHAR:
-        case OWNER_TYPE_OBJECT_STRING:
-            return STD_BOOL_TRUE;
-        case OWNER_TYPE_OBJECT:
-            return STD_BOOL_TRUE;
-        default:
-            return STD_BOOL_FALSE;
-    }
-}
-
-/**
- * check_support_ownership_object_type
- * @brief   
- * @param   item
- * @return  STD_CALL std_bool_t
- */
-STD_CALL std_bool_t check_support_ownership_object_type(IN const ownership_object_t *item)
-{
-    switch (get_owner_value_type(item->value)) {
-        case OWNER_TYPE_NUMBER:
-        case OWNER_TYPE_DOUBLE:
-        case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_ADDRESS:
-        case OWNER_TYPE_CHAR:
-        case OWNER_TYPE_OBJECT_STRING:
-        case OWNER_TYPE_OBJECT_SYMBOL:
-            return STD_BOOL_TRUE;
-        default:
-            return STD_BOOL_FALSE;
-    }
-}
 
 /**
  * create_ownership_object
