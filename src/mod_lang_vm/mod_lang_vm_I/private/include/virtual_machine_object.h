@@ -33,9 +33,9 @@ typedef enum owner_value_type_s {
     OWN_TYPE_BOOL,
     OWN_TYPE_ADDRESS,
     OWN_TYPE_CHAR,
-    OWN_TYPE_OBJECT,
-    OWN_TYPE_OBJECT_SYMBOL,
-    OWN_TYPE_OBJECT_STRING
+    OWNER_TYPE_OBJECT,
+    OWNER_TYPE_OBJECT_SYMBOL,
+    OWNER_TYPE_OBJECT_STRING
 } owner_value_type_t;
 
 #define NAN_BOX_MASK_SIGN               0x8000000000000000
@@ -636,11 +636,11 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
         case NAN_BOX_SIGNATURE_CHAR:
             return OWN_TYPE_CHAR;
         case NAN_BOX_SIGNATURE_OBJECT:
-            return OWN_TYPE_OBJECT;
+            return OWNER_TYPE_OBJECT;
         case NAN_BOX_SIGNATURE_OBJECT_SYMBOL:
-            return OWN_TYPE_OBJECT_SYMBOL;
+            return OWNER_TYPE_OBJECT_SYMBOL;
         case NAN_BOX_SIGNATURE_OBJECT_STRING:
-            return OWN_TYPE_OBJECT_STRING;
+            return OWNER_TYPE_OBJECT_STRING;
         case NAN_BOX_MASK_SIGNATURE:
             //such as -2, < 0
             return OWN_TYPE_NUMBER;

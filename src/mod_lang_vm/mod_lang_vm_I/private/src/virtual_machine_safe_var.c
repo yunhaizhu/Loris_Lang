@@ -128,7 +128,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
 
                 root_value_type = get_owner_value_type(root_value);
 
-                if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
+                if (unlikely(root_value_type == OWNER_TYPE_OBJECT_SYMBOL)) {
                     root = root_value;
                     keep_loop = STD_BOOL_TRUE;
 
@@ -164,7 +164,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
 
             case array_type:
                 if (index_key != NAN_BOX_Null) {
-                    if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                    if (get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                     }
                     idx = (std_int_t) get_owner_value_number(index_key);
@@ -183,7 +183,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
                 break;
 
             case tuple_type:
-                if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
 
@@ -198,7 +198,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
                 break;
 
             case hash_type:
-                if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }else if (index_key == NAN_BOX_Null){
                     if (fail_back_symbol){
@@ -274,7 +274,7 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
 
     root_value_type = get_owner_value_type(root_value);
 
-    if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
+    if (unlikely(root_value_type == OWNER_TYPE_OBJECT_SYMBOL)) {
         if (set_VAR(root_value, index_key, value) != STD_RV_SUC){
             set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
         }
@@ -313,7 +313,7 @@ STD_CALL std_rv_t set_VAR2(owner_value_t root, owner_value_t index_key, owner_va
 
         case array_type:
             if (index_key != NAN_BOX_Null) {
-                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
                 idx = (std_int_t) get_owner_value_number(index_key);
@@ -328,7 +328,7 @@ STD_CALL std_rv_t set_VAR2(owner_value_t root, owner_value_t index_key, owner_va
             break;
 
         case tuple_type:
-            if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+            if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                 index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
             }
 
@@ -338,7 +338,7 @@ STD_CALL std_rv_t set_VAR2(owner_value_t root, owner_value_t index_key, owner_va
             break;
 
         case hash_type:
-            if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+            if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                 index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
             }else if (index_key == NAN_BOX_Null){
                 return STD_RV_ERR_FAIL;
@@ -369,7 +369,7 @@ STD_CALL static inline owner_value_t inline_get_VAR_switch_var(const ownership_o
         return root;
     }
 
-   if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+   if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     }
 
@@ -394,7 +394,7 @@ STD_CALL static inline owner_value_t inline_get_VAR_switch_array(IN owner_value_
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
         idx = (std_int_t) get_owner_value_number(index_key);
     } else if (index_key != NAN_BOX_Null) {
@@ -424,7 +424,7 @@ STD_CALL static inline owner_value_t inline_find_VAR_switch_array(IN owner_value
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
@@ -452,7 +452,7 @@ STD_CALL static inline owner_value_t inline_get_VAR_switch_tuple(IN owner_value_
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
@@ -482,7 +482,7 @@ STD_CALL static inline owner_value_t inline_find_VAR_switch_tuple(IN owner_value
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
@@ -509,7 +509,7 @@ STD_CALL static inline owner_value_t inline_find_VAR_switch_hash(IN owner_value_
     if (reenter) {
         return root;
     }
-    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
@@ -522,7 +522,7 @@ STD_CALL static inline owner_value_t inline_find_VAR_switch_hash(IN owner_value_
 
 #define LOOP_CHECK_AND_RETURN()              \
     index_key = NAN_BOX_Null;                        \
-    if (value != NAN_BOX_Null && get_owner_value_type(value) != OWN_TYPE_OBJECT_SYMBOL) { \
+    if (value != NAN_BOX_Null && get_owner_value_type(value) != OWNER_TYPE_OBJECT_SYMBOL) { \
         return value;                        \
     }                                        \
     if (reenter) {                           \
@@ -551,7 +551,7 @@ STD_CALL static inline owner_value_t get_find_VAR_internal(owner_value_t root, o
     do {
         value_type = get_owner_value_type(value);
 
-        if (value_type == OWN_TYPE_OBJECT_SYMBOL) {
+        if (value_type == OWNER_TYPE_OBJECT_SYMBOL) {
             const ownership_object_symbol_t *value_symbol;
             value_symbol = get_owner_value_object_symbol(value);
 
@@ -638,7 +638,7 @@ STD_CALL owner_value_t get_VAR_size(owner_value_t object)
     owner_value_type_t value_type;
 
     value_type = get_owner_value_type(object);
-    if (value_type == OWN_TYPE_OBJECT_SYMBOL) {
+    if (value_type == OWNER_TYPE_OBJECT_SYMBOL) {
         const ownership_object_symbol_t *value_symbol;
         value_symbol = get_owner_value_object_symbol(object);
 
@@ -689,7 +689,7 @@ STD_CALL owner_value_t del_VAR(owner_value_t root, owner_value_t index_key, std_
 
     root_type = get_owner_value_type(root);
 
-    if (root_type == OWN_TYPE_OBJECT_SYMBOL) {
+    if (root_type == OWNER_TYPE_OBJECT_SYMBOL) {
         root_symbol = get_owner_value_object_symbol(root);
 
         switch (root_symbol->env_value.symbol_type) {
@@ -700,7 +700,7 @@ STD_CALL owner_value_t del_VAR(owner_value_t root, owner_value_t index_key, std_
             }
 
             case tuple_type:
-                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
                 if (index_bool){
@@ -713,7 +713,7 @@ STD_CALL owner_value_t del_VAR(owner_value_t root, owner_value_t index_key, std_
                 }
 
             case hash_type:
-                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
                 return del_VAR_with_hash_type(get_owner_value_object_symbol(root), index_key);
@@ -740,7 +740,7 @@ STD_CALL owner_value_t resize_VAR(owner_value_t root, owner_value_t index_key)
 
     root_type = get_owner_value_type(root);
 
-    if (root_type == OWN_TYPE_OBJECT_SYMBOL) {
+    if (root_type == OWNER_TYPE_OBJECT_SYMBOL) {
         root_symbol = get_owner_value_object_symbol(root);
 
         switch (root_symbol->env_value.symbol_type) {
@@ -751,7 +751,7 @@ STD_CALL owner_value_t resize_VAR(owner_value_t root, owner_value_t index_key)
             }
 
             case array_type:
-                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWNER_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
                 std_int_t new_size =  (std_int_t)get_owner_value_number(index_key);

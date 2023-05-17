@@ -284,8 +284,8 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             }
             inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         }
-    } else if ((get_owner_value_type(obj_x) == OWN_TYPE_OBJECT_STRING) &&
-               (get_owner_value_type(obj_y) == OWN_TYPE_OBJECT_STRING)) {
+    } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_OBJECT_STRING) &&
+               (get_owner_value_type(obj_y) == OWNER_TYPE_OBJECT_STRING)) {
         std_char_t *sx = get_owner_value_object_string(obj_x);
         std_char_t *sy = get_owner_value_object_string(obj_y);
 
@@ -304,7 +304,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
     } else if ((get_owner_value_type(obj_x) == OWN_TYPE_NUMBER || get_owner_value_type(obj_x) == OWN_TYPE_CHAR) &&
-               (get_owner_value_type(obj_y) == OWN_TYPE_OBJECT_STRING)) {
+               (get_owner_value_type(obj_y) == OWNER_TYPE_OBJECT_STRING)) {
         nx = get_owner_value_number(obj_x);
         std_char_t *sy = get_owner_value_object_string(obj_y);
 
@@ -320,7 +320,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
         } else if (type == ADD) {
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
-    } else if ((get_owner_value_type(obj_x) == OWN_TYPE_OBJECT_STRING) &&
+    } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_OBJECT_STRING) &&
                (get_owner_value_type(obj_y) == OWN_TYPE_NUMBER || get_owner_value_type(obj_y) == OWN_TYPE_CHAR)) {
         std_char_t *sx = get_owner_value_object_string(obj_x);
         ny = get_owner_value_number(obj_y);

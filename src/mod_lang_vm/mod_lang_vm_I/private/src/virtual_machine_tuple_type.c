@@ -158,7 +158,7 @@ STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *sy
     value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
 
     new_value_type = get_owner_value_type(value);
-    if (new_value_type == OWN_TYPE_OBJECT_STRING || new_value_type == OWN_TYPE_OBJECT_SYMBOL || new_value_type == OWN_TYPE_OBJECT) {
+    if (new_value_type == OWNER_TYPE_OBJECT_STRING || new_value_type == OWNER_TYPE_OBJECT_SYMBOL || new_value_type == OWNER_TYPE_OBJECT) {
         new_object_value = duplicate_ownership_value(symbol, value);
     } else {
         new_value = value;

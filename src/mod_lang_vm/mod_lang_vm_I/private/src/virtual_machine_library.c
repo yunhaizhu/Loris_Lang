@@ -147,9 +147,9 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
             *dest = json_verylong(*dest, arg_name,
                                   get_owner_value_char(value));
             break;
-        case OWN_TYPE_OBJECT:
+        case OWNER_TYPE_OBJECT:
             break;
-        case OWN_TYPE_OBJECT_SYMBOL:{
+        case OWNER_TYPE_OBJECT_SYMBOL:{
             const ownership_object_symbol_t *root_symbol;
 
             root_symbol = get_owner_value_object_symbol(value);
@@ -180,7 +180,7 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
             break;
         }
 
-        case OWN_TYPE_OBJECT_STRING:
+        case OWNER_TYPE_OBJECT_STRING:
             STD_LOG(INFO, "%s STRING value:%s\n",
                     arg_name, get_owner_value_object_string(value));
             *dest = json_str(*dest, arg_name, get_owner_value_object_string(value));
@@ -424,7 +424,7 @@ STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t args)
     STD_ASSERT_RV(obj_json_string != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_name_value_hash != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_owner_value_type(obj_json_string) == OWN_TYPE_OBJECT_STRING, );
+    STD_ASSERT_RV(get_owner_value_type(obj_json_string) == OWNER_TYPE_OBJECT_STRING, );
 
     json_string = strdup(get_owner_value_object_string(obj_json_string));
 
@@ -698,7 +698,7 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t a
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_string != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_owner_value_type(obj_string) == OWN_TYPE_OBJECT_STRING, );
+    STD_ASSERT_RV(get_owner_value_type(obj_string) == OWNER_TYPE_OBJECT_STRING, );
 
     string_string = get_owner_value_object_string(obj_string);
     snprintf(string_buffer, sizeof(string_buffer), "%s", string_string);
@@ -738,7 +738,7 @@ STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t a
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_array != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_owner_value_type(obj_array) == OWN_TYPE_OBJECT_SYMBOL, );
+    STD_ASSERT_RV(get_owner_value_type(obj_array) == OWNER_TYPE_OBJECT_SYMBOL, );
 
     std_int_t obj_item_type = get_owner_value_object_symbol(obj_array)->env_value.symbol_type;
     STD_ASSERT_RV(obj_item_type == array_type, );
@@ -783,7 +783,7 @@ STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t args)
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_string != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_owner_value_type(obj_string) == OWN_TYPE_OBJECT_STRING, );
+    STD_ASSERT_RV(get_owner_value_type(obj_string) == OWNER_TYPE_OBJECT_STRING, );
 
     file_name = get_owner_value_object_string(obj_string);
 

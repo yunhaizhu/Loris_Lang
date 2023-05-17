@@ -247,7 +247,7 @@ STD_CALL std_void_t append_VARS_with_array_type(IN ownership_object_symbol_t *sy
     array[array_length] = value;
 
     value_type = get_owner_value_type(value);
-    if (value_type == OWN_TYPE_OBJECT || value_type == OWN_TYPE_OBJECT_STRING) {
+    if (value_type == OWNER_TYPE_OBJECT || value_type == OWNER_TYPE_OBJECT_STRING) {
         create_ownership_signature(symbol, get_owner_value_object(value));
     }
 
