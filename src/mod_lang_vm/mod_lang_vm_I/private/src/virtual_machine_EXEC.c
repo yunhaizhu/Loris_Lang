@@ -152,8 +152,8 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
     std_64_t nx = 0;
     std_64_t ny = 0;
 
-    if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) &&
-        (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_CHAR)) {
+    if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_INTEGER) &&
+        (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_INTEGER)) {
         nx = get_owner_value_number(obj_x);
         ny = get_owner_value_number(obj_y);
         if (type == ADD || type == Inp_ADD) {
@@ -303,7 +303,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             // is not assigned to any variable, so the memory of str1 + str2 is not freed.
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
-    } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) &&
+    } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_INTEGER) &&
                (get_owner_value_type(obj_y) == OWNER_TYPE_OBJECT_STRING)) {
         nx = get_owner_value_number(obj_x);
         std_char_t *sy = get_owner_value_object_string(obj_y);
@@ -321,7 +321,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
     } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_OBJECT_STRING) &&
-               (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_CHAR)) {
+               (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_INTEGER)) {
         std_char_t *sx = get_owner_value_object_string(obj_x);
         ny = get_owner_value_number(obj_y);
 
@@ -424,7 +424,7 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environmen
     std_64_t nx;
     owner_value_t ret;
 
-    if (get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) {
+    if (get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_INTEGER) {
         nx = get_owner_value_number(obj_x);
 
         ret = make_owner_value_number(nx + ny);

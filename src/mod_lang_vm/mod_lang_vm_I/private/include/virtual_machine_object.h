@@ -32,7 +32,7 @@ typedef enum owner_value_type_s {
     OWNER_TYPE_DOUBLE,
     OWNER_TYPE_BOOL,
     OWNER_TYPE_ADDRESS,
-    OWNER_TYPE_CHAR,
+    OWNER_TYPE_INTEGER,
     OWNER_TYPE_OBJECT,
     OWNER_TYPE_OBJECT_SYMBOL,
     OWNER_TYPE_OBJECT_STRING
@@ -44,6 +44,7 @@ typedef enum owner_value_type_s {
 #define NAN_BOX_MASK_TYPE               0x0007000000000000
 #define NAN_BOX_MASK_SIGNATURE          0xffff000000000000
 #define NAN_BOX_MASK_PAYLOAD_PTR        0x0000ffffffffffff
+#define NAN_BOX_MASK_INTEGER            0x00000000ffffffff
 
 #define NAN_BOX_MASK_TYPE_NAN           0x0000000000000000
 #define NAN_BOX_MASK_TYPE_FALSE         0x0001000000000000
@@ -54,7 +55,7 @@ typedef enum owner_value_type_s {
 #define NAN_BOX_MASK_TYPE_OBJECT_SYMBOL 0x0006000000000000
 #define NAN_BOX_MASK_TYPE_OBJECT_STRING 0x0007000000000000
 #define NAN_BOX_MASK_TYPE_ZERO          0x0008000000000000
-#define NAN_BOX_MASK_TYPE_CHAR          0x0009000000000000
+#define NAN_BOX_MASK_TYPE_INTEGER       0x0009000000000000
 
 //#define NAN_BOX_NaN (NAN_BOX_MASK_EXPONENT | NAN_BOX_MASK_QUIET)
 #define NAN_BOX_NaN (NAN_BOX_MASK_EXPONENT )
@@ -72,7 +73,7 @@ typedef enum owner_value_type_s {
 #define NAN_BOX_SIGNATURE_OBJECT (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_OBJECT)
 #define NAN_BOX_SIGNATURE_OBJECT_SYMBOL (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_OBJECT_SYMBOL)
 #define NAN_BOX_SIGNATURE_OBJECT_STRING (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_OBJECT_STRING)
-#define NAN_BOX_SIGNATURE_CHAR ( NAN_BOX_NaN | NAN_BOX_MASK_TYPE_CHAR)
+#define NAN_BOX_SIGNATURE_INTEGER ( NAN_BOX_NaN | NAN_BOX_MASK_TYPE_INTEGER)
 
 #else
 typedef union owner_value_union {
@@ -304,10 +305,10 @@ STD_CALL static inline owner_value_t make_owner_value_address(IN std_void_t *ptr
  * @param   ptr
  * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline owner_value_t make_owner_value_char(IN std_char_t chr)
+STD_CALL static inline owner_value_t make_owner_value_integer(IN std_u32_t integer)
 {
 #ifdef NAN_BOX
-    return NAN_BOX_SIGNATURE_CHAR| (uint64_t) chr;
+    return NAN_BOX_SIGNATURE_INTEGER | (uint64_t) integer;
 #else
     owner_value_t value;
     value.tag = TAG_ADDRESS;
@@ -512,19 +513,19 @@ STD_CALL static inline std_void_t *get_owner_value_address(IN const owner_value_
 }
 
 /**
- * get_owner_value_char
+ * get_owner_value_integer
  * @brief
  * @param   value
  * @return  STD_CALL static inline std_char_t
  */
-STD_CALL static inline std_char_t get_owner_value_char(IN const owner_value_t value)
+STD_CALL static inline std_u32_t get_owner_value_integer(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
 
-    assert(NAN_BOX_SIGNATURE_CHAR == signature);
+    assert(NAN_BOX_SIGNATURE_INTEGER == signature);
 
-    return (std_char_t ) (value & NAN_BOX_MASK_PAYLOAD_PTR);
+    return (std_u32_t ) (value & NAN_BOX_MASK_INTEGER);
 #else
     return value.u.i64;
 #endif
@@ -605,6 +606,10 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
     std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
     std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
 
+    if ((~value & NAN_BOX_MASK_EXPONENT) != 0) {
+        return OWNER_TYPE_DOUBLE;
+    }
+
     if (isNaN != NAN_BOX_SIGNATURE_NAN) {
         if (signature == NAN_BOX_MASK_TYPE_NAN){
             return OWNER_TYPE_NUMBER;
@@ -614,6 +619,10 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
     }
 
     switch (signature) {
+        case NAN_BOX_MASK_TYPE_NAN:
+            return OWNER_TYPE_NUMBER;
+        case NAN_BOX_SIGNATURE_NAN:
+            return OWNER_TYPE_DOUBLE;
         case NAN_BOX_SIGNATURE_NULL:
             return OWNER_TYPE_NULL;
         case NAN_BOX_SIGNATURE_FALSE:
@@ -621,8 +630,8 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
             return OWNER_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_ADDRESS:
             return OWNER_TYPE_ADDRESS;
-        case NAN_BOX_SIGNATURE_CHAR:
-            return OWNER_TYPE_CHAR;
+        case NAN_BOX_SIGNATURE_INTEGER:
+            return OWNER_TYPE_INTEGER;
         case NAN_BOX_SIGNATURE_OBJECT:
             return OWNER_TYPE_OBJECT;
         case NAN_BOX_SIGNATURE_OBJECT_SYMBOL:
@@ -632,9 +641,9 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
         case NAN_BOX_MASK_SIGNATURE:
             //such as -2, < 0
             return OWNER_TYPE_NUMBER;
-        default:
-            return OWNER_TYPE_NULL;
     }
+
+    return OWNER_TYPE_NULL;
 }
 
 /**

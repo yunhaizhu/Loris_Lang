@@ -141,11 +141,11 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
             *dest = json_verylong(*dest, arg_name,
                                   (intptr_t) get_owner_value_address(value));
             break;
-        case OWNER_TYPE_CHAR:
+        case OWNER_TYPE_INTEGER:
             STD_LOG(INFO, "%s CHAR value:%d\n",
                     arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,
-                                  get_owner_value_char(value));
+                                  get_owner_value_interger(value));
             break;
         case OWNER_TYPE_OBJECT:
             break;
@@ -711,7 +711,7 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t a
 
     for (std_int_t i = 0; i < std_safe_strlen(string_buffer, sizeof(string_buffer)); i++) {
         owner_value_t owner_value;
-        owner_value = make_owner_value_char(string_buffer[i]);
+        owner_value = make_owner_value_integer(string_buffer[i]);
         set_VAR(ret_obj, i, owner_value);
     }
 }
