@@ -56,8 +56,6 @@ typedef enum owner_value_type_s {
 #define NAN_BOX_MASK_TYPE_ZERO          0x0008000000000000
 #define NAN_BOX_MASK_TYPE_CHAR          0x0009000000000000
 
-#define NAN_BOX_MASK_TYPE_OBJECT_SYMBOL_GPR    0x0010000000000000
-
 //#define NAN_BOX_NaN (NAN_BOX_MASK_EXPONENT | NAN_BOX_MASK_QUIET)
 #define NAN_BOX_NaN (NAN_BOX_MASK_EXPONENT )
 #define NAN_BOX_Null (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_NULL)
@@ -125,7 +123,6 @@ typedef enum {
     array_type,
     tuple_type,
     hash_type,
-    func_type,
 } symbol_type_t;
 
 typedef struct var_s {
@@ -146,14 +143,6 @@ typedef struct hash_s {
     std_lock_free_key_hash_t *hash_head;
 } hash_t;
 
-typedef struct func_s {
-
-} func_t;
-
-typedef struct source_data_s {
-    std_int_t line;
-} source_data_t;
-
 typedef struct env_value_s {
     symbol_type_t symbol_type;
     union {
@@ -161,7 +150,6 @@ typedef struct env_value_s {
         array_t array;
         tuple_t tuple;
         hash_t hash;
-        func_t func;
     } data;
 } env_value_t;
 

@@ -596,9 +596,6 @@ STD_CALL static inline owner_value_t get_find_VAR_internal(owner_value_t root, o
                     LOOP_CHECK_AND_RETURN()
                     break;
 
-                case func_type:
-                    return value;
-
                 default:
                     break;
             }
@@ -655,7 +652,7 @@ STD_CALL owner_value_t get_VAR_size(owner_value_t object)
             case hash_type:
                 ret = make_owner_value_number(get_VAR_total_with_hash_type(value_symbol));
                 break;
-            case func_type:
+            default:
                 break;
         }
     }

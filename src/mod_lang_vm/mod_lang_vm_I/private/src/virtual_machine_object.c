@@ -86,9 +86,6 @@ STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value)
         case hash_type:
             ret = "HASH_TYPE";
             break;
-        case func_type:
-            ret = "FUNC_TYPE";
-            break;
         default:
             break;
     }
