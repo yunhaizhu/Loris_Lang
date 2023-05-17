@@ -31,8 +31,8 @@ typedef enum owner_value_type_s {
     OWN_TYPE_NUMBER,
     OWN_TYPE_DOUBLE,
     OWN_TYPE_BOOL,
-    OWN_TYPE_ADDRESS,
-    OWN_TYPE_CHAR,
+    OWNER_TYPE_ADDRESS,
+    OWNER_TYPE_CHAR,
     OWNER_TYPE_OBJECT,
     OWNER_TYPE_OBJECT_SYMBOL,
     OWNER_TYPE_OBJECT_STRING
@@ -632,9 +632,9 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
         case NAN_BOX_SIGNATURE_TRUE:
             return OWN_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_ADDRESS:
-            return OWN_TYPE_ADDRESS;
+            return OWNER_TYPE_ADDRESS;
         case NAN_BOX_SIGNATURE_CHAR:
-            return OWN_TYPE_CHAR;
+            return OWNER_TYPE_CHAR;
         case NAN_BOX_SIGNATURE_OBJECT:
             return OWNER_TYPE_OBJECT;
         case NAN_BOX_SIGNATURE_OBJECT_SYMBOL:

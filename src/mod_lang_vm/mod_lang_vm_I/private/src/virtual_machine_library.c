@@ -135,13 +135,13 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
             *dest = json_verylong(*dest, arg_name,
                                   get_owner_value_bool(value));
             break;
-        case OWN_TYPE_ADDRESS:
+        case OWNER_TYPE_ADDRESS:
             STD_LOG(INFO, "%s ADDRESS value:%p\n",
                     arg_name, get_owner_value_address(value));
             *dest = json_verylong(*dest, arg_name,
                                   (intptr_t) get_owner_value_address(value));
             break;
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_CHAR:
             STD_LOG(INFO, "%s CHAR value:%d\n",
                     arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,

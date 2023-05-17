@@ -48,9 +48,9 @@ STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value)
         case NAN_BOX_SIGNATURE_TRUE:
             return "OWN_TYPE_BOOL";
         case NAN_BOX_SIGNATURE_ADDRESS:
-            return "OWN_TYPE_ADDRESS";
+            return "OWNER_TYPE_ADDRESS";
         case NAN_BOX_SIGNATURE_CHAR:
-            return "OWN_TYPE_CHAR";
+            return "OWNER_TYPE_CHAR";
         case NAN_BOX_SIGNATURE_OBJECT:
             object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
             if (object) {
@@ -115,14 +115,14 @@ STD_CALL std_bool_t is_owner_value_equal(IN owner_value_t x_value, IN owner_valu
         string_x = get_owner_value_object_string(x_value);
         string_y = get_owner_value_object_string(y_value);
         return strcmp(string_x, string_y) == 0 ? STD_BOOL_TRUE : STD_BOOL_FALSE;
-    } else if ((get_owner_value_type(x_value) == get_owner_value_type(y_value)) && get_owner_value_type(x_value) == OWN_TYPE_ADDRESS) {
+    } else if ((get_owner_value_type(x_value) == get_owner_value_type(y_value)) && get_owner_value_type(x_value) == OWNER_TYPE_ADDRESS) {
         std_void_t const *addr_x;
         std_void_t const *addr_y;
 
         addr_x = get_owner_value_address(x_value);
         addr_y = get_owner_value_address(y_value);
         return addr_x == addr_y ? STD_BOOL_TRUE : STD_BOOL_FALSE;
-    } else if ((get_owner_value_type(x_value) == get_owner_value_type(y_value)) && get_owner_value_type(x_value) == OWN_TYPE_CHAR) {
+    } else if ((get_owner_value_type(x_value) == get_owner_value_type(y_value)) && get_owner_value_type(x_value) == OWNER_TYPE_CHAR) {
         std_char_t char_x;
         std_char_t char_y;
 
@@ -270,8 +270,8 @@ STD_CALL std_bool_t check_support_owner_value_type(IN owner_value_t value)
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
-        case OWN_TYPE_ADDRESS:
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT_STRING:
             return STD_BOOL_TRUE;
         case OWNER_TYPE_OBJECT:
@@ -293,8 +293,8 @@ STD_CALL std_bool_t check_support_ownership_object_type(IN const ownership_objec
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
-        case OWN_TYPE_ADDRESS:
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT_STRING:
         case OWNER_TYPE_OBJECT_SYMBOL:
             return STD_BOOL_TRUE;
@@ -326,8 +326,8 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
-        case OWN_TYPE_ADDRESS:
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_CHAR:
             item_value = owner_item;
             return item_value;
 
@@ -341,8 +341,8 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
                 case OWN_TYPE_NUMBER:
                 case OWN_TYPE_DOUBLE:
                 case OWN_TYPE_BOOL:
-                case OWN_TYPE_ADDRESS:
-                case OWN_TYPE_CHAR:
+                case OWNER_TYPE_ADDRESS:
+                case OWNER_TYPE_CHAR:
                     item_value = item->value;
                     break;
                 default:
@@ -428,8 +428,8 @@ STD_CALL std_rv_t free_ownership_ownvalue(IN const ownership_object_symbol_t *ow
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
-        case OWN_TYPE_ADDRESS:
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_CHAR:
             break;
         case OWNER_TYPE_OBJECT:
             object = get_owner_value_object(owner_item);
@@ -501,9 +501,9 @@ STD_CALL std_void_t print_owner_value(IN owner_value_t value, std_int_t display_
         print_owner_value(obj->value, display_type);
     }else if (get_owner_value_type(value) == OWNER_TYPE_OBJECT_STRING) {
         STD_LOG(display_type, "'%s' ", get_owner_value_object_string(value));
-    } else if (get_owner_value_type(value) == OWN_TYPE_ADDRESS) {
+    } else if (get_owner_value_type(value) == OWNER_TYPE_ADDRESS) {
         STD_LOG(display_type, "%p ", get_owner_value_address(value));
-    } else if (get_owner_value_type(value) == OWN_TYPE_CHAR) {
+    } else if (get_owner_value_type(value) == OWNER_TYPE_CHAR) {
         STD_LOG(display_type, "%c ", get_owner_value_char(value));
     } else if (get_owner_value_type(value) == OWN_TYPE_BOOL) {
         STD_LOG(display_type, "%s ", get_owner_value_bool(value) ? "true" : "false");
@@ -582,9 +582,9 @@ STD_CALL std_void_t print_owner_value_to_buf(IN owner_value_t value, IN std_char
         }
     }else if (value_type == OWNER_TYPE_OBJECT_STRING) {
         snprintf(buf, buf_size, "%s", get_owner_value_object_string(value));
-    } else if (value_type == OWN_TYPE_ADDRESS) {
+    } else if (value_type == OWNER_TYPE_ADDRESS) {
         snprintf(buf, buf_size, "%p", get_owner_value_address(value));
-    } else if (value_type == OWN_TYPE_CHAR) {
+    } else if (value_type == OWNER_TYPE_CHAR) {
         snprintf(buf, buf_size, "%c", get_owner_value_char(value));
     } else if (value_type == OWN_TYPE_BOOL) {
         snprintf(buf, buf_size, "%s", get_owner_value_bool(value) ? "true" : "false");
@@ -617,8 +617,8 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
-        case OWN_TYPE_ADDRESS:
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT:
             value = obj->value;
             print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
@@ -648,8 +648,8 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
-        case OWN_TYPE_ADDRESS:
-        case OWN_TYPE_CHAR:
+        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT:
             ret = item->value;
             break;
