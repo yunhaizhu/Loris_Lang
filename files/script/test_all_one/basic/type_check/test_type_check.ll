@@ -2,7 +2,7 @@ package test19
 require "os"
 import os.print, os.assert, os.check_type
 
-def test_random_number(var a1:{"OWN_TYPE_NUMBER"}, var a2:{"OWN_TYPE_STRING", "OWN_TYPE_BOOL"})
+def test_random_number(var a1:{"OWNER__TYPE_NUMBER"}, var a2:{"OWNER__TYPE_STRING", "OWNER__TYPE_BOOL"})
 {
     if (a2 == "200234"){
         os.assert(a2 == "200234", "a2 == 200234")
@@ -26,9 +26,9 @@ def test_type_check1()
 def test_type_check2()
 {
     var a = 1
-    var b:{"OWN_TYPE_NUMBER"} = 2
-    var c:{"OWN_TYPE_STRING"} = "hello"
-    var d:{"OWN_TYPE_BOOL"} = true
+    var b:{"OWNER__TYPE_NUMBER"} = 2
+    var c:{"OWNER__TYPE_STRING"} = "hello"
+    var d:{"OWNER__TYPE_BOOL"} = true
 
     b = 3
     b = 2

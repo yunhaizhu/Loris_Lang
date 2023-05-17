@@ -36,17 +36,17 @@ STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value)
     std_char_t *ret = "";
 
     if (isNaN == 0) {
-        return "OWN_TYPE_NUMBER";
+        return "OWNER_TYPE_NUMBER";
     }
 
     switch (signature) {
         case NAN_BOX_SIGNATURE_NAN:
-            return "OWN_TYPE_DOUBLE";
+            return "OWNER_TYPE_DOUBLE";
         case NAN_BOX_SIGNATURE_NULL:
-            return "OWN_TYPE_NULL";
+            return "OWNER_TYPE_NULL";
         case NAN_BOX_SIGNATURE_FALSE:
         case NAN_BOX_SIGNATURE_TRUE:
-            return "OWN_TYPE_BOOL";
+            return "OWNER_TYPE_BOOL";
         case NAN_BOX_SIGNATURE_ADDRESS:
             return "OWNER_TYPE_ADDRESS";
         case NAN_BOX_SIGNATURE_CHAR:
@@ -58,14 +58,14 @@ STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value)
                 if (NAN_BOX_SIGNATURE_OBJECT_SYMBOL == signature) {
                     break;
                 } else if (NAN_BOX_SIGNATURE_OBJECT_STRING == signature) {
-                    return "OWN_TYPE_STRING";
+                    return "OWNER_TYPE_STRING";
                 }
             }
             return "OWNER_TYPE_OBJECT";
         case NAN_BOX_SIGNATURE_OBJECT_SYMBOL:
             break;
         case NAN_BOX_SIGNATURE_OBJECT_STRING:
-            return "OWN_TYPE_STRING";
+            return "OWNER_TYPE_STRING";
         default:
             return ret;
     }
@@ -266,10 +266,10 @@ STD_CALL owner_value_t copy_ownership_object(ownership_object_t *item)
 STD_CALL std_bool_t check_support_owner_value_type(IN owner_value_t value)
 {
     switch (get_owner_value_type(value)) {
-        case OWN_TYPE_NULL:
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NULL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT_STRING:
@@ -290,9 +290,9 @@ STD_CALL std_bool_t check_support_owner_value_type(IN owner_value_t value)
 STD_CALL std_bool_t check_support_ownership_object_type(IN const ownership_object_t *item)
 {
     switch (get_owner_value_type(item->value)) {
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT_STRING:
@@ -322,10 +322,10 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
 
     value_type = get_owner_value_type(owner_item);
     switch(value_type){
-        case OWN_TYPE_NULL:
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NULL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
             item_value = owner_item;
@@ -337,10 +337,10 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
             STD_ASSERT_RV(item != NULL, NAN_BOX_Null);
 
             switch (get_owner_value_type(item->value)) {
-                case OWN_TYPE_NULL:
-                case OWN_TYPE_NUMBER:
-                case OWN_TYPE_DOUBLE:
-                case OWN_TYPE_BOOL:
+                case OWNER_TYPE_NULL:
+                case OWNER_TYPE_NUMBER:
+                case OWNER_TYPE_DOUBLE:
+                case OWNER_TYPE_BOOL:
                 case OWNER_TYPE_ADDRESS:
                 case OWNER_TYPE_CHAR:
                     item_value = item->value;
@@ -425,9 +425,9 @@ STD_CALL std_rv_t free_ownership_ownvalue(IN const ownership_object_symbol_t *ow
     std_char_t *string;
 
     switch (get_owner_value_type(owner_item)) {
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
             break;
@@ -492,9 +492,9 @@ STD_CALL std_void_t print_owner_value(IN owner_value_t value, std_int_t display_
         return;
     }
 
-    if (get_owner_value_type(value) == OWN_TYPE_NUMBER) {
+    if (get_owner_value_type(value) == OWNER_TYPE_NUMBER) {
         STD_LOG(display_type, "%ld ", get_owner_value_number(value));
-    }else if (get_owner_value_type(value) == OWN_TYPE_DOUBLE) {
+    }else if (get_owner_value_type(value) == OWNER_TYPE_DOUBLE) {
         STD_LOG(display_type, "%lf ", get_owner_value_float(value));
     }else if (get_owner_value_type(value) == OWNER_TYPE_OBJECT) {
         ownership_object_t *obj = get_owner_value_object(value);
@@ -505,7 +505,7 @@ STD_CALL std_void_t print_owner_value(IN owner_value_t value, std_int_t display_
         STD_LOG(display_type, "%p ", get_owner_value_address(value));
     } else if (get_owner_value_type(value) == OWNER_TYPE_CHAR) {
         STD_LOG(display_type, "%c ", get_owner_value_char(value));
-    } else if (get_owner_value_type(value) == OWN_TYPE_BOOL) {
+    } else if (get_owner_value_type(value) == OWNER_TYPE_BOOL) {
         STD_LOG(display_type, "%s ", get_owner_value_bool(value) ? "true" : "false");
     } else if (get_owner_value_type(value) == OWNER_TYPE_OBJECT_SYMBOL) {
         STD_LOG(display_type, "%s ", get_owner_value_type_string(value));
@@ -566,9 +566,9 @@ STD_CALL std_void_t print_owner_value_to_buf(IN owner_value_t value, IN std_char
 {
     owner_value_type_t value_type = get_owner_value_type(value);
 
-    if (value_type == OWN_TYPE_NULL) {
+    if (value_type == OWNER_TYPE_NULL) {
         snprintf(buf, buf_size, "%s", "null");
-    } else if (value_type == OWN_TYPE_NUMBER) {
+    } else if (value_type == OWNER_TYPE_NUMBER) {
         if (number_value != NULL) {
             snprintf(buf, buf_size, "%s", "NUMBER");
             *number_value = get_owner_value_number(value);
@@ -586,7 +586,7 @@ STD_CALL std_void_t print_owner_value_to_buf(IN owner_value_t value, IN std_char
         snprintf(buf, buf_size, "%p", get_owner_value_address(value));
     } else if (value_type == OWNER_TYPE_CHAR) {
         snprintf(buf, buf_size, "%c", get_owner_value_char(value));
-    } else if (value_type == OWN_TYPE_BOOL) {
+    } else if (value_type == OWNER_TYPE_BOOL) {
         snprintf(buf, buf_size, "%s", get_owner_value_bool(value) ? "true" : "false");
     } else if (value_type == OWNER_TYPE_OBJECT_SYMBOL) {
         value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -613,10 +613,10 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
     }
 
     switch(get_owner_value_type(obj->owner_value)){
-        case OWN_TYPE_NULL:
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NULL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT:
@@ -644,10 +644,10 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
     owner_value_t ret;
 
     switch(get_owner_value_type(item->owner_value)){
-        case OWN_TYPE_NULL:
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NULL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
         case OWNER_TYPE_OBJECT:

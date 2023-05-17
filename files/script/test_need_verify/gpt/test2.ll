@@ -3,7 +3,7 @@ def main()
 {
     # Here are some intentionally wrong test cases to check the parser:
     # WRONG test case: testing variable declaration and assignment with wrong type
-#    var a:{"OWN_TYPE_NUMBER"} = "hello"
+#    var a:{"OWNER__TYPE_NUMBER"} = "hello"
     # WRONG test case: testing arithmetic operations with wrong types
     var b = "hello" + 2
     var c = true * 3
@@ -33,13 +33,13 @@ def main()
 #}
 #
 ## WRONG test case: testing function declaration and call with wrong argument types
-#def add(var a:{"OWN_TYPE_NUMBER"}, var b:{"OWN_TYPE_NUMBER"}) {
+#def add(var a:{"OWNER__TYPE_NUMBER"}, var b:{"OWNER__TYPE_NUMBER"}) {
 #    return a + b
 #}
 #var result = add("hello", 2)
 #
 ## WRONG test case: using wrong syntax for variable declaration
-#var l = "hello"  # should be var l:{"OWN_TYPE_NUMBER"} = 3
+#var l = "hello"  # should be var l:{"OWNER__TYPE_NUMBER"} = 3
 #
 ## WRONG test case: testing array declaration and indexing with wrong types
 #var arr = [1, "hello", true]

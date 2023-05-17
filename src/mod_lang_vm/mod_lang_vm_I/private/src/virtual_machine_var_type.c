@@ -195,10 +195,10 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
     owner_value_t dup_value;
 
     switch (get_owner_value_type(init_value)) {
-        case OWN_TYPE_NULL:
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NULL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
             inline_set_var(symbol, init_value);
@@ -245,10 +245,10 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
     owner_value_t dup_value;
 
     switch (get_owner_value_type(init_value)) {
-        case OWN_TYPE_NULL:
-        case OWN_TYPE_NUMBER:
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_NULL:
+        case OWNER_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_BOOL:
         case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_CHAR:
             inline_set_var(symbol, init_value);

@@ -120,16 +120,16 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
     owner_value_type_t value_type = get_owner_value_type(value);
 
     switch (value_type) {
-        case OWN_TYPE_NULL:
+        case OWNER_TYPE_NULL:
             break;
-        case OWN_TYPE_DOUBLE:
-        case OWN_TYPE_NUMBER:
+        case OWNER_TYPE_DOUBLE:
+        case OWNER_TYPE_NUMBER:
             STD_LOG(INFO, "%s NUM value:%ld\n",
                     arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,
                                   get_owner_value_number(value));
             break;
-        case OWN_TYPE_BOOL:
+        case OWNER_TYPE_BOOL:
             STD_LOG(INFO, "%s BOOL value:%ld\n",
                     arg_name, get_owner_value_bool(value));
             *dest = json_verylong(*dest, arg_name,
@@ -602,7 +602,7 @@ STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t arg
     obj1 = Pop(vm);
     obj1 = get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    STD_ASSERT_RV(get_owner_value_type(obj1) == OWN_TYPE_NUMBER, );
+    STD_ASSERT_RV(get_owner_value_type(obj1) == OWNER_TYPE_NUMBER, );
 
     std_int_t random_number = (std_int_t) get_owner_value_number(obj1);
     std_u64_t value;
@@ -653,7 +653,7 @@ STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t arg
     obj1 = Pop(vm);
     obj1 = get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    STD_ASSERT_RV(get_owner_value_type(obj1) == OWN_TYPE_NUMBER, );
+    STD_ASSERT_RV(get_owner_value_type(obj1) == OWNER_TYPE_NUMBER, );
 
     std_int_t length = (std_int_t) get_owner_value_number(obj1);
     std_char_t *value = NULL;

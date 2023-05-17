@@ -152,8 +152,8 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
     std_64_t nx = 0;
     std_64_t ny = 0;
 
-    if ((get_owner_value_type(obj_x) == OWN_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) &&
-        (get_owner_value_type(obj_y) == OWN_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_CHAR)) {
+    if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) &&
+        (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_CHAR)) {
         nx = get_owner_value_number(obj_x);
         ny = get_owner_value_number(obj_y);
         if (type == ADD || type == Inp_ADD) {
@@ -210,18 +210,18 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             }
             inline_set_obj_x_value(vm,ret, Codes, Stack, Pc, Fp);
         }
-    } else if (get_owner_value_type(obj_x) == OWN_TYPE_DOUBLE ||
-               get_owner_value_type(obj_y) == OWN_TYPE_DOUBLE) {
+    } else if (get_owner_value_type(obj_x) == OWNER_TYPE_DOUBLE ||
+               get_owner_value_type(obj_y) == OWNER_TYPE_DOUBLE) {
         std_double_t x = 0;
         std_double_t y = 0;
 
-        if (get_owner_value_type(obj_x) == OWN_TYPE_NUMBER) {
+        if (get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER) {
             x = (std_double_t) get_owner_value_number(obj_x);
         } else {
             x = get_owner_value_float(obj_x);
         }
 
-        if (get_owner_value_type(obj_y) == OWN_TYPE_NUMBER) {
+        if (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER) {
             y = (std_double_t) get_owner_value_number(obj_y);
         } else {
             y = get_owner_value_float(obj_y);
@@ -303,7 +303,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             // is not assigned to any variable, so the memory of str1 + str2 is not freed.
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
-    } else if ((get_owner_value_type(obj_x) == OWN_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) &&
+    } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) &&
                (get_owner_value_type(obj_y) == OWNER_TYPE_OBJECT_STRING)) {
         nx = get_owner_value_number(obj_x);
         std_char_t *sy = get_owner_value_object_string(obj_y);
@@ -321,7 +321,7 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
             Push(vm,  (intptr_t) NAN_BOX_Null);
         }
     } else if ((get_owner_value_type(obj_x) == OWNER_TYPE_OBJECT_STRING) &&
-               (get_owner_value_type(obj_y) == OWN_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_CHAR)) {
+               (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_CHAR)) {
         std_char_t *sx = get_owner_value_object_string(obj_x);
         ny = get_owner_value_number(obj_y);
 
@@ -424,7 +424,7 @@ STD_CALL static forced_inline std_void_t inline_execute_code_Inp_ADDI(environmen
     std_64_t nx;
     owner_value_t ret;
 
-    if (get_owner_value_type(obj_x) == OWN_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) {
+    if (get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_CHAR) {
         nx = get_owner_value_number(obj_x);
 
         ret = make_owner_value_number(nx + ny);
@@ -1040,7 +1040,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A_CLEAN(environment_vm
 
 #if FAST_VAR_ENABLE
     const ownership_object_t *owner_object = get_owner_value_object(object);
-    if (get_owner_value_type(owner_object->fast_value) == OWN_TYPE_NUMBER) {
+    if (get_owner_value_type(owner_object->fast_value) == OWNER_TYPE_NUMBER) {
         return_owner_value_object_symbol(vm, object);
         return;
     }
@@ -1067,7 +1067,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 
 #if FAST_VAR_ENABLE1
     const ownership_object_t *owner_object = get_owner_value_object(object);
-    if (get_owner_value_type(owner_object->fast_value) == OWN_TYPE_NUMBER) {
+    if (get_owner_value_type(owner_object->fast_value) == OWNER_TYPE_NUMBER) {
         return_owner_value_object_symbol(vm, object);
         return;
     }

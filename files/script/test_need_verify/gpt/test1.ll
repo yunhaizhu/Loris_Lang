@@ -5,9 +5,9 @@
 def main()
 {
     var a = 1
-    var b:{"OWN_TYPE_NUMBER"} = 2
-    var c:{"OWN_TYPE_STRING"} = "hello"
-    var d:{"OWN_TYPE_BOOL"} = true
+    var b:{"OWNER__TYPE_NUMBER"} = 2
+    var c:{"OWNER__TYPE_STRING"} = "hello"
+    var d:{"OWNER__TYPE_BOOL"} = true
 
     b = 3
     b = 2

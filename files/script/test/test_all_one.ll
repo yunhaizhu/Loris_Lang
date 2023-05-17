@@ -1564,7 +1564,7 @@ def test_var_math()
 #script("test/basic/math/test_var_math.nl")
 
 
-def test_random_number(var a1:{"OWN_TYPE_NUMBER"}, var a2:{"OWN_TYPE_STRING", "OWN_TYPE_BOOL"})
+def test_random_number(var a1:{"OWNER__TYPE_NUMBER"}, var a2:{"OWNER__TYPE_STRING", "OWNER__TYPE_BOOL"})
 {
     if (a2 == "200234"){
         assert(a2 == "200234", "a2 == 200234")
@@ -1765,9 +1765,9 @@ def main()
 
 // OK test case: testing variable declaration and assignment
 var a = 1
-var b:{"OWN_TYPE_NUMBER"} = 2
-var c:{"OWN_TYPE_STRING"} = "hello"
-var d:{"OWN_TYPE_BOOL"} = true
+var b:{"OWNER__TYPE_NUMBER"} = 2
+var c:{"OWNER__TYPE_STRING"} = "hello"
+var d:{"OWNER__TYPE_BOOL"} = true
 
 // OK test case: testing arithmetic operations
 var e = a + b
@@ -1800,19 +1800,19 @@ while (i < 10) {
 }
 
 // OK test case: testing function declaration and call
-def add(var a:{"OWN_TYPE_NUMBER"}, var b:{"OWN_TYPE_NUMBER"}) {
+def add(var a:{"OWNER__TYPE_NUMBER"}, var b:{"OWNER__TYPE_NUMBER"}) {
     return a + b
 }
 var result = add(1, 2)
 assert(result == 3, "add function works correctly")
 
 // WRONG test case: missing closing brace for function declaration
-def subtract(var a:{"OWN_TYPE_NUMBER"}, var b:{"OWN_TYPE_NUMBER"}) {
+def subtract(var a:{"OWNER__TYPE_NUMBER"}, var b:{"OWNER__TYPE_NUMBER"}) {
     return a - b
 // missing closing brace here
 
 // WRONG test case: using wrong syntax for variable declaration
-var l = "hello"  // should be var l:{"OWN_TYPE_NUMBER"} = 3
+var l = "hello"  // should be var l:{"OWNER__TYPE_NUMBER"} = 3
 
 // OK test case: testing array declaration and indexing
 var arr = [1, 2, 3]
@@ -1837,7 +1837,7 @@ var y = tup[1]
 assert(y == "hello", "tuple indexing works correctly") 
 
 // OK test case: testing type checking
-var m:{"OWN_TYPE_NUMBER"} = 1
+var m:{"OWNER__TYPE_NUMBER"} = 1
 test_random_number(m, "200234")  // should pass
 test_random_number(m, "hello")  // should fail
 
@@ -1859,7 +1859,7 @@ assert(fib_result == 34, "Fibonacci function works correctly")
 # Here are some intentionally wrong test cases to check the parser:
 
 # WRONG test case: testing variable declaration and assignment with wrong type
-var a:{"OWN_TYPE_NUMBER"} = "hello"
+var a:{"OWNER__TYPE_NUMBER"} = "hello"
 
 # WRONG test case: testing arithmetic operations with wrong types
 var b = "hello" + 2
@@ -1889,13 +1889,13 @@ while (j < 10) {
 }
 
 # WRONG test case: testing function declaration and call with wrong argument types
-def add(var a:{"OWN_TYPE_NUMBER"}, var b:{"OWN_TYPE_NUMBER"}) {
+def add(var a:{"OWNER__TYPE_NUMBER"}, var b:{"OWNER__TYPE_NUMBER"}) {
     return a + b
 }
 var result = add("hello", 2)
 
 # WRONG test case: using wrong syntax for variable declaration
-var l = "hello"  # should be var l:{"OWN_TYPE_NUMBER"} = 3
+var l = "hello"  # should be var l:{"OWNER__TYPE_NUMBER"} = 3
 
 # WRONG test case: testing array declaration and indexing with wrong types
 var arr = [1, "hello", true]

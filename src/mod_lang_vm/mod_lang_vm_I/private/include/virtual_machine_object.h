@@ -27,10 +27,10 @@
 typedef std_u64_t owner_value_t;
 
 typedef enum owner_value_type_s {
-    OWN_TYPE_NULL,
-    OWN_TYPE_NUMBER,
-    OWN_TYPE_DOUBLE,
-    OWN_TYPE_BOOL,
+    OWNER_TYPE_NULL,
+    OWNER_TYPE_NUMBER,
+    OWNER_TYPE_DOUBLE,
+    OWNER_TYPE_BOOL,
     OWNER_TYPE_ADDRESS,
     OWNER_TYPE_CHAR,
     OWNER_TYPE_OBJECT,
@@ -619,18 +619,18 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
 
     if (isNaN != NAN_BOX_SIGNATURE_NAN) {
         if (signature == NAN_BOX_MASK_TYPE_NAN){
-            return OWN_TYPE_NUMBER;
+            return OWNER_TYPE_NUMBER;
         }else {
-            return OWN_TYPE_DOUBLE;
+            return OWNER_TYPE_DOUBLE;
         }
     }
 
     switch (signature) {
         case NAN_BOX_SIGNATURE_NULL:
-            return OWN_TYPE_NULL;
+            return OWNER_TYPE_NULL;
         case NAN_BOX_SIGNATURE_FALSE:
         case NAN_BOX_SIGNATURE_TRUE:
-            return OWN_TYPE_BOOL;
+            return OWNER_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_ADDRESS:
             return OWNER_TYPE_ADDRESS;
         case NAN_BOX_SIGNATURE_CHAR:
@@ -643,9 +643,9 @@ STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t 
             return OWNER_TYPE_OBJECT_STRING;
         case NAN_BOX_MASK_SIGNATURE:
             //such as -2, < 0
-            return OWN_TYPE_NUMBER;
+            return OWNER_TYPE_NUMBER;
         default:
-            return OWN_TYPE_NULL;
+            return OWNER_TYPE_NULL;
     }
 }
 
