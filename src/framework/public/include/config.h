@@ -1,17 +1,3 @@
-/**
- * Copyright (c) 2021 Yunhai Zhu <yunhaia2@gmail.com>
- *
- * see COPYRIGHT file.  
- */
-     
-/**
- * @file    config.h
- * @brief   define structure & functions
- * @version 1.0
- * @author  Yunhai Zhu
- * @date    2023-05-16
- *
- */
 #define ENABLE_SELF_HEAL FALSE
 #define KEY_NAME_SIZE BUF_SIZE_128
 #define CMD_LINE_SIZE BUF_SIZE_256

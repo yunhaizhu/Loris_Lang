@@ -107,7 +107,7 @@ STD_CALL std_int_t get_VAR_total_with_var_type(IN const ownership_object_symbol_
  */
 STD_CALL std_rv_t set_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN own_value_t value, IN std_bool_t del)
 {
-    own_value_t new_value = NAN_BOX_Null;
+    own_value_t new_value;
     own_value_type_t new_value_type;
     ownership_object_t *new_value_obj;
 
