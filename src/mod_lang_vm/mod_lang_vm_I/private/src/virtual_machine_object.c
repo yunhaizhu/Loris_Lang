@@ -613,6 +613,7 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
     }
 
     switch(get_own_value_type(obj->own_value)){
+        case OWN_TYPE_NULL:
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
@@ -622,7 +623,7 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
             value = obj->value;
             print_own_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
             break;
-        case OWN_TYPE_NULL:
+
         case OWN_TYPE_OBJECT_SYMBOL:
         case OWN_TYPE_OBJECT_STRING:
             print_own_value_to_buf(obj->own_value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
@@ -643,6 +644,7 @@ STD_CALL own_value_t get_object_value(ownership_object_t *item)
     own_value_t ret;
 
     switch(get_own_value_type(item->own_value)){
+        case OWN_TYPE_NULL:
         case OWN_TYPE_NUMBER:
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_BOOL:
@@ -650,9 +652,8 @@ STD_CALL own_value_t get_object_value(ownership_object_t *item)
         case OWN_TYPE_CHAR:
         case OWN_TYPE_OBJECT:
             ret = item->value;
-
             break;
-        case OWN_TYPE_NULL:
+
         case OWN_TYPE_OBJECT_SYMBOL:
         case OWN_TYPE_OBJECT_STRING:
             ret = item->own_value;

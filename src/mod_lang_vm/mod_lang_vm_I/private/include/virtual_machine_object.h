@@ -32,10 +32,10 @@ typedef enum own_value_type_s {
     OWN_TYPE_DOUBLE,
     OWN_TYPE_BOOL,
     OWN_TYPE_ADDRESS,
+    OWN_TYPE_CHAR,
     OWN_TYPE_OBJECT,
     OWN_TYPE_OBJECT_SYMBOL,
-    OWN_TYPE_OBJECT_STRING,
-    OWN_TYPE_CHAR
+    OWN_TYPE_OBJECT_STRING
 } own_value_type_t;
 
 #define NAN_BOX_MASK_SIGN               0x8000000000000000
