@@ -32,7 +32,7 @@ STD_CALL std_rv_t mod_lang_vm_I_init(IN mod_lang_vm_t *p_m, IN const std_char_t 
 
     p_imp->vm->symbol_head_index = 0;
     for (int i = 0; i < RECURSIVE_LOOP_MAX; ++i) {
-         p_imp->vm->symbol_head[i] = make_own_value_object_symbol();
+         p_imp->vm->symbol_head[i] = make_owner_value_object_symbol();
     }
     return STD_RV_SUC;
 }

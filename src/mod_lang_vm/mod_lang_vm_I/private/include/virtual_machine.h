@@ -145,7 +145,7 @@ typedef struct environment_vm_s {
     std_u64_t func_arg_stack[32];
     std_int_t func_arg_stack_index;
 
-    own_value_t symbol_head[RECURSIVE_LOOP_MAX];
+    owner_value_t symbol_head[RECURSIVE_LOOP_MAX];
     std_int_t symbol_head_index;
 } environment_vm_t;
 

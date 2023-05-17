@@ -35,9 +35,9 @@ STD_CALL std_void_t declare_VAR_with_tuple_type(IN ownership_object_symbol_t *sy
  * @brief   
  * @param   symbol
  * @param   index
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index, std_bool_t is_ownvalue);
+STD_CALL owner_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index, std_bool_t is_ownvalue);
 
 /**
  * add_VAR_with_tuple_type
@@ -46,34 +46,34 @@ STD_CALL own_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t 
  * @param   value
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN own_value_t  index_key,IN own_value_t value);
+STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t  index_key,IN owner_value_t value);
 
 /**
  * find_VAR_with_tuple_type
  * @brief   
  * @param   symbol
  * @param   key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key);
+STD_CALL owner_value_t find_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key);
 
 /**
  * del_index_VAR_with_tuple_type
  * @brief
  * @param   symbol
  * @param   index
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_index_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index);
+STD_CALL owner_value_t del_index_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index);
 
 /**
  * del_VAR_with_tuple_type
  * @brief   
  * @param   symbol
  * @param   value
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN own_value_t value);
+STD_CALL owner_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t value);
 
 /**
  * del_VARS_with_tuple_type

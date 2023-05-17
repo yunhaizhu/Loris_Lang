@@ -24,9 +24,9 @@
 #define NAN_BOX
 
 #ifdef NAN_BOX
-typedef std_u64_t own_value_t;
+typedef std_u64_t owner_value_t;
 
-typedef enum own_value_type_s {
+typedef enum owner_value_type_s {
     OWN_TYPE_NULL,
     OWN_TYPE_NUMBER,
     OWN_TYPE_DOUBLE,
@@ -36,7 +36,7 @@ typedef enum own_value_type_s {
     OWN_TYPE_OBJECT,
     OWN_TYPE_OBJECT_SYMBOL,
     OWN_TYPE_OBJECT_STRING
-} own_value_type_t;
+} owner_value_type_t;
 
 #define NAN_BOX_MASK_SIGN               0x8000000000000000
 #define NAN_BOX_MASK_EXPONENT           0x7ff0000000000000
@@ -77,13 +77,13 @@ typedef enum own_value_type_s {
 #define NAN_BOX_SIGNATURE_CHAR ( NAN_BOX_NaN | NAN_BOX_MASK_TYPE_CHAR)
 
 #else
-typedef union own_value_union {
+typedef union owner_value_union {
     std_64_t i64;
     double float64;
     std_void_t *ptr;
-} own_value_union;
+} owner_value_union;
 
-typedef enum own_value_tag_s {
+typedef enum owner_value_tag_s {
     TAG_NUMBER,
     TAG_DOUBLE,
     TAG_BOOL,
@@ -91,12 +91,12 @@ typedef enum own_value_tag_s {
     TAG_SYMBOL,
     TAG_STRING,
     TAG_OBJECT
-} own_value_tag_t;
+} owner_value_tag_t;
 
-typedef struct own_value {
+typedef struct owner_value {
     int64_t tag;
-    own_value_union u;
-} own_value_t;
+    owner_value_union u;
+} owner_value_t;
 #endif
 
 typedef struct ownership_token_signature_s {
@@ -105,17 +105,17 @@ typedef struct ownership_token_signature_s {
 } ownership_token_signature_t;
 
 typedef struct ownership_object_s {
-    own_value_t value;
-    own_value_t own_value;
+    owner_value_t value;
+    owner_value_t owner_value;
     ownership_token_signature_t owner_token_signature;
     std_lock_free_list_head_t list;
 
 #if FAST_VAR_ENABLE
-    own_value_t fast_value;
+    owner_value_t fast_value;
 #endif
 
 #if FAST_SYMBOL_ENABLE
-    own_value_t fast_symbol;
+    owner_value_t fast_symbol;
 #endif
 
 } ownership_object_t;
@@ -129,12 +129,12 @@ typedef enum {
 } symbol_type_t;
 
 typedef struct var_s {
-    own_value_t value;
+    owner_value_t value;
 } val_t;
 
 typedef struct array_s {
     std_int_t array_length;
-    own_value_t *array;
+    owner_value_t *array;
 } array_t;
 
 typedef struct tuple_s {
@@ -173,17 +173,17 @@ typedef struct ownership_object_symbol_s {
 } ownership_object_symbol_t;
 
 /**
- * make_own_value_number
+ * make_owner_value_number
  * @brief   
  * @param   num
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_number(IN const std_64_t num)
+STD_CALL static inline owner_value_t make_owner_value_number(IN const std_64_t num)
 {
 #ifdef NAN_BOX
-    return *(own_value_t *) (&num);
+    return *(owner_value_t *) (&num);
 #else
-    own_value_t value;
+    owner_value_t value;
     value.tag = TAG_NUMBER;
     value.u.i64 = num;
 
@@ -192,17 +192,17 @@ STD_CALL static inline own_value_t make_own_value_number(IN const std_64_t num)
 }
 
 /**
- * make_own_value_bool
+ * make_owner_value_bool
  * @brief   
  * @param   val
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_bool(IN const std_bool_t val)
+STD_CALL static inline owner_value_t make_owner_value_bool(IN const std_bool_t val)
 {
 #ifdef NAN_BOX
     return val ? NAN_BOX_True : NAN_BOX_False;
 #else
-    own_value_t value;
+    owner_value_t value;
     value.tag = TAG_BOOL;
     value.u.i64 = val;
 
@@ -211,25 +211,25 @@ STD_CALL static inline own_value_t make_own_value_bool(IN const std_bool_t val)
 }
 
 /**
- * make_own_value_float
+ * make_owner_value_float
  * @brief   
  * @param   val
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_float(IN const double val)
+STD_CALL static inline owner_value_t make_owner_value_float(IN const double val)
 {
 #ifdef NAN_BOX
     union {
         double d;
         uint64_t u64;
     } u;
-    own_value_t v;
+    owner_value_t v;
     u.d = val;
     v = u.u64;
 
     return v;
 #else
-    own_value_t value;
+    owner_value_t value;
     value.tag = TAG_DOUBLE;
     value.u.float64 = val;
 
@@ -239,12 +239,12 @@ STD_CALL static inline own_value_t make_own_value_float(IN const double val)
 
 
 /**
- * make_own_value_object_string
+ * make_owner_value_object_string
  * @brief   
  * @param   str
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_object_string(IN const std_char_t *str)
+STD_CALL static inline owner_value_t make_owner_value_object_string(IN const std_char_t *str)
 {
 #ifdef NAN_BOX
     ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
@@ -252,8 +252,8 @@ STD_CALL static inline own_value_t make_own_value_object_string(IN const std_cha
     object->value = (uint64_t) strdup(str?str:"") | NAN_BOX_SIGNATURE_ADDRESS;
     return NAN_BOX_SIGNATURE_OBJECT_STRING | (uint64_t) object;
 #else
-    own_value_t value;
-    own_object_t *object = (own_object_t *) CALLOC(sizeof(own_object_t), 1);
+    owner_value_t value;
+    owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
 
     object->value.tag = TAG_STRING;
     object->value.u.ptr = strdup(str);
@@ -266,19 +266,19 @@ STD_CALL static inline own_value_t make_own_value_object_string(IN const std_cha
 }
 
 /**
- * make_own_value_string
+ * make_owner_value_string
  * @brief   
  * @param   str
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_string(IN const std_char_t *str)
+STD_CALL static inline owner_value_t make_owner_value_string(IN const std_char_t *str)
 {
 #ifdef NAN_BOX
     std_char_t *value = strdup(str);
     return NAN_BOX_SIGNATURE_ADDRESS | (uint64_t) value;
 #else
-    own_value_t value;
-    own_object_t *object = (own_object_t *) CALLOC(sizeof(own_object_t), 1);
+    owner_value_t value;
+    owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
 
     object->value.tag = TAG_STRING;
     object->value.u.ptr = strdup(str);
@@ -292,17 +292,17 @@ STD_CALL static inline own_value_t make_own_value_string(IN const std_char_t *st
 
 
 /**
- * make_own_value_address
+ * make_owner_value_address
  * @brief   
  * @param   ptr
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_address(IN std_void_t *ptr)
+STD_CALL static inline owner_value_t make_owner_value_address(IN std_void_t *ptr)
 {
 #ifdef NAN_BOX
     return NAN_BOX_SIGNATURE_ADDRESS | (uint64_t) ptr;
 #else
-    own_value_t value;
+    owner_value_t value;
     value.tag = TAG_ADDRESS;
     value.u.ptr = ptr;
 
@@ -311,17 +311,17 @@ STD_CALL static inline own_value_t make_own_value_address(IN std_void_t *ptr)
 }
 
 /**
- * make_own_value_address
+ * make_owner_value_address
  * @brief
  * @param   ptr
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_char(IN std_char_t chr)
+STD_CALL static inline owner_value_t make_owner_value_char(IN std_char_t chr)
 {
 #ifdef NAN_BOX
     return NAN_BOX_SIGNATURE_CHAR| (uint64_t) chr;
 #else
-    own_value_t value;
+    owner_value_t value;
     value.tag = TAG_ADDRESS;
     value.u.ptr = ptr;
 
@@ -332,11 +332,11 @@ STD_CALL static inline own_value_t make_own_value_char(IN std_char_t chr)
 
 
 /**
- * make_own_value_object_symbol
+ * make_owner_value_object_symbol
  * @brief   
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_object_symbol()
+STD_CALL static inline owner_value_t make_owner_value_object_symbol()
 {
 #ifdef NAN_BOX
     ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
@@ -352,9 +352,9 @@ STD_CALL static inline own_value_t make_own_value_object_symbol()
 
     return NAN_BOX_SIGNATURE_OBJECT_SYMBOL | (uint64_t) object;
 #else
-    own_value_t value;
-    own_object_t *object = (own_object_t *) CALLOC(sizeof(own_object_t), 1);
-    own_object_symbol_t *symbol = (own_object_symbol_t *) CALLOC(sizeof(own_object_symbol_t), 1);
+    owner_value_t value;
+    owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
+    owner_object_symbol_t *symbol = (owner_object_symbol_t *) CALLOC(sizeof(owner_object_symbol_t), 1);
     rsa_gen_keys(&symbol->pub, &symbol->pri, PRIME_SOURCE_FILE);
 
     object->value.tag = TAG_SYMBOL;
@@ -368,12 +368,12 @@ STD_CALL static inline own_value_t make_own_value_object_symbol()
 }
 
 /**
- * make_own_value_object
+ * make_owner_value_object
  * @brief   
  * @param   val
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t make_own_value_object(IN const own_value_t val)
+STD_CALL static inline owner_value_t make_owner_value_object(IN const owner_value_t val)
 {
 #ifdef NAN_BOX
     ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
@@ -381,8 +381,8 @@ STD_CALL static inline own_value_t make_own_value_object(IN const own_value_t va
 
     return NAN_BOX_SIGNATURE_OBJECT | (uint64_t) object;
 #else
-    own_value_t value;
-    own_object_t *object = (own_object_t *) CALLOC(sizeof(own_object_t), 1);
+    owner_value_t value;
+    owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
 
     object->value = val;
 
@@ -394,12 +394,12 @@ STD_CALL static inline own_value_t make_own_value_object(IN const own_value_t va
 }
 
 /**
- * get_own_value_number
+ * get_owner_value_number
  * @brief   
  * @param   value
  * @return  STD_CALL static inline std_64_t
  */
-STD_CALL static inline std_64_t get_own_value_number(IN const own_value_t value)
+STD_CALL static inline std_64_t get_owner_value_number(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
@@ -417,12 +417,12 @@ STD_CALL static inline std_64_t get_own_value_number(IN const own_value_t value)
 }
 
 /**
- * get_own_value_bool
+ * get_owner_value_bool
  * @brief   
  * @param   value
  * @return  STD_CALL static inline std_bool_t
  */
-STD_CALL static inline std_bool_t get_own_value_bool(IN const own_value_t value)
+STD_CALL static inline std_bool_t get_owner_value_bool(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     assert(value == NAN_BOX_True || value == NAN_BOX_False);
@@ -433,12 +433,12 @@ STD_CALL static inline std_bool_t get_own_value_bool(IN const own_value_t value)
 }
 
 /**
- * get_own_value_float
+ * get_owner_value_float
  * @brief   
  * @param   value
  * @return  STD_CALL static inline double
  */
-STD_CALL static inline double get_own_value_float(IN const own_value_t value)
+STD_CALL static inline double get_owner_value_float(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
@@ -446,7 +446,7 @@ STD_CALL static inline double get_own_value_float(IN const own_value_t value)
     assert(isNaN != NAN_BOX_SIGNATURE_NAN);
 
     union {
-        own_value_t v;
+        owner_value_t v;
         double d;
     } u;
     u.v = value;
@@ -458,12 +458,12 @@ STD_CALL static inline double get_own_value_float(IN const own_value_t value)
 }
 
 /**
- * get_own_value_object_string
+ * get_owner_value_object_string
  * @brief   
  * @param   value
  * @return  STD_CALL static inline std_char_t *
  */
-STD_CALL static inline std_char_t *get_own_value_object_string(IN const own_value_t value)
+STD_CALL static inline std_char_t *get_owner_value_object_string(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     if (value == NAN_BOX_Null){
@@ -476,7 +476,7 @@ STD_CALL static inline std_char_t *get_own_value_object_string(IN const own_valu
 
     return (std_char_t *) (object->value & NAN_BOX_MASK_PAYLOAD_PTR);
 #else
-    own_object_t *object = (own_object_t *) value.u.ptr;
+    owner_object_t *object = (owner_object_t *) value.u.ptr;
 
     assert(object->value.tag == TAG_STRING);
     return object->value.u.ptr;
@@ -484,12 +484,12 @@ STD_CALL static inline std_char_t *get_own_value_object_string(IN const own_valu
 }
 
 /**
- * get_own_value_string
+ * get_owner_value_string
  * @brief   
  * @param   value
  * @return  STD_CALL static inline std_char_t *
  */
-STD_CALL static inline std_char_t *get_own_value_string(IN const own_value_t value)
+STD_CALL static inline std_char_t *get_owner_value_string(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
@@ -497,7 +497,7 @@ STD_CALL static inline std_char_t *get_own_value_string(IN const own_value_t val
 
     return (std_char_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 #else
-    own_object_t *object = (own_object_t *) value.u.ptr;
+    owner_object_t *object = (owner_object_t *) value.u.ptr;
 
     assert(object->value.tag == TAG_STRING);
     return object->value.u.ptr;
@@ -505,12 +505,12 @@ STD_CALL static inline std_char_t *get_own_value_string(IN const own_value_t val
 }
 
 /**
- * get_own_value_address
+ * get_owner_value_address
  * @brief   
  * @param   value
  * @return  STD_CALL static inline std_void_t *
  */
-STD_CALL static inline std_void_t *get_own_value_address(IN const own_value_t value)
+STD_CALL static inline std_void_t *get_owner_value_address(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
@@ -524,12 +524,12 @@ STD_CALL static inline std_void_t *get_own_value_address(IN const own_value_t va
 }
 
 /**
- * get_own_value_char
+ * get_owner_value_char
  * @brief
  * @param   value
  * @return  STD_CALL static inline std_char_t
  */
-STD_CALL static inline std_char_t get_own_value_char(IN const own_value_t value)
+STD_CALL static inline std_char_t get_owner_value_char(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
@@ -543,12 +543,12 @@ STD_CALL static inline std_char_t get_own_value_char(IN const own_value_t value)
 }
 
 /**
- * get_own_value_object_symbol
+ * get_owner_value_object_symbol
  * @brief   
  * @param   value
  * @return  STD_CALL static inline ownership_object_symbol_t *
  */
-STD_CALL static inline ownership_object_symbol_t *get_own_value_object_symbol(IN const own_value_t value)
+STD_CALL static inline ownership_object_symbol_t *get_owner_value_object_symbol(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     assert(NAN_BOX_SIGNATURE_OBJECT_SYMBOL == (value & NAN_BOX_MASK_SIGNATURE));
@@ -557,7 +557,7 @@ STD_CALL static inline ownership_object_symbol_t *get_own_value_object_symbol(IN
     assert(NAN_BOX_SIGNATURE_ADDRESS == (object->value & NAN_BOX_MASK_SIGNATURE));
     return (ownership_object_symbol_t *) (object->value & NAN_BOX_MASK_PAYLOAD_PTR);
 #else
-    own_object_t *object = (own_object_t *) value.u.ptr;
+    owner_object_t *object = (owner_object_t *) value.u.ptr;
 
     assert(object->value.tag == TAG_SYMBOL);
     return object->value.u.ptr;
@@ -565,18 +565,18 @@ STD_CALL static inline ownership_object_symbol_t *get_own_value_object_symbol(IN
 }
 
 /**
- * get_own_value_symbol
+ * get_owner_value_symbol
  * @brief   
  * @param   value
  * @return  STD_CALL static inline ownership_object_symbol_t *
  */
-STD_CALL static inline ownership_object_symbol_t *get_own_value_symbol(IN const own_value_t value)
+STD_CALL static inline ownership_object_symbol_t *get_owner_value_symbol(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     assert(NAN_BOX_SIGNATURE_ADDRESS == (value & NAN_BOX_MASK_SIGNATURE));
     return (ownership_object_symbol_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 #else
-    own_object_t *object = (own_object_t *) value.u.ptr;
+    owner_object_t *object = (owner_object_t *) value.u.ptr;
 
     assert(object->value.tag == TAG_SYMBOL);
     return object->value.u.ptr;
@@ -584,12 +584,12 @@ STD_CALL static inline ownership_object_symbol_t *get_own_value_symbol(IN const 
 }
 
 /**
- * get_own_value_object
+ * get_owner_value_object
  * @brief   
  * @param   value
  * @return  STD_CALL static inline ownership_object_t *
  */
-STD_CALL static forced_inline ownership_object_t *get_own_value_object(IN const own_value_t value)
+STD_CALL static forced_inline ownership_object_t *get_owner_value_object(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
     ownership_object_t *object;
@@ -607,12 +607,12 @@ STD_CALL static forced_inline ownership_object_t *get_own_value_object(IN const 
 }
 
 /**
- * get_own_value_type
+ * get_owner_value_type
  * @brief   
  * @param   value
- * @return  STD_CALL static inline own_value_type_t
+ * @return  STD_CALL static inline owner_value_type_t
  */
-STD_CALL static inline own_value_type_t get_own_value_type(IN own_value_t value)
+STD_CALL static inline owner_value_type_t get_owner_value_type(IN owner_value_t value)
 {
     std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
     std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
@@ -650,29 +650,29 @@ STD_CALL static inline own_value_type_t get_own_value_type(IN own_value_t value)
 }
 
 /**
- * get_own_value_type_string
+ * get_owner_value_type_string
  * @brief   
  * @param   value
  * @return  STD_CALL std_char_t *
  */
-STD_CALL std_char_t *get_own_value_type_string(IN own_value_t value);
+STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value);
 
 /**
- * is_own_value_equal
+ * is_owner_value_equal
  * @brief   
  * @param   x_value
  * @param   y_value
  * @return  STD_CALL std_bool_t
  */
-STD_CALL std_bool_t is_own_value_equal(IN own_value_t x_value, IN own_value_t y_value);
+STD_CALL std_bool_t is_owner_value_equal(IN owner_value_t x_value, IN owner_value_t y_value);
 
 /**
- * print_own_value
+ * print_owner_value
  * @brief   
  * @param   value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t print_own_value(IN own_value_t value, std_int_t display_type);
+STD_CALL std_void_t print_owner_value(IN owner_value_t value, std_int_t display_type);
 /**
  * create_mod_ownership_signature
  * @brief
@@ -707,27 +707,27 @@ STD_CALL std_bool_t clear_ownership_signature(IN const ownership_object_symbol_t
  * duplicate_ownership_value
  * @brief   
  * @param   owner_symbol
- * @param   own_item
- * @return  STD_CALL own_value_t
+ * @param   owner_item
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t duplicate_ownership_value(IN const ownership_object_symbol_t *owner_symbol, IN own_value_t own_item);
+STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbol_t *owner_symbol, IN owner_value_t owner_item);
 
 /**
  * free_ownership_ownvalue
  * @brief   
  * @param   owner_symbol
- * @param   own_item
+ * @param   owner_item
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t free_ownership_ownvalue(IN const ownership_object_symbol_t *owner_symbol, IN own_value_t own_item);
+STD_CALL std_rv_t free_ownership_ownvalue(IN const ownership_object_symbol_t *owner_symbol, IN owner_value_t owner_item);
 
 /**
- * check_support_own_value_type
+ * check_support_owner_value_type
  * @brief   
  * @param   value
  * @return  STD_CALL std_bool_t
  */
-STD_CALL std_bool_t check_support_own_value_type(IN own_value_t value);
+STD_CALL std_bool_t check_support_owner_value_type(IN owner_value_t value);
 
 
 /**
@@ -744,17 +744,17 @@ STD_CALL std_u64_t build_u64key_with_object_value(IN ownership_object_t *obj);
  * @param   value
  * @return  STD_CALL std_u64_t
  */
-STD_CALL std_u64_t build_u64key_with_value(IN own_value_t value);
+STD_CALL std_u64_t build_u64key_with_value(IN owner_value_t value);
 
 /**
- * print_own_value_to_buf
+ * print_owner_value_to_buf
  * @brief   
  * @param   value
  * @param   buf
  * @param   reenter
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t print_own_value_to_buf(IN own_value_t value, IN std_char_t *buf, std_int_t buf_size, std_bool_t reenter, std_64_t *number_value);
+STD_CALL std_void_t print_owner_value_to_buf(IN owner_value_t value, IN std_char_t *buf, std_int_t buf_size, std_bool_t reenter, std_64_t *number_value);
 
 /**
  * print_object_value_to_buf
@@ -771,6 +771,6 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
  * @param   item
  * @return  STD_CALL std_void_t
  */
-STD_CALL own_value_t get_object_value(ownership_object_t *item);
+STD_CALL owner_value_t get_object_value(ownership_object_t *item);
 
 #endif

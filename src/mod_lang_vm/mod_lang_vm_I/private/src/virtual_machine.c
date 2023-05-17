@@ -274,9 +274,9 @@ STD_CALL std_int_t get_opcode(IN const std_char_t *name)
 STD_CALL std_rv_t vm_push_var_int(environment_vm_t *vm, IN std_int_t value)
 {
     std_rv_t ret = STD_RV_SUC;
-    own_value_t object;
+    owner_value_t object;
 
-    object = make_own_value_number(value);
+    object = make_owner_value_number(value);
     vm->func_arg_stack[vm->func_arg_stack_index++] = object;
 
     return ret;
@@ -362,12 +362,12 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
         //VAR_L
         for(std_int_t i = 0; i < vm->func_arg_stack_index; i++) {
 
-            own_value_t object;
+            owner_value_t object;
             ownership_object_symbol_t *symbol;
             std_int_t fp_index;
 
-            object = make_own_value_object_symbol();
-            symbol = get_own_value_object_symbol(object);
+            object = make_owner_value_object_symbol();
+            symbol = get_owner_value_object_symbol(object);
 
             fp_index = (std_int_t) (*Fp - i);
             Stack[fp_index] = object;
@@ -377,7 +377,7 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
         //SYM_L
         for(std_int_t i = vm->func_arg_stack_index -1; i >= 0; i--) {
             std_int_t fp_index;
-            own_value_t object;
+            owner_value_t object;
 
             fp_index = (std_int_t) (*Fp - i);
             object = Stack[fp_index];
@@ -395,13 +395,13 @@ STD_CALL std_rv_t vm_call_func(environment_vm_t *vm, IN const std_char_t *func_n
         //VAR_L_CLEAN
         for(std_int_t i = 0; i < vm->func_arg_stack_index; i++) {
             std_int_t fp_index;
-            own_value_t object;
+            owner_value_t object;
             std_char_t key[KEY_NAME_SIZE] = "\0";
 
             fp_index = (std_int_t) (*Fp - i);
             object = Stack[fp_index];
 
-            own_value_t value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
+            owner_value_t value = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
             STD_LOG(DISPLAY, "value:%lu\n", value);
 
             del_VARS(object, STD_BOOL_TRUE);

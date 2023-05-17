@@ -22,15 +22,15 @@
  * declare_fast_VAR
  * @brief   
  * @param   symbol
- * @param   own_object
+ * @param   owner_object
  * @param   init_value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *own_object, own_value_t init_value)
+STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *owner_object, owner_value_t init_value)
 {
     STD_ASSERT_RV(symbol != NULL, );
 
-    declare_VAR_with_fast_var_type(symbol, own_object, init_value);
+    declare_VAR_with_fast_var_type(symbol, owner_object, init_value);
 }
 
 /**
@@ -43,7 +43,7 @@ STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownershi
  * @param   copy
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size_or_enable, own_value_t init_value)
+STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size_or_enable, owner_value_t init_value)
 {
     STD_ASSERT_RV(symbol != NULL, );
 
@@ -81,7 +81,7 @@ STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t
  * @param   fast_value_enable
  * @return  STD_CALL static forced_inline std_rv_t
  */
-STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_value_t index_key, own_value_t value, std_bool_t fast_value_enable)
+STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owner_value_t index_key, owner_value_t value, std_bool_t fast_value_enable)
 {
     std_int_t idx;
     ownership_object_symbol_t *root_symbol;
@@ -90,21 +90,21 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
     ownership_object_symbol_t *fail_back_symbol = NULL;
 #if FAST_SYMBOL_ENABLE
     ownership_object_t *first_object[RECURSIVE_LOOP_MAX] = {NULL};
-    own_value_t last_symbol = NAN_BOX_Null;
+    owner_value_t last_symbol = NAN_BOX_Null;
     std_bool_t jump_fast_symbol = STD_BOOL_FALSE;
 #endif
 
     do {
 #if FAST_VAR_ENABLE
-        ownership_object_t *own_object = get_own_value_object(root);
+        ownership_object_t *owner_object = get_owner_value_object(root);
 
-        if (fast_value_enable || own_object->fast_value != NAN_BOX_Null){
-            own_object->fast_value = value;
+        if (fast_value_enable || owner_object->fast_value != NAN_BOX_Null){
+            owner_object->fast_value = value;
         }
 #endif
 
 #if FAST_SYMBOL_ENABLE
-        first_object[loop_max] = own_object;
+        first_object[loop_max] = owner_object;
 
         if (first_object[loop_max]->fast_symbol != NAN_BOX_Null) {
             root = first_object[loop_max]->fast_symbol;
@@ -113,12 +113,12 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
 
 #endif
 
-        root_symbol = get_own_value_object_symbol(root);
+        root_symbol = get_owner_value_object_symbol(root);
         switch (root_symbol->env_value.symbol_type) {
             case var_type:
             {
-                own_value_t root_value;
-                own_value_type_t root_value_type;
+                owner_value_t root_value;
+                owner_value_type_t root_value_type;
 
                 root_value = get_VAR_with_var_type(root_symbol, index_key);
 
@@ -126,7 +126,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
                     return STD_RV_SUC;
                 }
 
-                root_value_type = get_own_value_type(root_value);
+                root_value_type = get_owner_value_type(root_value);
 
                 if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
                     root = root_value;
@@ -164,10 +164,10 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
 
             case array_type:
                 if (index_key != NAN_BOX_Null) {
-                    if (get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                    if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                     }
-                    idx = (std_int_t) get_own_value_number(index_key);
+                    idx = (std_int_t) get_owner_value_number(index_key);
                     if (set_VAR_with_array_type(root_symbol, idx, value) == NAN_BOX_Null){
                         if (fail_back_symbol){
                             set_VAR_with_var_type(fail_back_symbol, value, STD_BOOL_TRUE);
@@ -183,7 +183,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
                 break;
 
             case tuple_type:
-                if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
 
@@ -198,7 +198,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
                 break;
 
             case hash_type:
-                if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }else if (index_key == NAN_BOX_Null){
                     if (fail_back_symbol){
@@ -234,7 +234,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(own_value_t root, own_va
  * @param   value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t value)
+STD_CALL std_rv_t set_VAR(owner_value_t root, owner_value_t index_key, owner_value_t value)
 {
     return set_VAR_internal(root, index_key, value, STD_BOOL_FALSE);
 }
@@ -247,7 +247,7 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
  * @param   value
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t set_fast_VAR(own_value_t root, own_value_t index_key, own_value_t value)
+STD_CALL std_rv_t set_fast_VAR(owner_value_t root, owner_value_t index_key, owner_value_t value)
 {
     return set_VAR_internal(root, index_key, value, STD_BOOL_TRUE);
 }
@@ -261,10 +261,10 @@ STD_CALL std_rv_t set_fast_VAR(own_value_t root, own_value_t index_key, own_valu
  * @param   copy
  * @return  STD_CALL inline std_void_t
  */
-STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_object_symbol_t *root_symbol, own_value_t index_key, IN own_value_t value)
+STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_object_symbol_t *root_symbol, owner_value_t index_key, IN owner_value_t value)
 {
-    own_value_t root_value;
-    own_value_type_t root_value_type;
+    owner_value_t root_value;
+    owner_value_type_t root_value_type;
 
     root_value = get_VAR_with_var_type(root_symbol, index_key);
 
@@ -272,7 +272,7 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
         return;
     }
 
-    root_value_type = get_own_value_type(root_value);
+    root_value_type = get_owner_value_type(root_value);
 
     if (unlikely(root_value_type == OWN_TYPE_OBJECT_SYMBOL)) {
         if (set_VAR(root_value, index_key, value) != STD_RV_SUC){
@@ -291,18 +291,18 @@ STD_CALL static inline std_void_t inline_set_VAR_with_var_type(IN ownership_obje
  * @param   value
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t value)
+STD_CALL std_rv_t set_VAR2(owner_value_t root, owner_value_t index_key, owner_value_t value)
 {
     std_int_t idx;
     ownership_object_symbol_t *root_symbol;
 
-    root_symbol = get_own_value_object_symbol(root);
+    root_symbol = get_owner_value_object_symbol(root);
 
 #if FAST_VAR_ENABLE
-    ownership_object_t *own_object = get_own_value_object(root);
+    ownership_object_t *owner_object = get_owner_value_object(root);
 
-    if (own_object->fast_value != NAN_BOX_Null){
-        own_object->fast_value = value;
+    if (owner_object->fast_value != NAN_BOX_Null){
+        owner_object->fast_value = value;
     }
 #endif
 
@@ -313,10 +313,10 @@ STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t 
 
         case array_type:
             if (index_key != NAN_BOX_Null) {
-                if (get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
-                idx = (std_int_t) get_own_value_number(index_key);
+                idx = (std_int_t) get_owner_value_number(index_key);
                 if (set_VAR_with_array_type(root_symbol, idx, value) == NAN_BOX_Null){
                     return STD_RV_ERR_FAIL;
                 }
@@ -328,7 +328,7 @@ STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t 
             break;
 
         case tuple_type:
-            if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+            if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                 index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
             }
 
@@ -338,7 +338,7 @@ STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t 
             break;
 
         case hash_type:
-            if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+            if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                 index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
             }else if (index_key == NAN_BOX_Null){
                 return STD_RV_ERR_FAIL;
@@ -363,13 +363,13 @@ STD_CALL std_rv_t set_VAR2(own_value_t root, own_value_t index_key, own_value_t 
  * @param   reenter
  * @return  STD_CALL inline object_t *
  */
-STD_CALL static inline own_value_t inline_get_VAR_switch_var(const ownership_object_symbol_t *root_symbol, IN own_value_t root, IN own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline owner_value_t inline_get_VAR_switch_var(const ownership_object_symbol_t *root_symbol, IN owner_value_t root, IN owner_value_t index_key, IN std_bool_t reenter)
 {
     if (reenter) {
         return root;
     }
 
-   if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+   if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     }
 
@@ -385,25 +385,25 @@ STD_CALL static inline own_value_t inline_get_VAR_switch_var(const ownership_obj
  * @param   reenter
  * @return  STD_CALL inline object_t *
  */
-STD_CALL static inline own_value_t inline_get_VAR_switch_array(IN own_value_t root, own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline owner_value_t inline_get_VAR_switch_array(IN owner_value_t root, owner_value_t index_key, IN std_bool_t reenter)
 {
-    own_value_t value = NAN_BOX_Null;
+    owner_value_t value = NAN_BOX_Null;
     std_int_t idx;
 
     if (reenter) {
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
-        idx = (std_int_t) get_own_value_number(index_key);
+        idx = (std_int_t) get_owner_value_number(index_key);
     } else if (index_key != NAN_BOX_Null) {
-        idx = (std_int_t) get_own_value_number(index_key);
+        idx = (std_int_t) get_owner_value_number(index_key);
     } else {
         return root;
     }
 
-    value = get_VAR_with_array_type(get_own_value_object_symbol(root), idx);
+    value = get_VAR_with_array_type(get_owner_value_object_symbol(root), idx);
 
     return value;
 }
@@ -416,21 +416,21 @@ STD_CALL static inline own_value_t inline_get_VAR_switch_array(IN own_value_t ro
  * @param   reenter
  * @return  STD_CALL inline object_t *
  */
-STD_CALL static inline own_value_t inline_find_VAR_switch_array(IN own_value_t root, own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline owner_value_t inline_find_VAR_switch_array(IN owner_value_t root, owner_value_t index_key, IN std_bool_t reenter)
 {
-    own_value_t value = NAN_BOX_Null;
+    owner_value_t value = NAN_BOX_Null;
 
     if (reenter) {
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
     }
 
-    value = find_VAR_with_array_type(get_own_value_object_symbol(root), index_key);
+    value = find_VAR_with_array_type(get_owner_value_object_symbol(root), index_key);
 
     return value;
 }
@@ -441,24 +441,24 @@ STD_CALL static inline own_value_t inline_find_VAR_switch_array(IN own_value_t r
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t inline_get_VAR_switch_tuple(IN own_value_t root, own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline owner_value_t inline_get_VAR_switch_tuple(IN owner_value_t root, owner_value_t index_key, IN std_bool_t reenter)
 {
-    own_value_t value = NAN_BOX_Null;
+    owner_value_t value = NAN_BOX_Null;
     std_int_t idx;
 
     if (reenter) {
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
     }
-    idx = (std_int_t)get_own_value_number(index_key);
-    value = get_VAR_with_tuple_type(get_own_value_object_symbol(root), idx, STD_BOOL_FALSE);
+    idx = (std_int_t)get_owner_value_number(index_key);
+    value = get_VAR_with_tuple_type(get_owner_value_object_symbol(root), idx, STD_BOOL_FALSE);
 
     return value;
 }
@@ -472,23 +472,23 @@ STD_CALL static inline own_value_t inline_get_VAR_switch_tuple(IN own_value_t ro
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t inline_find_VAR_switch_tuple(IN own_value_t root, own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline owner_value_t inline_find_VAR_switch_tuple(IN owner_value_t root, owner_value_t index_key, IN std_bool_t reenter)
 {
-    own_value_t value = NAN_BOX_Null;
+    owner_value_t value = NAN_BOX_Null;
 
     if (reenter) {
         return root;
     }
 
-    if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
     }
 
-    value = find_VAR_with_tuple_type(get_own_value_object_symbol(root), index_key);
+    value = find_VAR_with_tuple_type(get_owner_value_object_symbol(root), index_key);
 
     return value;
 }
@@ -500,29 +500,29 @@ STD_CALL static inline own_value_t inline_find_VAR_switch_tuple(IN own_value_t r
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL static inline own_value_t
+ * @return  STD_CALL static inline owner_value_t
  */
-STD_CALL static inline own_value_t inline_find_VAR_switch_hash(IN own_value_t root, own_value_t index_key, IN std_bool_t reenter)
+STD_CALL static inline owner_value_t inline_find_VAR_switch_hash(IN owner_value_t root, owner_value_t index_key, IN std_bool_t reenter)
 {
-    own_value_t value = NAN_BOX_Null;
+    owner_value_t value = NAN_BOX_Null;
 
     if (reenter) {
         return root;
     }
-    if (index_key != NAN_BOX_Null && get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+    if (index_key != NAN_BOX_Null && get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
         index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
     } else if (index_key == NAN_BOX_Null) {
         return root;
     }
 
-    value = find_VAR_with_hash_type(get_own_value_object_symbol(root), index_key);
+    value = find_VAR_with_hash_type(get_owner_value_object_symbol(root), index_key);
 
     return value;
 }
 
 #define LOOP_CHECK_AND_RETURN()              \
     index_key = NAN_BOX_Null;                        \
-    if (value != NAN_BOX_Null && get_own_value_type(value) != OWN_TYPE_OBJECT_SYMBOL) { \
+    if (value != NAN_BOX_Null && get_owner_value_type(value) != OWN_TYPE_OBJECT_SYMBOL) { \
         return value;                        \
     }                                        \
     if (reenter) {                           \
@@ -539,21 +539,21 @@ STD_CALL static inline own_value_t inline_find_VAR_switch_hash(IN own_value_t ro
  * @param   index_key
  * @param   reenter
  * @param   find
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL static inline own_value_t get_find_VAR_internal(own_value_t root, own_value_t index_key, std_bool_t reenter, std_bool_t get)
+STD_CALL static inline owner_value_t get_find_VAR_internal(owner_value_t root, owner_value_t index_key, std_bool_t reenter, std_bool_t get)
 {
-    own_value_t value = root;
+    owner_value_t value = root;
     std_bool_t keep_loop = STD_BOOL_FALSE;
     std_int_t loop_max = 1;
-    own_value_type_t value_type;
+    owner_value_type_t value_type;
 
     do {
-        value_type = get_own_value_type(value);
+        value_type = get_owner_value_type(value);
 
         if (value_type == OWN_TYPE_OBJECT_SYMBOL) {
             const ownership_object_symbol_t *value_symbol;
-            value_symbol = get_own_value_object_symbol(value);
+            value_symbol = get_owner_value_object_symbol(value);
 
             switch (value_symbol->env_value.symbol_type) {
                 case var_type:
@@ -617,9 +617,9 @@ STD_CALL static inline own_value_t get_find_VAR_internal(own_value_t root, own_v
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR(own_value_t root, own_value_t index_key, std_bool_t reenter)
+STD_CALL owner_value_t get_VAR(owner_value_t root, owner_value_t index_key, std_bool_t reenter)
 {
     return get_find_VAR_internal(root, index_key, reenter, STD_BOOL_TRUE);
 }
@@ -630,30 +630,30 @@ STD_CALL own_value_t get_VAR(own_value_t root, own_value_t index_key, std_bool_t
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR_size(own_value_t object)
+STD_CALL owner_value_t get_VAR_size(owner_value_t object)
 {
-    own_value_t ret = NAN_BOX_Null;
-    own_value_type_t value_type;
+    owner_value_t ret = NAN_BOX_Null;
+    owner_value_type_t value_type;
 
-    value_type = get_own_value_type(object);
+    value_type = get_owner_value_type(object);
     if (value_type == OWN_TYPE_OBJECT_SYMBOL) {
         const ownership_object_symbol_t *value_symbol;
-        value_symbol = get_own_value_object_symbol(object);
+        value_symbol = get_owner_value_object_symbol(object);
 
         switch (value_symbol->env_value.symbol_type) {
             case var_type:
-                ret = make_own_value_number(get_VAR_total_with_var_type(value_symbol));
+                ret = make_owner_value_number(get_VAR_total_with_var_type(value_symbol));
                 break;
             case array_type:
-                ret = make_own_value_number(get_VAR_total_with_array_type(value_symbol));
+                ret = make_owner_value_number(get_VAR_total_with_array_type(value_symbol));
                 break;
             case tuple_type:
-                ret = make_own_value_number(get_VAR_total_with_tuple_type(value_symbol));
+                ret = make_owner_value_number(get_VAR_total_with_tuple_type(value_symbol));
                 break;
             case hash_type:
-                ret = make_own_value_number(get_VAR_total_with_hash_type(value_symbol));
+                ret = make_owner_value_number(get_VAR_total_with_hash_type(value_symbol));
                 break;
             case func_type:
                 break;
@@ -668,9 +668,9 @@ STD_CALL own_value_t get_VAR_size(own_value_t object)
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR(own_value_t root, own_value_t index_key, std_bool_t reenter)
+STD_CALL owner_value_t find_VAR(owner_value_t root, owner_value_t index_key, std_bool_t reenter)
 {
     return get_find_VAR_internal(root, index_key, reenter, STD_BOOL_FALSE);
 }
@@ -680,43 +680,43 @@ STD_CALL own_value_t find_VAR(own_value_t root, own_value_t index_key, std_bool_
  * @brief   
  * @param   root
  * @param   index_key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_VAR(own_value_t root, own_value_t index_key, std_bool_t index_bool)
+STD_CALL owner_value_t del_VAR(owner_value_t root, owner_value_t index_key, std_bool_t index_bool)
 {
-    own_value_type_t root_type;
+    owner_value_type_t root_type;
     ownership_object_symbol_t const *root_symbol;
 
-    root_type = get_own_value_type(root);
+    root_type = get_owner_value_type(root);
 
     if (root_type == OWN_TYPE_OBJECT_SYMBOL) {
-        root_symbol = get_own_value_object_symbol(root);
+        root_symbol = get_owner_value_object_symbol(root);
 
         switch (root_symbol->env_value.symbol_type) {
             case var_type:{
-                own_value_t object_item =  get_VAR(root, NAN_BOX_Null, STD_BOOL_FALSE);
+                owner_value_t object_item =  get_VAR(root, NAN_BOX_Null, STD_BOOL_FALSE);
                 del_VAR(object_item,  index_key,  index_bool);
                 break;
             }
 
             case tuple_type:
-                if (get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
                 if (index_bool){
-                    std_int_t index = (std_int_t)get_own_value_number(index_key);
-                    return del_index_VAR_with_tuple_type(get_own_value_object_symbol(root), index);
+                    std_int_t index = (std_int_t)get_owner_value_number(index_key);
+                    return del_index_VAR_with_tuple_type(get_owner_value_object_symbol(root), index);
 
                 }else {
-                    return del_VAR_with_tuple_type(get_own_value_object_symbol(root), index_key);
+                    return del_VAR_with_tuple_type(get_owner_value_object_symbol(root), index_key);
 
                 }
 
             case hash_type:
-                if (get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
-                return del_VAR_with_hash_type(get_own_value_object_symbol(root), index_key);
+                return del_VAR_with_hash_type(get_owner_value_object_symbol(root), index_key);
 
             default:
                 break;
@@ -731,31 +731,31 @@ STD_CALL own_value_t del_VAR(own_value_t root, own_value_t index_key, std_bool_t
  * @brief   
  * @param   root
  * @param   index_key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t resize_VAR(own_value_t root, own_value_t index_key)
+STD_CALL owner_value_t resize_VAR(owner_value_t root, owner_value_t index_key)
 {
-    own_value_type_t root_type;
+    owner_value_type_t root_type;
     ownership_object_symbol_t const *root_symbol;
 
-    root_type = get_own_value_type(root);
+    root_type = get_owner_value_type(root);
 
     if (root_type == OWN_TYPE_OBJECT_SYMBOL) {
-        root_symbol = get_own_value_object_symbol(root);
+        root_symbol = get_owner_value_object_symbol(root);
 
         switch (root_symbol->env_value.symbol_type) {
             case var_type:{
-                own_value_t object_item =  get_VAR(root, NAN_BOX_Null, STD_BOOL_FALSE);
+                owner_value_t object_item =  get_VAR(root, NAN_BOX_Null, STD_BOOL_FALSE);
                 resize_VAR(object_item,  index_key);
                 break;
             }
 
             case array_type:
-                if (get_own_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
+                if (get_owner_value_type(index_key) == OWN_TYPE_OBJECT_SYMBOL) {
                     index_key = get_VAR(index_key, NAN_BOX_Null, STD_BOOL_FALSE);
                 }
-                std_int_t new_size =  (std_int_t)get_own_value_number(index_key);
-                resize_VARS_with_array_type(get_own_value_object_symbol(root), new_size);
+                std_int_t new_size =  (std_int_t)get_owner_value_number(index_key);
+                resize_VARS_with_array_type(get_owner_value_object_symbol(root), new_size);
                 break;
 
             default:
@@ -773,11 +773,11 @@ STD_CALL own_value_t resize_VAR(own_value_t root, own_value_t index_key)
  * @param   del_tuple_or_hash
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t del_VARS(IN own_value_t root, IN std_bool_t del_tuple_or_hash)
+STD_CALL std_void_t del_VARS(IN owner_value_t root, IN std_bool_t del_tuple_or_hash)
 {
     ownership_object_symbol_t *root_symbol;
 
-    root_symbol = get_own_value_object_symbol(root);
+    root_symbol = get_owner_value_object_symbol(root);
 
     switch (root_symbol->env_value.symbol_type) {
         case var_type:{

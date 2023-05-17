@@ -35,25 +35,25 @@ STD_CALL std_void_t declare_VAR_with_hash_type(IN ownership_object_symbol_t *sym
  * @param   value
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t add_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key, IN own_value_t value);
+STD_CALL std_rv_t add_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key, IN owner_value_t value);
 
 /**
  * del_VAR_with_hash_type
  * @brief   
  * @param   symbol
  * @param   key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key);
+STD_CALL owner_value_t del_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key);
 
 /**
  * find_VAR_with_hash_type
  * @brief   
  * @param   symbol
  * @param   key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key);
+STD_CALL owner_value_t find_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key);
 
 /**
  * del_VARS_with_hash_type

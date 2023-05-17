@@ -114,10 +114,10 @@ std_void_t json_create_walk_callback(const std_char_t *key, std_void_t **data, s
  * @param   dest
  * @return  std_void_t
  */
-std_void_t create_json_function(const std_char_t *arg_name, own_value_t value, std_char_t **dest)
+std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value, std_char_t **dest)
 {
 
-    own_value_type_t value_type = get_own_value_type(value);
+    owner_value_type_t value_type = get_owner_value_type(value);
 
     switch (value_type) {
         case OWN_TYPE_NULL:
@@ -125,41 +125,41 @@ std_void_t create_json_function(const std_char_t *arg_name, own_value_t value, s
         case OWN_TYPE_DOUBLE:
         case OWN_TYPE_NUMBER:
             STD_LOG(INFO, "%s NUM value:%ld\n",
-                    arg_name, get_own_value_number(value));
+                    arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,
-                                  get_own_value_number(value));
+                                  get_owner_value_number(value));
             break;
         case OWN_TYPE_BOOL:
             STD_LOG(INFO, "%s BOOL value:%ld\n",
-                    arg_name, get_own_value_bool(value));
+                    arg_name, get_owner_value_bool(value));
             *dest = json_verylong(*dest, arg_name,
-                                  get_own_value_bool(value));
+                                  get_owner_value_bool(value));
             break;
         case OWN_TYPE_ADDRESS:
             STD_LOG(INFO, "%s ADDRESS value:%p\n",
-                    arg_name, get_own_value_address(value));
+                    arg_name, get_owner_value_address(value));
             *dest = json_verylong(*dest, arg_name,
-                                  (intptr_t) get_own_value_address(value));
+                                  (intptr_t) get_owner_value_address(value));
             break;
         case OWN_TYPE_CHAR:
             STD_LOG(INFO, "%s CHAR value:%d\n",
-                    arg_name, get_own_value_number(value));
+                    arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,
-                                  get_own_value_char(value));
+                                  get_owner_value_char(value));
             break;
         case OWN_TYPE_OBJECT:
             break;
         case OWN_TYPE_OBJECT_SYMBOL:{
             const ownership_object_symbol_t *root_symbol;
 
-            root_symbol = get_own_value_object_symbol(value);
+            root_symbol = get_owner_value_object_symbol(value);
             switch (root_symbol->env_value.symbol_type) {
                 case tuple_type:
                 case array_type: {
                     *dest = json_arrOpen( *dest, arg_name );
 
                     for( int i = 0; i < get_VAR_size(value); ++i ){
-                        own_value_t item_value = get_VAR(value, make_own_value_number(i), STD_BOOL_FALSE);
+                        owner_value_t item_value = get_VAR(value, make_owner_value_number(i), STD_BOOL_FALSE);
                         create_json_function(NULL, item_value, dest);
                     }
 
@@ -182,8 +182,8 @@ std_void_t create_json_function(const std_char_t *arg_name, own_value_t value, s
 
         case OWN_TYPE_OBJECT_STRING:
             STD_LOG(INFO, "%s STRING value:%s\n",
-                    arg_name, get_own_value_object_string(value));
-            *dest = json_str(*dest, arg_name, get_own_value_object_string(value));
+                    arg_name, get_owner_value_object_string(value));
+            *dest = json_str(*dest, arg_name, get_owner_value_object_string(value));
             break;
         default:
             break;
@@ -201,7 +201,7 @@ std_void_t create_json_function(const std_char_t *arg_name, own_value_t value, s
 std_void_t json_create_walk_callback(const std_char_t *key, std_void_t **data, std_void_t *callback_arg)
 {
     const std_char_t *arg_name = key;
-    own_value_t value = (own_value_t) *data;
+    owner_value_t value = (owner_value_t) *data;
     std_char_t **dest = (std_char_t **) callback_arg;
 
     value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -217,10 +217,10 @@ std_void_t json_create_walk_callback(const std_char_t *key, std_void_t **data, s
  */
 STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_name_value_hash;
+    owner_value_t obj_name_value_hash;
     std_char_t request_string[MAX_BODY_SIZE] = "\0";
     std_char_t *dest;
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     obj_name_value_hash = Pop(vm);
@@ -229,13 +229,13 @@ STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t args)
     memset(request_string, 0, sizeof(request_string));
     dest = json_objOpen(request_string, NULL);
 
-    walk_VAR_with_hash_type(get_own_value_object_symbol(obj_name_value_hash), json_create_walk_callback, &dest);
+    walk_VAR_with_hash_type(get_owner_value_object_symbol(obj_name_value_hash), json_create_walk_callback, &dest);
 
     dest = json_objClose(dest);
     json_end(dest);
 
     STD_LOG(INFO, "request_string:%s\n", request_string);
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_object_string(request_string));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_object_string(request_string));
 }
 
 
@@ -250,8 +250,8 @@ STD_CALL std_void_t library_make_json(environment_vm_t *vm, IN std_int_t args)
 std_void_t keys_walk_callback(const std_char_t *key, IN std_void_t **data, IN std_void_t *callback_arg)
 {
     const std_char_t *arg_name = key;
-    const own_value_t *ret_obj = (own_value_t *) callback_arg;
-    own_value_t arg_value = make_own_value_object_string(arg_name);
+    const owner_value_t *ret_obj = (owner_value_t *) callback_arg;
+    owner_value_t arg_value = make_owner_value_object_string(arg_name);
 
     set_VAR( *ret_obj, NAN_BOX_Null, arg_value);
     free_ownership_ownvalue(NULL, arg_value);
@@ -267,8 +267,8 @@ std_void_t keys_walk_callback(const std_char_t *key, IN std_void_t **data, IN st
  */
 STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_name_value_hash;
-    own_value_t ret_obj;
+    owner_value_t obj_name_value_hash;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     ret_obj = get_VAR(ret_obj, NAN_BOX_Null, STD_BOOL_FALSE);
@@ -276,7 +276,7 @@ STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t arg
     obj_name_value_hash = Pop(vm);
     obj_name_value_hash = get_VAR(obj_name_value_hash, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    walk_VAR_with_hash_type(get_own_value_object_symbol(obj_name_value_hash), keys_walk_callback, &ret_obj);
+    walk_VAR_with_hash_type(get_owner_value_object_symbol(obj_name_value_hash), keys_walk_callback, &ret_obj);
 }
 
 
@@ -290,7 +290,7 @@ STD_CALL std_void_t library_get_hash_keys(environment_vm_t *vm, IN std_int_t arg
  * @param   obj_name_value_hash
  * @return  std_void_t
  */
-std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t const *json, own_value_t obj_name_value_hash)
+std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t const *json, owner_value_t obj_name_value_hash)
 {
     STD_ASSERT_RV(json != NULL, );
 
@@ -309,8 +309,8 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
         {
             json_t const *arrayList = json;
 
-            own_value_t array_symbol = make_own_value_object_symbol();
-            declare_VAR_with_tuple_type(get_own_value_object_symbol(array_symbol), 0);
+            owner_value_t array_symbol = make_owner_value_object_symbol();
+            declare_VAR_with_tuple_type(get_owner_value_object_symbol(array_symbol), 0);
 
             std_char_t key[KEY_NAME_SIZE] = "\0";
             snprintf(key, sizeof(key), "%lu", array_symbol);
@@ -320,8 +320,8 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
                 char const *name = json_getName(item);
 
                 if (JSON_OBJ == json_getType(item)) {
-                    own_value_t hash_symbol = make_own_value_object_symbol();
-                    declare_VAR_with_hash_type(get_own_value_object_symbol(hash_symbol));
+                    owner_value_t hash_symbol = make_owner_value_object_symbol();
+                    declare_VAR_with_hash_type(get_owner_value_object_symbol(hash_symbol));
 
                     snprintf(key, sizeof(key), "%lu", hash_symbol);
                     std_lock_free_key_hash_add(vm->symbol_hash, key, std_safe_strlen(key, sizeof(key)),(std_void_t *) hash_symbol);
@@ -335,7 +335,7 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
                     json_parse(vm, name, item, array_symbol);
                 }
             }
-            own_value_t index_key = make_own_value_object_string(prop_name);
+            owner_value_t index_key = make_owner_value_object_string(prop_name);
             set_VAR(obj_name_value_hash, index_key, array_symbol);
             free_ownership_ownvalue(NULL, index_key);
             del_VARS(array_symbol, STD_BOOL_TRUE);
@@ -345,11 +345,11 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
 
         case JSON_TEXT:{
             std_char_t const *ret_string = json_getValue(json);
-            own_value_t index_key;
-            own_value_t obj_json_string = make_own_value_object_string(ret_string);
+            owner_value_t index_key;
+            owner_value_t obj_json_string = make_owner_value_object_string(ret_string);
 
             if (prop_name){
-                index_key = make_own_value_object_string(prop_name);
+                index_key = make_owner_value_object_string(prop_name);
             }else {
                 index_key = NAN_BOX_Null;
             }
@@ -364,11 +364,11 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
         case JSON_UINTEGER:
         case JSON_INTEGER:
         {
-            own_value_t index_key;
+            owner_value_t index_key;
             std_64_t ret_number = json_getInteger(json);
-            own_value_t ret_value = make_own_value_number(ret_number);
+            owner_value_t ret_value = make_owner_value_number(ret_number);
             if (prop_name){
-                index_key = make_own_value_object_string(prop_name);
+                index_key = make_owner_value_object_string(prop_name);
             }else {
                 index_key = NAN_BOX_Null;
             }
@@ -380,11 +380,11 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
         }
 
         case JSON_BOOLEAN: {
-            own_value_t index_key;
+            owner_value_t index_key;
             std_64_t ret_number = json_getBoolean(json);
-            own_value_t ret_value = make_own_value_bool(ret_number);
+            owner_value_t ret_value = make_owner_value_bool(ret_number);
             if (prop_name){
-                index_key = make_own_value_object_string(prop_name);
+                index_key = make_owner_value_object_string(prop_name);
             }else {
                 index_key = NAN_BOX_Null;
             }
@@ -410,8 +410,8 @@ std_void_t json_parse(environment_vm_t *vm, const std_char_t *prop_name, json_t 
 STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t args)
 {
     json_t const *json = NULL;
-    own_value_t obj_json_string;
-    own_value_t obj_name_value_hash;
+    owner_value_t obj_json_string;
+    owner_value_t obj_name_value_hash;
     json_t mem[32];
     std_char_t *json_string;
 
@@ -424,9 +424,9 @@ STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t args)
     STD_ASSERT_RV(obj_json_string != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_name_value_hash != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_own_value_type(obj_json_string) == OWN_TYPE_OBJECT_STRING, );
+    STD_ASSERT_RV(get_owner_value_type(obj_json_string) == OWN_TYPE_OBJECT_STRING, );
 
-    json_string = strdup(get_own_value_object_string(obj_json_string));
+    json_string = strdup(get_owner_value_object_string(obj_json_string));
 
     json = json_create(json_string, mem, sizeof mem / sizeof *mem);
     STD_ASSERT_RV(json != NULL, );
@@ -445,7 +445,7 @@ STD_CALL std_void_t library_parse_json(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj[32];
+    owner_value_t obj[32];
 
     STD_ASSERT_RV(args <= 31, );
 
@@ -455,7 +455,7 @@ STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t args)
 
     for (std_int_t i = args - 1; i >= 0; --i) {
         STD_ASSERT_RV(i <= 31, );
-        print_own_value(obj[i], DISPLAY);
+        print_owner_value(obj[i], DISPLAY);
     }
 
     STD_LOG(DISPLAY, "\n");
@@ -471,7 +471,7 @@ STD_CALL std_void_t library_print(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj[32];
+    owner_value_t obj[32];
 
     STD_ASSERT_RV(args <= 31, );
 
@@ -481,7 +481,7 @@ STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t args)
 
     for (std_int_t i = args - 1; i >= 0; --i) {
         STD_ASSERT_RV(i <= 31, );
-        print_own_value(obj[i], DISPLAY_ESCAPE);
+        print_owner_value(obj[i], DISPLAY_ESCAPE);
     }
 
     STD_LOG(DISPLAY, "\n");
@@ -495,15 +495,15 @@ STD_CALL std_void_t library_eprint(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_assert(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj1;
-    own_value_t obj2;
+    owner_value_t obj1;
+    owner_value_t obj2;
     std_char_t *string;
 
     obj2 = Pop(vm);
     obj1 = Pop(vm);
 
-    string = get_own_value_object_string(get_VAR(obj2, NAN_BOX_Null, STD_BOOL_FALSE));
-    if (STD_BOOL_TRUE == get_own_value_bool(get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE))) {
+    string = get_owner_value_object_string(get_VAR(obj2, NAN_BOX_Null, STD_BOOL_FALSE));
+    if (STD_BOOL_TRUE == get_owner_value_bool(get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE))) {
         STD_LOG(INFO, "ASSERT %s OK! \n", string);
     } else {
         STD_LOG(DISPLAY, "ASSERT %s FAILED!\n", string);
@@ -519,22 +519,22 @@ STD_CALL std_void_t library_assert(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj1;
-    own_value_t obj2;
-    own_value_t obj_convert = NAN_BOX_Null;
+    owner_value_t obj1;
+    owner_value_t obj2;
+    owner_value_t obj_convert = NAN_BOX_Null;
     const std_char_t *string;
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     obj2 = Pop(vm);
     obj1 = Pop(vm);
 
-    string = get_own_value_object_string(get_VAR(obj1,
+    string = get_owner_value_object_string(get_VAR(obj1,
                                                  NAN_BOX_Null,
                                                  STD_BOOL_FALSE));
 
     if (strcmp(string, "STRING2OBJECT") == 0) {
-        const std_char_t *buffer = get_own_value_object_string(get_VAR(obj2,
+        const std_char_t *buffer = get_owner_value_object_string(get_VAR(obj2,
                                                                  NAN_BOX_Null,
                                                                  STD_BOOL_FALSE));
         std_char_t *end;
@@ -547,7 +547,7 @@ STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t args)
                        NAN_BOX_Null,
                        STD_BOOL_FALSE);
         snprintf(buffer, sizeof(buffer), "%lu", obj2);
-        obj_convert = make_own_value_object_string(buffer);
+        obj_convert = make_owner_value_object_string(buffer);
     } else {
         STD_LOG(ERR, "STRING2OBJECT or OBJECT2STRING\n");
         return;
@@ -565,10 +565,10 @@ STD_CALL std_void_t library_convert(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_check;
-    own_value_t obj_tuple;
-    own_value_t obj_key;
-    own_value_t ret_obj;
+    owner_value_t obj_check;
+    owner_value_t obj_tuple;
+    owner_value_t obj_key;
+    owner_value_t ret_obj;
     std_char_t const *check_string;
 
     ret_obj = Pop(vm);
@@ -577,14 +577,14 @@ STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t args)
 
     obj_check = get_VAR(obj_check, NAN_BOX_Null, STD_BOOL_FALSE);
     obj_tuple = get_VAR(obj_tuple, NAN_BOX_Null, STD_BOOL_FALSE);
-    check_string = get_own_value_type_string(obj_check);
-    obj_key = make_own_value_object_string(check_string);
-    own_value_t check = find_VAR(obj_tuple, obj_key, STD_BOOL_FALSE);
+    check_string = get_owner_value_type_string(obj_check);
+    obj_key = make_owner_value_object_string(check_string);
+    owner_value_t check = find_VAR(obj_tuple, obj_key, STD_BOOL_FALSE);
 
-    FREE(get_own_value_object_string(obj_key));
-    FREE(get_own_value_object(obj_key));
+    FREE(get_owner_value_object_string(obj_key));
+    FREE(get_owner_value_object(obj_key));
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_bool(check != NAN_BOX_Null ? STD_BOOL_TRUE : STD_BOOL_FALSE));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_bool(check != NAN_BOX_Null ? STD_BOOL_TRUE : STD_BOOL_FALSE));
 }
 
 /**
@@ -595,16 +595,16 @@ STD_CALL std_void_t library_check_type(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj1;
-    own_value_t ret_obj;
+    owner_value_t obj1;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     obj1 = Pop(vm);
     obj1 = get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    STD_ASSERT_RV(get_own_value_type(obj1) == OWN_TYPE_NUMBER, );
+    STD_ASSERT_RV(get_owner_value_type(obj1) == OWN_TYPE_NUMBER, );
 
-    std_int_t random_number = (std_int_t) get_own_value_number(obj1);
+    std_int_t random_number = (std_int_t) get_owner_value_number(obj1);
     std_u64_t value;
 
     if (32 == random_number) {
@@ -615,7 +615,7 @@ STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t arg
         value = std_random_u64();
     }
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_number(value));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_number(value));
     STD_LOG(INFO, "%s:%lu\n", __FUNCTION__, value);
 }
 
@@ -628,13 +628,13 @@ STD_CALL std_void_t library_random_number(environment_vm_t *vm, IN std_int_t arg
 STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t args)
 {
     std_64_t value;
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
 
     value = (std_64_t) (std_random_u64() % INT32_MAX);
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_address((std_void_t *) value));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_address((std_void_t *) value));
     STD_LOG(INFO, "%s:%lu\n", __FUNCTION__, value);
 }
 
@@ -646,21 +646,21 @@ STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t ar
  */
 STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj1;
-    own_value_t ret_obj;
+    owner_value_t obj1;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     obj1 = Pop(vm);
     obj1 = get_VAR(obj1, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    STD_ASSERT_RV(get_own_value_type(obj1) == OWN_TYPE_NUMBER, );
+    STD_ASSERT_RV(get_owner_value_type(obj1) == OWN_TYPE_NUMBER, );
 
-    std_int_t length = (std_int_t) get_own_value_number(obj1);
+    std_int_t length = (std_int_t) get_owner_value_number(obj1);
     std_char_t *value = NULL;
     value = std_random_string(length);
 
     if (value != NULL) {
-        set_VAR(ret_obj, NAN_BOX_Null, make_own_value_object_string(value));
+        set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_object_string(value));
 
         STD_LOG(INFO, "%s:%s\n", __FUNCTION__, value);
         FREE(value);
@@ -682,11 +682,11 @@ STD_CALL std_void_t library_random_string(environment_vm_t *vm, IN std_int_t arg
  */
 STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_string;
+    owner_value_t obj_string;
     std_char_t *string_string = NULL;
     std_char_t string_buffer[LINE_BUF_SIZE] = {0};
 
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
     ownership_object_symbol_t *ret_symbol;
 
     ret_obj = Pop(vm);
@@ -698,21 +698,21 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t a
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_string != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_own_value_type(obj_string) == OWN_TYPE_OBJECT_STRING, );
+    STD_ASSERT_RV(get_owner_value_type(obj_string) == OWN_TYPE_OBJECT_STRING, );
 
-    string_string = get_own_value_object_string(obj_string);
+    string_string = get_owner_value_object_string(obj_string);
     snprintf(string_buffer, sizeof(string_buffer), "%s", string_string);
     STD_LOG(INFO, "string_string:%s\n", string_string);
 
-    ret_symbol = get_own_value_object_symbol(ret_obj);
+    ret_symbol = get_owner_value_object_symbol(ret_obj);
     del_VARS(ret_obj, STD_BOOL_TRUE);
 
     declare_VAR_with_array_type(ret_symbol, (std_int_t) std_safe_strlen(string_buffer, sizeof(string_buffer)), NAN_BOX_Null);
 
     for (std_int_t i = 0; i < std_safe_strlen(string_buffer, sizeof(string_buffer)); i++) {
-        own_value_t own_value;
-        own_value = make_own_value_char(string_buffer[i]);
-        set_VAR(ret_obj, i, own_value);
+        owner_value_t owner_value;
+        owner_value = make_owner_value_char(string_buffer[i]);
+        set_VAR(ret_obj, i, owner_value);
     }
 }
 
@@ -725,9 +725,9 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t a
  */
 STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_array;
+    owner_value_t obj_array;
     std_char_t tmp_buffer[MAX_BODY_SIZE] = "\0";
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
     std_int_t array_size;
 
     ret_obj = Pop(vm);
@@ -738,22 +738,22 @@ STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t a
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_array != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_own_value_type(obj_array) == OWN_TYPE_OBJECT_SYMBOL, );
+    STD_ASSERT_RV(get_owner_value_type(obj_array) == OWN_TYPE_OBJECT_SYMBOL, );
 
-    std_int_t obj_item_type = get_own_value_object_symbol(obj_array)->env_value.symbol_type;
+    std_int_t obj_item_type = get_owner_value_object_symbol(obj_array)->env_value.symbol_type;
     STD_ASSERT_RV(obj_item_type == array_type, );
-    array_size = get_VAR_total_with_array_type(get_own_value_object_symbol(obj_array));
+    array_size = get_VAR_total_with_array_type(get_owner_value_object_symbol(obj_array));
 
     for (std_int_t i = 0; i < array_size; i++) {
-        own_value_t item_value;
+        owner_value_t item_value;
         std_char_t item_string[MAX_STRING_SIZE] = "\0";
 
         item_value = get_VAR(obj_array, i, STD_BOOL_FALSE);
-        print_own_value_to_buf(item_value, item_string, sizeof(item_string), STD_BOOL_FALSE, NULL);
+        print_owner_value_to_buf(item_value, item_string, sizeof(item_string), STD_BOOL_FALSE, NULL);
         std_strcat_s(tmp_buffer, sizeof(tmp_buffer), item_string, std_safe_strlen(item_string, sizeof(item_string)));
     }
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_object_string(tmp_buffer));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_object_string(tmp_buffer));
 }
 
 
@@ -767,11 +767,11 @@ STD_CALL std_void_t library_array_to_string(environment_vm_t *vm, IN std_int_t a
  */
 STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_string;
+    owner_value_t obj_string;
     const std_char_t *file_name = NULL;
     FILE *fp = NULL;
     std_char_t input[MAX_STRING_SIZE];
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
     ownership_object_symbol_t *ret_symbol;
 
     ret_obj = Pop(vm);
@@ -783,18 +783,18 @@ STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t args)
     STD_ASSERT_RV(ret_obj != NAN_BOX_Null, );
     STD_ASSERT_RV(obj_string != NAN_BOX_Null, );
 
-    STD_ASSERT_RV(get_own_value_type(obj_string) == OWN_TYPE_OBJECT_STRING, );
+    STD_ASSERT_RV(get_owner_value_type(obj_string) == OWN_TYPE_OBJECT_STRING, );
 
-    file_name = get_own_value_object_string(obj_string);
+    file_name = get_owner_value_object_string(obj_string);
 
     fp = fopen(file_name, "r");
     STD_ASSERT_RV(fp != NULL, );
 
-    ret_symbol = get_own_value_object_symbol(ret_obj);
+    ret_symbol = get_owner_value_object_symbol(ret_obj);
     del_VARS(ret_obj, STD_BOOL_TRUE);
 
     declare_VAR_with_array_type(ret_symbol, 1, NAN_BOX_Null);
-    set_VAR(ret_obj, 0, make_own_value_object_string(""));
+    set_VAR(ret_obj, 0, make_owner_value_object_string(""));
 
     while (STD_BOOL_TRUE) {
         memset(input, '\0', sizeof(input));
@@ -802,9 +802,9 @@ STD_CALL std_void_t library_read_lines(environment_vm_t *vm, IN std_int_t args)
             fclose(fp);
             return;
         } else {
-            own_value_t own_value;
-            own_value = make_own_value_object_string(input);
-            append_VARS_with_array_type(ret_symbol, own_value);
+            owner_value_t owner_value;
+            owner_value = make_owner_value_object_string(input);
+            append_VARS_with_array_type(ret_symbol, owner_value);
         }
     }
 }

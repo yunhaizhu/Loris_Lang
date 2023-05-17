@@ -35,8 +35,8 @@
  */
 STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t file_name;
-    own_value_t file_body;
+    owner_value_t file_name;
+    owner_value_t file_body;
     std_char_t *string_file_name;
     std_char_t *string_file_body;
     FILE *fp = NULL;
@@ -46,8 +46,8 @@ STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t args)
     file_name = Pop(vm);
     file_name = get_VAR(file_name, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    string_file_name = get_own_value_object_string(file_name);
-    string_file_body = get_own_value_object_string(file_body);
+    string_file_name = get_owner_value_object_string(file_name);
+    string_file_body = get_owner_value_object_string(file_body);
 
     fp = fopen(string_file_name, "w+");
     if (fp == NULL) {
@@ -67,8 +67,8 @@ STD_CALL std_void_t library_save_file(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t file_x;
-    own_value_t file_y;
+    owner_value_t file_x;
+    owner_value_t file_y;
     std_char_t cmd[BUF_SIZE_128] = {0};
     std_char_t *string_file_x;
     std_char_t *string_file_y;
@@ -78,8 +78,8 @@ STD_CALL std_void_t library_diff(environment_vm_t *vm, IN std_int_t args)
     file_x = Pop(vm);
     file_x = get_VAR(file_x, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    string_file_x = get_own_value_object_string(file_x);
-    string_file_y = get_own_value_object_string(file_y);
+    string_file_x = get_owner_value_object_string(file_x);
+    string_file_y = get_owner_value_object_string(file_y);
     snprintf(cmd,sizeof(cmd), "diff %s %s |colordiff", string_file_x, string_file_y );
 
     std_int_t ret = system(cmd);
@@ -166,18 +166,18 @@ STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t args)
 {
     char *response = NULL;
     int res;
-    own_value_t ret_obj;
-    own_value_t model_obj;
-    own_value_t ask_text_obj;
-    own_value_t prompt_obj;
-    own_value_t api_endpoint_obj;
-    own_value_t api_key_obj;
+    owner_value_t ret_obj;
+    owner_value_t model_obj;
+    owner_value_t ask_text_obj;
+    owner_value_t prompt_obj;
+    owner_value_t api_endpoint_obj;
+    owner_value_t api_key_obj;
     std_char_t *model = NULL;
     std_char_t *ask_text = NULL;
     std_char_t *prompt = NULL;
     std_char_t *api_endpoint = NULL;
     std_char_t *api_key = NULL;
-    own_value_t response_obj;
+    owner_value_t response_obj;
 
     ret_obj = Pop(vm);
     ask_text_obj = Pop(vm);
@@ -192,11 +192,11 @@ STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t args)
     api_endpoint_obj = get_VAR(api_endpoint_obj, NAN_BOX_Null, STD_BOOL_FALSE);
     api_key_obj = get_VAR(api_key_obj, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    model = get_own_value_object_string(model_obj);
-    ask_text = get_own_value_object_string(ask_text_obj);
-    prompt = get_own_value_object_string(prompt_obj);
-    api_endpoint = get_own_value_object_string(api_endpoint_obj);
-    api_key = get_own_value_object_string(api_key_obj);
+    model = get_owner_value_object_string(model_obj);
+    ask_text = get_owner_value_object_string(ask_text_obj);
+    prompt = get_owner_value_object_string(prompt_obj);
+    api_endpoint = get_owner_value_object_string(api_endpoint_obj);
+    api_key = get_owner_value_object_string(api_key_obj);
 
     res = make_request(api_key, api_endpoint, prompt, model, ask_text, 0.7, &response);
     if (res == CURLE_OK) {
@@ -206,11 +206,11 @@ STD_CALL std_void_t library_ask_gpt(environment_vm_t *vm, IN std_int_t args)
         choice = cJSON_GetArrayItem(choices, 0);
         message = cJSON_GetObjectItem(choice, "message");
 
-        response_obj = make_own_value_object_string(cJSON_GetObjectItem(message, "content")->valuestring);
+        response_obj = make_owner_value_object_string(cJSON_GetObjectItem(message, "content")->valuestring);
         cJSON_Delete(root);
     } else {
         fprintf(stderr, "Error making request: %s\n", curl_easy_strerror(res));
-        response_obj = make_own_value_object_string(curl_easy_strerror(res));
+        response_obj = make_owner_value_object_string(curl_easy_strerror(res));
     }
 
     set_VAR(ret_obj, NAN_BOX_Null, response_obj);

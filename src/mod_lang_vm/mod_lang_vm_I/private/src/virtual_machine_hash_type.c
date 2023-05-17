@@ -67,16 +67,16 @@ STD_CALL static inline std_rv_t inline_get_hash_head(IN const ownership_object_s
  * @param   copy
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t add_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key, IN own_value_t value)
+STD_CALL std_rv_t add_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key, IN owner_value_t value)
 {
     std_char_t key_buf[KEY_NAME_SIZE] = "\0";
     std_lock_free_key_hash_t *hash_head = NULL;
-    own_value_t new_value = NAN_BOX_Null;
+    owner_value_t new_value = NAN_BOX_Null;
 
     STD_ASSERT_RV(key != NAN_BOX_Null, STD_RV_ERR_INVALIDARG);
     STD_ASSERT_RV(inline_get_hash_head(symbol, &hash_head) == STD_RV_SUC, STD_RV_ERR_INVALIDARG);
 
-    print_own_value_to_buf(key, key_buf, sizeof(key_buf), STD_BOOL_FALSE, NULL);
+    print_owner_value_to_buf(key, key_buf, sizeof(key_buf), STD_BOOL_FALSE, NULL);
 
     new_value = duplicate_ownership_value(symbol, value);
 
@@ -95,25 +95,25 @@ STD_CALL std_rv_t add_VAR_with_hash_type(IN const ownership_object_symbol_t *sym
  * @brief   
  * @param   symbol
  * @param   key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key)
+STD_CALL owner_value_t del_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key)
 {
     std_int_t ret;
     std_char_t key_buf[KEY_NAME_SIZE] = "\0";
-    own_value_t value;
+    owner_value_t value;
     std_lock_free_key_hash_t *hash_head = NULL;
 
     STD_ASSERT_RV(key != NAN_BOX_Null, NAN_BOX_Null);
     STD_ASSERT_RV(inline_get_hash_head(symbol, &hash_head) == STD_RV_SUC, NAN_BOX_Null);
 
-    print_own_value_to_buf(key, key_buf, sizeof(key_buf), STD_BOOL_FALSE, NULL);
-    value = (own_value_t ) std_lock_free_key_hash_find(hash_head, key_buf, std_safe_strlen(key_buf, sizeof(key_buf)));
+    print_owner_value_to_buf(key, key_buf, sizeof(key_buf), STD_BOOL_FALSE, NULL);
+    value = (owner_value_t ) std_lock_free_key_hash_find(hash_head, key_buf, std_safe_strlen(key_buf, sizeof(key_buf)));
     free_ownership_ownvalue(symbol, value);
 
     ret = std_lock_free_key_hash_del(hash_head, key_buf, std_safe_strlen(key_buf, sizeof(key_buf)));
 
-    return make_own_value_number(ret);
+    return make_owner_value_number(ret);
 }
 
 
@@ -123,24 +123,24 @@ STD_CALL own_value_t del_VAR_with_hash_type(IN const ownership_object_symbol_t *
  * @brief   
  * @param   symbol
  * @param   key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key)
+STD_CALL owner_value_t find_VAR_with_hash_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key)
 {
-    own_value_t ret;
+    owner_value_t ret;
     std_char_t key_buf[KEY_NAME_SIZE] = "\0";
     std_lock_free_key_hash_t *hash_head = NULL;
 
     STD_ASSERT_RV(key != NAN_BOX_Null, NAN_BOX_Null);
     STD_ASSERT_RV(inline_get_hash_head(symbol, &hash_head) == STD_RV_SUC, NAN_BOX_Null);
 
-    print_own_value_to_buf(key, key_buf, sizeof(key_buf),  STD_BOOL_FALSE, NULL);
+    print_owner_value_to_buf(key, key_buf, sizeof(key_buf),  STD_BOOL_FALSE, NULL);
 
-    ret = (own_value_t )std_lock_free_key_hash_find(hash_head, key_buf, std_safe_strlen(key_buf, sizeof(key_buf)));
+    ret = (owner_value_t )std_lock_free_key_hash_find(hash_head, key_buf, std_safe_strlen(key_buf, sizeof(key_buf)));
 
     if (ret == NAN_BOX_Zero){
         ret = 0;
-    } else if (ret == (own_value_t)NULL){
+    } else if (ret == (owner_value_t)NULL){
         ret = NAN_BOX_Null;
     }
     return  ret;
@@ -158,7 +158,7 @@ STD_CALL own_value_t find_VAR_with_hash_type(IN const ownership_object_symbol_t 
 STD_CALL std_void_t del_VAR_with_hash_type_callback(IN std_void_t *value, IN const std_void_t *callback_arg)
 {
     STD_LOG(DEBUG, "FREE %s  %p\n", __FUNCTION__, value);
-    free_ownership_ownvalue( callback_arg, (own_value_t ) value);
+    free_ownership_ownvalue( callback_arg, (owner_value_t ) value);
 }
 
 

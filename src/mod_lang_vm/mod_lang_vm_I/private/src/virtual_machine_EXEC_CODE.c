@@ -43,9 +43,9 @@ STD_CALL std_void_t execute_code(environment_vm_t *vm, IN std_int_t start_pc, IN
     }
 
     *Pc = start_pc;
-    own_value_t object;
+    owner_value_t object;
     if (main_arg) {
-        object = make_own_value_object_string(main_arg);
+        object = make_owner_value_object_string(main_arg);
     }else {
         object = NAN_BOX_Null;
     }

@@ -68,9 +68,9 @@ STD_CALL static inline std_rv_t inline_get_tuples(IN const ownership_object_symb
  * @brief   
  * @param   symbol
  * @param   index
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index, std_bool_t is_ownvalue)
+STD_CALL owner_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index, std_bool_t is_ownvalue)
 {
     ownership_object_t *item = NULL;
     std_lock_free_list_head_t *tuples = NULL;
@@ -100,7 +100,7 @@ STD_CALL own_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t 
     STD_ASSERT_RV_WARN(item != NULL, NAN_BOX_Null);
 
     if (is_ownvalue){
-        return item->own_value;
+        return item->owner_value;
     }else {
         return get_object_value(item);
     }
@@ -111,11 +111,11 @@ STD_CALL own_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_t 
  * @brief
  * @param   symbol
  * @param   index
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_index_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index)
+STD_CALL owner_value_t del_index_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index)
 {
-    own_value_t item = get_VAR_with_tuple_type(symbol, index, STD_BOOL_TRUE);
+    owner_value_t item = get_VAR_with_tuple_type(symbol, index, STD_BOOL_TRUE);
     std_lock_free_list_head_t *tuples = NULL;
     std_int_t ret;
 
@@ -131,7 +131,7 @@ STD_CALL own_value_t del_index_VAR_with_tuple_type(IN const ownership_object_sym
     ret = std_lock_free_list_del_index_flag(tuples, index, STD_BOOL_FALSE);
     free_ownership_ownvalue(symbol, item);
 
-    return make_own_value_number(ret);
+    return make_owner_value_number(ret);
 }
 
 
@@ -144,31 +144,31 @@ STD_CALL own_value_t del_index_VAR_with_tuple_type(IN const ownership_object_sym
  * @param   copy
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN own_value_t  index_key, IN own_value_t value)
+STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t  index_key, IN owner_value_t value)
 {
     std_lock_free_list_head_t *tuples = NULL;
     ownership_object_t *new_value_obj = NULL;
-    own_value_type_t new_value_type;
-    own_value_t new_value = NAN_BOX_Null;
-    own_value_t new_object_value;
+    owner_value_type_t new_value_type;
+    owner_value_t new_value = NAN_BOX_Null;
+    owner_value_t new_object_value;
     std_u64_t u64_key;
 
     STD_ASSERT_RV(inline_get_tuples(symbol, &tuples) == STD_RV_SUC, STD_RV_ERR_INVALIDARG);
 
     value = get_VAR(value, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    new_value_type = get_own_value_type(value);
+    new_value_type = get_owner_value_type(value);
     if (new_value_type == OWN_TYPE_OBJECT_STRING || new_value_type == OWN_TYPE_OBJECT_SYMBOL || new_value_type == OWN_TYPE_OBJECT) {
         new_object_value = duplicate_ownership_value(symbol, value);
     } else {
         new_value = value;
-        new_object_value = make_own_value_object(new_value);
-        new_value_obj = get_own_value_object(new_object_value);
+        new_object_value = make_owner_value_object(new_value);
+        new_value_obj = get_owner_value_object(new_object_value);
 
         create_ownership_signature(symbol, new_value_obj);
     }
-    new_value_obj = get_own_value_object(new_object_value);
-    new_value_obj->own_value = new_object_value;
+    new_value_obj = get_owner_value_object(new_object_value);
+    new_value_obj->owner_value = new_object_value;
 
     u64_key = build_u64key_with_object_value(new_value_obj);
 
@@ -182,9 +182,9 @@ STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *sy
  * @brief   
  * @param   symbol
  * @param   key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN own_value_t key)
+STD_CALL owner_value_t find_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t key)
 {
     ownership_object_t *item = NULL;
     std_lock_free_list_head_t *tuples = NULL;
@@ -209,16 +209,16 @@ STD_CALL own_value_t find_VAR_with_tuple_type(IN const ownership_object_symbol_t
  * @brief   
  * @param   symbol
  * @param   value
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN own_value_t value)
+STD_CALL owner_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t value)
 {
     ownership_object_t const *item = NULL;
     std_int_t ret;
     std_lock_free_list_head_t *tuples = NULL;
     std_lock_free_list_head_t *pos;
     std_u64_t u64_key;
-    own_value_t own_value;
+    owner_value_t owner_value;
 
     STD_ASSERT_RV(value != NAN_BOX_Null, NAN_BOX_Null);
     STD_ASSERT_RV(inline_get_tuples(symbol, &tuples) == STD_RV_SUC, NAN_BOX_Null);
@@ -228,12 +228,12 @@ STD_CALL own_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_t 
     STD_ASSERT_RV(pos != NULL, NAN_BOX_Null);
 
     item = std_lock_free_list_head_entry(pos, ownership_object_t, list);
-    own_value = item->own_value;
+    owner_value = item->owner_value;
 
     ret = std_lock_free_list_del_flag(tuples, u64_key, STD_BOOL_FALSE);
-    free_ownership_ownvalue(symbol, own_value);
+    free_ownership_ownvalue(symbol, owner_value);
 
-    return make_own_value_number(ret);
+    return make_owner_value_number(ret);
 }
 
 
@@ -252,7 +252,7 @@ STD_CALL std_rv_t del_VARS_with_tuple_type(IN ownership_object_symbol_t *symbol)
 
     std_int_t total = get_VAR_total_with_tuple_type(symbol);
     for (int j = 0; j < total; ++j) {
-        own_value_t item = get_VAR_with_tuple_type(symbol, 0, STD_BOOL_FALSE);
+        owner_value_t item = get_VAR_with_tuple_type(symbol, 0, STD_BOOL_FALSE);
 
         STD_LOG(DEBUG, "FREE %s TUPLE %d %p \n", __FUNCTION__, 0, item);
         del_VAR_with_tuple_type(symbol, item);

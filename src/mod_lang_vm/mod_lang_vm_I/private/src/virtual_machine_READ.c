@@ -150,13 +150,13 @@ STD_CALL static inline std_void_t read_PUSHS(environment_vm_t *vm,
                                     IN std_int_t line
                                     )
 {
-    own_value_t value;
+    owner_value_t value;
 
-    value = make_own_value_object_string(s);
+    value = make_owner_value_object_string(s);
     Codes[*n_codes].i_operand = value;
     Codes[*n_codes].line = line;
 
-    create_ownership_signature(&vm->global_system_object_symbol, get_own_value_object(value));
+    create_ownership_signature(&vm->global_system_object_symbol, get_owner_value_object(value));
 }
 
 STD_CALL static inline std_void_t read_PUSHI(
@@ -169,12 +169,12 @@ STD_CALL static inline std_void_t read_PUSHI(
                                     IN std_int_t ex,
                                     IN std_int_t line)
 {
-    own_value_t value;
+    owner_value_t value;
 
     if (ex) {
-        value = make_own_value_bool(i);
+        value = make_owner_value_bool(i);
     } else {
-        value = make_own_value_number(i);
+        value = make_owner_value_number(i);
     }
 
     Codes[*n_codes].i_operand = value;
@@ -191,7 +191,7 @@ STD_CALL static inline std_void_t read_PUSHA(
                                              IN std_int_t ex,
                                              IN std_int_t line)
 {
-    Codes[*n_codes].i_operand = make_own_value_address((std_void_t *) i);
+    Codes[*n_codes].i_operand = make_owner_value_address((std_void_t *) i);
     Codes[*n_codes].line = line;
 }
 
@@ -205,7 +205,7 @@ STD_CALL static inline std_void_t read_PUSHC(
                                              IN std_int_t ex,
                                              IN std_int_t line)
 {
-    Codes[*n_codes].i_operand = make_own_value_char((std_char_t)i);
+    Codes[*n_codes].i_operand = make_owner_value_char((std_char_t)i);
     Codes[*n_codes].line = line;
 }
 
@@ -220,7 +220,7 @@ STD_CALL static inline std_void_t read_PUSHU(
                                     IN std_int_t ex,
                                     IN std_int_t line)
 {
-    Codes[*n_codes].i_operand = make_own_value_number(i);
+    Codes[*n_codes].i_operand = make_owner_value_number(i);
     Codes[*n_codes].line = line;
 }
 
@@ -234,7 +234,7 @@ STD_CALL static inline std_void_t read_PUSHD(
                                     IN std_int_t ex,
                                     IN std_int_t line)
 {
-    Codes[*n_codes].i_operand = make_own_value_float(d);
+    Codes[*n_codes].i_operand = make_owner_value_float(d);
     Codes[*n_codes].line = line;
 }
 

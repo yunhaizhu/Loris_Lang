@@ -34,17 +34,17 @@
  * @param   init_value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size, own_value_t init_value);
+STD_CALL std_void_t declare_VAR(ownership_object_symbol_t *symbol, symbol_type_t symbol_type, std_int_t size, owner_value_t init_value);
 
 /**
  * declare_fast_VAR
  * @brief   
  * @param   symbol
- * @param   own_object
+ * @param   owner_object
  * @param   init_value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *own_object, own_value_t init_value);
+STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *owner_object, owner_value_t init_value);
 /**
  * set_VAR
  * @brief   
@@ -53,7 +53,7 @@ STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownershi
  * @param   value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t value);
+STD_CALL std_rv_t set_VAR(owner_value_t root, owner_value_t index_key, owner_value_t value);
 
 
 /**
@@ -64,7 +64,7 @@ STD_CALL std_rv_t set_VAR(own_value_t root, own_value_t index_key, own_value_t v
  * @param   value
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t set_fast_VAR(own_value_t root, own_value_t index_key, own_value_t value);
+STD_CALL std_rv_t set_fast_VAR(owner_value_t root, owner_value_t index_key, owner_value_t value);
 
 /**
  * get_VAR
@@ -72,44 +72,44 @@ STD_CALL std_rv_t set_fast_VAR(own_value_t root, own_value_t index_key, own_valu
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR(own_value_t root, own_value_t index_key, std_bool_t reenter);
+STD_CALL owner_value_t get_VAR(owner_value_t root, owner_value_t index_key, std_bool_t reenter);
 
 /**
  * get_VAR_size
  * @brief   
  * @param   object
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR_size(own_value_t object);
+STD_CALL owner_value_t get_VAR_size(owner_value_t object);
 
 /**
  * resize_VAR
  * @brief   
  * @param   root
  * @param   index_key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t resize_VAR(own_value_t root, own_value_t index_key);
+STD_CALL owner_value_t resize_VAR(owner_value_t root, owner_value_t index_key);
 /**
  * find_VAR
  * @brief
  * @param   root
  * @param   index_key
  * @param   reenter
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR(own_value_t root, own_value_t index_key, std_bool_t reenter);
+STD_CALL owner_value_t find_VAR(owner_value_t root, owner_value_t index_key, std_bool_t reenter);
 
 /**
  * del_VAR
  * @brief   
  * @param   root
  * @param   index_key
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t del_VAR(own_value_t root, own_value_t index_key, std_bool_t index_bool);
+STD_CALL owner_value_t del_VAR(owner_value_t root, owner_value_t index_key, std_bool_t index_bool);
 
 /**
  * del_VARS
@@ -118,5 +118,5 @@ STD_CALL own_value_t del_VAR(own_value_t root, own_value_t index_key, std_bool_t
  * @param   del_tuple_or_hash
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t del_VARS(IN own_value_t root, IN std_bool_t del_tuple_or_hash);
+STD_CALL std_void_t del_VARS(IN owner_value_t root, IN std_bool_t del_tuple_or_hash);
 #endif

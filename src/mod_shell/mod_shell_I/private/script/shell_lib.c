@@ -28,7 +28,7 @@
  * @param   resp
  * @return  STD_CALL object_t *
  */
-STD_CALL own_value_t parse_json_resp(IN std_char_t *resp)
+STD_CALL owner_value_t parse_json_resp(IN std_char_t *resp)
 {
     json_t const *json = NULL;
     json_t const *json_response;
@@ -39,7 +39,7 @@ STD_CALL own_value_t parse_json_resp(IN std_char_t *resp)
     std_64_t ret;
     const std_char_t *ret_string = NULL;
     const std_char_t *ret_type = NULL;
-    own_value_t return_address = NAN_BOX_Null;
+    owner_value_t return_address = NAN_BOX_Null;
     json_t mem[32];
 
     json = json_create(resp, mem, sizeof mem / sizeof *mem);
@@ -56,18 +56,18 @@ STD_CALL own_value_t parse_json_resp(IN std_char_t *resp)
         ret = json_getInteger(json_ret);
 
         STD_LOG(DEBUG, "ret:%ld\n", ret);
-        return_address = make_own_value_number(ret);
+        return_address = make_owner_value_number(ret);
     } else if (0 == strcmp(ret_type, "STRING")) {
         json_ret = json_getProperty(json_return, "ret");
         ret_string = json_getValue(json_ret);
 
-        return_address = make_own_value_object_string(ret_string);
+        return_address = make_owner_value_object_string(ret_string);
     } else if (0 == strcmp(ret_type, "ADDRESS")) {
         json_ret = json_getProperty(json_return, "ret");
         ret = json_getInteger(json_ret);
 
         STD_LOG(INFO, "ret:%p\n", (std_void_t *) ret);
-        return_address = make_own_value_address((std_void_t *) ret);
+        return_address = make_owner_value_address((std_void_t *) ret);
     } else {
         STD_LOG(INFO, "FAIL\n");
     }
@@ -82,29 +82,29 @@ STD_CALL own_value_t parse_json_resp(IN std_char_t *resp)
  */
 STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_id;
-    own_value_t obj_handle;
+    owner_value_t obj_id;
+    owner_value_t obj_handle;
     std_void_t *p_handle = NULL;
-    own_value_t obj_arg;
+    owner_value_t obj_arg;
     const std_char_t *run_name;
     std_char_t *string;
     std_char_t *resp;
-    own_value_t ret;
-    own_value_t ret_obj;
+    owner_value_t ret;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     obj_arg = Pop(vm);
     obj_handle = Pop(vm);
     obj_id = Pop(vm);
 
-    run_name = get_own_value_object_string(get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE));
-    p_handle = get_own_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
+    run_name = get_owner_value_object_string(get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE));
+    p_handle = get_owner_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
 
-    string = get_own_value_object_string(get_VAR(obj_arg, NAN_BOX_Null, STD_BOOL_FALSE));
+    string = get_owner_value_object_string(get_VAR(obj_arg, NAN_BOX_Null, STD_BOOL_FALSE));
     resp = cmd_run(run_name, std_safe_strlen(run_name, BUF_SIZE_128), p_handle, string, std_safe_strlen(string, BUF_SIZE_128));
 
     if (resp == NULL) {
-        ret = make_own_value_number(-1);
+        ret = make_owner_value_number(-1);
     } else {
         ret = parse_json_resp(resp);
         FREE(resp);
@@ -121,8 +121,8 @@ STD_CALL std_void_t library_run(IN environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t ret_obj;
-    own_value_t object;
+    owner_value_t ret_obj;
+    owner_value_t object;
     std_char_t *string;
     std_int_t bundle_id;
 
@@ -130,10 +130,10 @@ STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t args)
     object = Pop(vm);
     object = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    string = get_own_value_object_string(object);
+    string = get_owner_value_object_string(object);
     bundle_id = cmd_install(string, std_safe_strlen(string, BUF_SIZE_128));
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_number(bundle_id));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_number(bundle_id));
 }
 
 /**
@@ -144,12 +144,12 @@ STD_CALL std_void_t library_install(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_uninstall(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t object;
+    owner_value_t object;
 
     object = Pop(vm);
     object = get_VAR(object, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    cmd_uninstall((std_uint_t) get_own_value_number(object));
+    cmd_uninstall((std_uint_t) get_owner_value_number(object));
 }
 
 /**
@@ -160,8 +160,8 @@ STD_CALL std_void_t library_uninstall(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_id;
-    own_value_t obj_arg;
+    owner_value_t obj_id;
+    owner_value_t obj_arg;
     std_char_t *string;
 
     if (args >= 2) {
@@ -171,14 +171,14 @@ STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t args)
         obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
         obj_arg = get_VAR(obj_arg, NAN_BOX_Null, STD_BOOL_FALSE);
 
-        string = get_own_value_object_string(obj_arg);
-        cmd_start((std_uint_t) get_own_value_number(obj_id),
+        string = get_owner_value_object_string(obj_arg);
+        cmd_start((std_uint_t) get_owner_value_number(obj_id),
                   string, std_safe_strlen(string, BUF_SIZE_128));
     } else {
         obj_id = Pop(vm);
         obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
 
-        cmd_start((std_uint_t) get_own_value_number(obj_id), NULL, 0);
+        cmd_start((std_uint_t) get_owner_value_number(obj_id), NULL, 0);
     }
 }
 
@@ -190,12 +190,12 @@ STD_CALL std_void_t library_start(environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_stop(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_id;
+    owner_value_t obj_id;
 
     obj_id = Pop(vm);
     obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    cmd_stop((std_uint_t) get_own_value_number(obj_id));
+    cmd_stop((std_uint_t) get_owner_value_number(obj_id));
 }
 
 /**
@@ -228,12 +228,12 @@ STD_CALL std_void_t library_help(IN environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_debug(IN environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_debug;
+    owner_value_t obj_debug;
 
     obj_debug = Pop(vm);
     obj_debug = get_VAR(obj_debug, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    cmd_debug(get_own_value_object_string(obj_debug));
+    cmd_debug(get_owner_value_object_string(obj_debug));
 }
 
 /**
@@ -244,12 +244,12 @@ STD_CALL std_void_t library_debug(IN environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_show(environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_id;
+    owner_value_t obj_id;
 
     obj_id = Pop(vm);
     obj_id = get_VAR(obj_id, NAN_BOX_Null, STD_BOOL_FALSE);
 
-    cmd_show((std_uint_t) get_own_value_number(obj_id));
+    cmd_show((std_uint_t) get_owner_value_number(obj_id));
 }
 
 /**
@@ -271,23 +271,23 @@ std_void_t library_exit(IN environment_vm_t *vm, IN std_int_t args)
  */
 STD_CALL std_void_t library_create_instance(IN environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_iid;
-    own_value_t obj_args;
+    owner_value_t obj_iid;
+    owner_value_t obj_args;
     const std_char_t *iid_string;
     const std_char_t *args_string;
     std_void_t *p_handle = NULL;
-    own_value_t ret_obj;
+    owner_value_t ret_obj;
 
     ret_obj = Pop(vm);
     obj_args = Pop(vm);
     obj_iid = Pop(vm);
 
-    iid_string = get_own_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
-    args_string = get_own_value_object_string(get_VAR(obj_args, NAN_BOX_Null, STD_BOOL_FALSE));
+    iid_string = get_owner_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
+    args_string = get_owner_value_object_string(get_VAR(obj_args, NAN_BOX_Null, STD_BOOL_FALSE));
 
     cmd_create_instance(iid_string, std_safe_strlen(iid_string, KEY_NAME_SIZE), &p_handle, args_string, std_safe_strlen(args_string, KEY_NAME_SIZE));
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_own_value_address(p_handle));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_address(p_handle));
 }
 
 
@@ -299,16 +299,16 @@ STD_CALL std_void_t library_create_instance(IN environment_vm_t *vm, IN std_int_
  */
 STD_CALL std_void_t library_delete_instance(IN environment_vm_t *vm, IN std_int_t args)
 {
-    own_value_t obj_iid;
-    own_value_t obj_handle;
+    owner_value_t obj_iid;
+    owner_value_t obj_handle;
     const std_char_t *iid_string;
     std_void_t *p_handle = NULL;
 
     obj_handle = Pop(vm);
     obj_iid = Pop(vm);
 
-    iid_string = get_own_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
-    p_handle = get_own_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
+    iid_string = get_owner_value_object_string(get_VAR(obj_iid, NAN_BOX_Null, STD_BOOL_FALSE));
+    p_handle = get_owner_value_address(get_VAR(obj_handle, NAN_BOX_Null, STD_BOOL_FALSE));
 
     cmd_delete_instance(iid_string, std_safe_strlen(iid_string, KEY_NAME_SIZE), &p_handle);
     set_VAR(obj_handle, NAN_BOX_Null, NAN_BOX_Null);

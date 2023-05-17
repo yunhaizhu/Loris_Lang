@@ -27,16 +27,16 @@
  * @param   var
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t declare_VAR_with_array_type(IN ownership_object_symbol_t *symbol, IN std_int_t count, IN IN own_value_t var);
+STD_CALL std_void_t declare_VAR_with_array_type(IN ownership_object_symbol_t *symbol, IN std_int_t count, IN IN owner_value_t var);
 
 /**
  * get_VAR_with_array_type
  * @brief   
  * @param   symbol
  * @param   index
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t get_VAR_with_array_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index);
+STD_CALL owner_value_t get_VAR_with_array_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index);
 
 /**
  * get_VAR_total_with_array_type
@@ -52,9 +52,9 @@ STD_CALL std_int_t get_VAR_total_with_array_type(IN const ownership_object_symbo
  * @param   symbol
  * @param   index
  * @param   value
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t set_VAR_with_array_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index, IN own_value_t value);
+STD_CALL owner_value_t set_VAR_with_array_type(IN const ownership_object_symbol_t *symbol, IN std_int_t index, IN owner_value_t value);
 
 /**
  * del_VARS_with_array_type
@@ -90,15 +90,15 @@ STD_CALL std_void_t resize_VARS_with_array_type(IN ownership_object_symbol_t *sy
  * @param   value
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_void_t append_VARS_with_array_type(IN ownership_object_symbol_t *symbol, IN own_value_t value);
+STD_CALL std_void_t append_VARS_with_array_type(IN ownership_object_symbol_t *symbol, IN owner_value_t value);
 
 /**
  * find_VAR_with_array_type
  * @brief
  * @param   symbol
  * @param   value
- * @return  STD_CALL own_value_t
+ * @return  STD_CALL owner_value_t
  */
-STD_CALL own_value_t find_VAR_with_array_type(IN const ownership_object_symbol_t *symbol, IN own_value_t value);
+STD_CALL owner_value_t find_VAR_with_array_type(IN const ownership_object_symbol_t *symbol, IN owner_value_t value);
 
 #endif
