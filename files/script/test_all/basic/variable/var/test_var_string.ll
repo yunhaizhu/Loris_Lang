@@ -29,7 +29,7 @@ def test_var_string1(var str)
     os.assert(tmp == 2, "tmp == 2")
 
     tmp = string[-1]
-    os.assert(tmp == null, "tmp == null")
+    os.assert(tmp == 'd', "tmp == d")
 
     tmp2 = string
     len = 0
