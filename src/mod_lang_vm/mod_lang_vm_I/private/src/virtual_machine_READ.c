@@ -191,7 +191,7 @@ STD_CALL static inline std_void_t read_PUSHA(
                                              IN std_int_t ex,
                                              IN std_int_t line)
 {
-    Codes[*n_codes].i_operand = make_owner_value_address((std_void_t *) i);
+    Codes[*n_codes].i_operand = make_owner_value_pointer((std_void_t *) i);
     Codes[*n_codes].line = line;
 }
 

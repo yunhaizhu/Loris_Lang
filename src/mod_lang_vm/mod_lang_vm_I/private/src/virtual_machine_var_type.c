@@ -199,7 +199,7 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_POINTER:
         case OWNER_TYPE_INTEGER:
             inline_set_var(symbol, init_value);
 
@@ -249,7 +249,7 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_POINTER:
         case OWNER_TYPE_INTEGER:
             inline_set_var(symbol, init_value);
 
