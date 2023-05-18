@@ -145,7 +145,7 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
             STD_LOG(INFO, "%s CHAR value:%d\n",
                     arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,
-                                  get_owner_value_interger(value));
+                                  get_owner_value_integer(value));
             break;
         case OWNER_TYPE_OBJECT:
             break;

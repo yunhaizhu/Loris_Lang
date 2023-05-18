@@ -136,40 +136,23 @@ typedef struct  {
 
     struct public_key_class pub;
     struct private_key_class pri;
-} ownership_symbol_t;
+} ownership_object_symbol_t;
 
 typedef struct  {
-
-    owner_value_t value;
+    owner_value_type_t type;
+    union {
+        owner_value_t value;
+        ownership_object_symbol_t *symbol;
+        std_char_t *string;
+    };
     ownership_token_signature_t owner_token_signature;
     std_lock_free_list_head_t list;
 
 #if FAST_VAR_ENABLE
     owner_value_t fast_value;
 #endif
-
 } ownership_object_t;
 
-typedef struct  {
-    std_u32_t length;
-    std_char_t *string;
-    ownership_object_t object;
-} ownership_object_string_t;
-
-typedef struct  {
-    ownership_symbol_t symbol;
-    ownership_object_t object;
-} ownership_object_symbol_t;
-
-typedef struct {
-    owner_value_type_t type;
-
-    union {
-        ownership_object_t as_object;
-        ownership_object_symbol_t as_object_symbol;
-        ownership_object_string_t as_object_string;
-    };
-} container_value_t;
 
 /**
  * make_owner_value_number
@@ -283,11 +266,11 @@ STD_CALL static forced_inline owner_value_t make_owner_value_integer(IN std_u32_
 STD_CALL static forced_inline owner_value_t make_owner_value_object(IN const owner_value_t val)
 {
 #ifdef NAN_BOX
-    container_value_t *container_value = (container_value_t *) CALLOC(sizeof(container_value_t), 1);
-    container_value->type = OWNER_TYPE_OBJECT;
-    container_value->as_object.value = val;
+    ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
+    object->type = OWNER_TYPE_OBJECT;
+    object->value = val;
 
-    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) container_value;
+    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) object;
 #else
     owner_value_t value;
     owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
@@ -309,13 +292,14 @@ STD_CALL static forced_inline owner_value_t make_owner_value_object(IN const own
 STD_CALL static forced_inline owner_value_t make_owner_value_object_symbol()
 {
 #ifdef NAN_BOX
-    container_value_t *container_value = (container_value_t *) CALLOC(sizeof(container_value_t), 1);
+    ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
 
-    container_value->type = OWNER_TYPE_OBJECT_SYMBOL;
+    object->type = OWNER_TYPE_OBJECT_SYMBOL;
+    object->symbol = (ownership_object_symbol_t *) CALLOC(sizeof(ownership_object_symbol_t), 1);
 
-    rsa_gen_keys(&container_value->as_object_symbol.symbol.pub, &container_value->as_object_symbol.symbol.pri, PRIME_SOURCE_FILE);
+    rsa_gen_keys(&object->symbol->pub, &object->symbol->pri, PRIME_SOURCE_FILE);
 
-    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) container_value;
+    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) object;
 #else
     owner_value_t value;
     owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
@@ -341,12 +325,12 @@ STD_CALL static forced_inline owner_value_t make_owner_value_object_symbol()
 STD_CALL static forced_inline owner_value_t make_owner_value_object_string(IN const std_char_t *str)
 {
 #ifdef NAN_BOX
-    container_value_t *container_value = (container_value_t *) CALLOC(sizeof(container_value_t), 1);
+    ownership_object_t *object = (ownership_object_t *) CALLOC(sizeof(ownership_object_t), 1);
 
-    container_value->type = OWNER_TYPE_OBJECT_STRING;
-    container_value->as_object_string.string = strdup(str?str:"");
-    container_value->as_object_string.length = (std_u32_t)std_safe_strlen(str?str:"", MAX_STRING_SIZE);
-    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) container_value;
+    object->type = OWNER_TYPE_OBJECT_STRING;
+    object->string = strdup(str?str:"");
+
+    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) object;
 #else
     owner_value_t value;
     owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
@@ -473,11 +457,14 @@ STD_CALL static forced_inline ownership_object_t *get_owner_value_object(IN cons
 #ifdef NAN_BOX
     assert(NAN_BOX_SIGNATURE_POINTER == (value & NAN_BOX_MASK_SIGNATURE));
 
-    container_value_t *container_value = (container_value_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
+    ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-    assert(OWNER_TYPE_OBJECT == (container_value->type));
-
-    return &(container_value->as_object);
+    if (object->type == OWNER_TYPE_OBJECT ||
+        object->type == OWNER_TYPE_OBJECT_SYMBOL ||
+        object->type == OWNER_TYPE_OBJECT_STRING) {
+        return object;
+    }
+    return NULL;
 #else
     return value.u.ptr;
 #endif
@@ -494,11 +481,11 @@ STD_CALL static forced_inline ownership_object_symbol_t *get_owner_value_object_
 #ifdef NAN_BOX
     assert(NAN_BOX_SIGNATURE_POINTER == (value & NAN_BOX_MASK_SIGNATURE));
 
-    container_value_t *container_value = (container_value_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
+    ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-    assert(OWNER_TYPE_OBJECT_SYMBOL == (container_value->type));
+    assert(OWNER_TYPE_OBJECT_SYMBOL == (object->type));
 
-    return &(container_value->as_object_symbol);
+    return object->symbol;
 #else
     owner_object_t *object = (owner_object_t *) value.u.ptr;
 
@@ -521,11 +508,11 @@ STD_CALL static forced_inline std_char_t *get_owner_value_object_string(IN const
     }
     assert(NAN_BOX_SIGNATURE_POINTER == (value & NAN_BOX_MASK_SIGNATURE));
 
-    const container_value_t *container_value = (container_value_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
+    const ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-    assert(OWNER_TYPE_OBJECT_STRING == (container_value->type));
+    assert(OWNER_TYPE_OBJECT_STRING == (object->type));
 
-    return container_value->as_object_string.string;
+    return object->string;
 #else
     owner_object_t *object = (owner_object_t *) value.u.ptr;
 
@@ -568,13 +555,13 @@ STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_v
         case NAN_BOX_SIGNATURE_TRUE:
             return OWNER_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_POINTER: {
-            const container_value_t *container_value = (container_value_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
+            const ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-            if (container_value->type == OWNER_TYPE_OBJECT) {
+            if (object->type == OWNER_TYPE_OBJECT) {
                 return OWNER_TYPE_OBJECT;
-            } else if (container_value->type == OWNER_TYPE_OBJECT_STRING) {
+            } else if (object->type == OWNER_TYPE_OBJECT_STRING) {
                 return OWNER_TYPE_OBJECT_STRING;
-            }else if (container_value->type == OWNER_TYPE_OBJECT_SYMBOL) {
+            }else if (object->type == OWNER_TYPE_OBJECT_SYMBOL) {
                 return OWNER_TYPE_OBJECT_SYMBOL;
             }else {
                 return OWNER_TYPE_POINTER;
