@@ -50,17 +50,17 @@ STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value)
         case NAN_BOX_SIGNATURE_INTEGER:
             return "OWNER_TYPE_INTEGER";
         case NAN_BOX_SIGNATURE_POINTER: {
-            const container_value_t *container_value = (container_value_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
+            object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-            if (container_value->type == OWNER_TYPE_OBJECT) {
+            if (object->type == OWNER_TYPE_OBJECT) {
                 return "OWNER_TYPE_OBJECT";
-            } else if (container_value->type == OWNER_TYPE_OBJECT_STRING) {
+            } else if (object->type == OWNER_TYPE_OBJECT_STRING) {
                 return "OWNER_TYPE_OBJECT_STRING";
-            }else if (container_value->type == OWNER_TYPE_OBJECT_SYMBOL) {
-                const ownership_object_symbol_t *symbol = get_owner_value_object_symbol(value);
+            }else if (object->type == OWNER_TYPE_OBJECT_SYMBOL) {
+                const ownership_object_symbol_t *symbol = object->symbol;
                 STD_ASSERT_RV(symbol != NULL, NULL);
 
-                switch (symbol->symbol.env_value.symbol_type) {
+                switch (symbol->env_value.symbol_type) {
                     case var_type:
                         ret = "VAR_TYPE";
                         break;
@@ -157,7 +157,7 @@ STD_CALL std_bool_t create_ownership_signature(IN const ownership_object_symbol_
             need_obj->owner_token_signature.token[i] = 1111;//avoid 0.
         }
         need_obj->owner_token_signature.signature[i] =
-                rsa_ptr_encrypt(need_obj->owner_token_signature.token[i], &owner_symbol->symbol.pub);
+                rsa_ptr_encrypt(need_obj->owner_token_signature.token[i], &owner_symbol->pub);
     }
 
     return STD_BOOL_TRUE;
@@ -177,7 +177,7 @@ STD_CALL std_bool_t verify_ownership_signature(IN const ownership_object_symbol_
     STD_ASSERT_RV_WARN(need_obj->owner_token_signature.signature[0] != 0, STD_BOOL_FALSE);
 
     for (int i = 0; i < TOKEN_SIGNATURE_NUMBER; ++i) {
-        std_u16_t token_decrypt = rsa_ptr_decrypt(need_obj->owner_token_signature.signature[i], &owner_symbol->symbol.pri);
+        std_u16_t token_decrypt = rsa_ptr_decrypt(need_obj->owner_token_signature.signature[i], &owner_symbol->pri);
         STD_ASSERT_RV_WARN(token_decrypt == need_obj->owner_token_signature.token[i], STD_BOOL_FALSE);
     }
 
@@ -218,8 +218,12 @@ STD_CALL std_void_t move_ownership_object_symbol_pub_pri_key(IN ownership_object
     ownership_object_symbol_t *from_symbol;
     ownership_object_symbol_t *to_symbol;
 
-    from_symbol = get_owner_value_symbol(from_item->value);
-    to_symbol = get_owner_value_symbol(to_item->value);
+    STD_ASSERT_RV(from_item->type == OWNER_TYPE_OBJECT_SYMBOL, );
+    STD_ASSERT_RV(to_item->type == OWNER_TYPE_OBJECT_SYMBOL, );
+
+    from_symbol = from_item->symbol;
+    to_symbol = to_item->symbol;
+
 
     memcpy(&to_symbol->pub, &from_symbol->pub, sizeof(from_symbol->pub));
     memcpy(&to_symbol->pri, &from_symbol->pri, sizeof(from_symbol->pri));
@@ -304,11 +308,12 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
         }
 
         case OWNER_TYPE_OBJECT_STRING:{
-            ownership_object_t *item;
+            const ownership_object_t *item;
             item = get_owner_value_object(owner_item);
             STD_ASSERT_RV(item != NULL, NAN_BOX_Null);
+            STD_ASSERT_RV(item->type == OWNER_TYPE_OBJECT_STRING, NAN_BOX_Null);
 
-            string = get_owner_value_string(item->value);
+            string = item->string;
             copy_value = make_owner_value_object_string(string);
             copy_obj = get_owner_value_object(copy_value);
             create_ownership_signature(owner_symbol, copy_obj);
@@ -319,30 +324,32 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
             ownership_object_t *item;
             item = get_owner_value_object(owner_item);
             STD_ASSERT_RV(item != NULL, NAN_BOX_Null);
+            STD_ASSERT_RV(item->type == OWNER_TYPE_OBJECT_SYMBOL, NAN_BOX_Null);
 
-            if ((symbol = get_owner_value_symbol(item->value)) == NULL) {
+            if ((symbol = item->symbol) == NULL) {
                 break;
             }
 
             copy_value = copy_ownership_object(item);
             copy_obj = get_owner_value_object(copy_value);
             create_ownership_signature(owner_symbol, copy_obj);
+            ownership_object_symbol_t *to_symbol = copy_obj->symbol;
 
             switch (symbol->env_value.symbol_type) {
                 case var_type:
-                    move_VAR_with_var_type(symbol, get_owner_value_symbol(copy_obj->value));
+                    move_VAR_with_var_type(symbol, to_symbol);
                     break;
 
                 case array_type:
-                    move_VAR_with_array_type(symbol, get_owner_value_symbol(copy_obj->value));
+                    move_VAR_with_array_type(symbol, to_symbol);
                     break;
 
                 case tuple_type:
-                    move_VAR_with_tuple_type(symbol, get_owner_value_symbol(copy_obj->value));
+                    move_VAR_with_tuple_type(symbol, to_symbol);
                     break;
 
                 case hash_type:
-                    move_VAR_with_hash_type(symbol, get_owner_value_symbol(copy_obj->value));
+                    move_VAR_with_hash_type(symbol, to_symbol);
                     break;
 
                 default:
@@ -387,7 +394,7 @@ STD_CALL std_rv_t free_ownership_ownvalue(IN const ownership_object_symbol_t *ow
         case OWNER_TYPE_OBJECT_STRING:
             object = get_owner_value_object(owner_item);
             STD_ASSERT_RV_WARN(verify_ownership_signature(owner_symbol, object) == STD_BOOL_TRUE, STD_RV_ERR_FAIL);
-            string = get_owner_value_string(object->value);
+            string = get_owner_value_object_string(owner_item);
             FREE(string);
             FREE(object);
             break;
@@ -560,21 +567,22 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
         return;
     }
 
-    switch(get_owner_value_type(obj->owner_value)){
+    switch(get_owner_value_type(obj->value)){
         case OWNER_TYPE_NULL:
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
         case OWNER_TYPE_POINTER:
         case OWNER_TYPE_INTEGER:
-        case OWNER_TYPE_OBJECT:
+
             value = obj->value;
             print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
             break;
 
+        case OWNER_TYPE_OBJECT:
         case OWNER_TYPE_OBJECT_SYMBOL:
         case OWNER_TYPE_OBJECT_STRING:
-            print_owner_value_to_buf(obj->owner_value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
+            print_owner_value_to_buf(obj->value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
             break;
         default:
             break;
@@ -591,20 +599,19 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
 {
     owner_value_t ret;
 
-    switch(get_owner_value_type(item->owner_value)){
+    switch(get_owner_value_type(item->value)){
         case OWNER_TYPE_NULL:
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
         case OWNER_TYPE_POINTER:
         case OWNER_TYPE_INTEGER:
-        case OWNER_TYPE_OBJECT:
             ret = item->value;
             break;
-
+        case OWNER_TYPE_OBJECT:
         case OWNER_TYPE_OBJECT_SYMBOL:
         case OWNER_TYPE_OBJECT_STRING:
-            ret = item->owner_value;
+            ret = NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
             break;
         default:
             break;
