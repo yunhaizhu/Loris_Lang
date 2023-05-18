@@ -100,7 +100,7 @@ STD_CALL owner_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_
     STD_ASSERT_RV_WARN(item != NULL, NAN_BOX_Null);
 
     if (is_ownvalue){
-        return item->owner_value;
+        return item->value;
     }else {
         return get_object_value(item);
     }
@@ -168,7 +168,7 @@ STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *sy
         create_ownership_signature(symbol, new_value_obj);
     }
     new_value_obj = get_owner_value_object(new_object_value);
-    new_value_obj->owner_value = new_object_value;
+    new_value_obj->value = new_object_value;
 
     u64_key = build_u64key_with_object_value(new_value_obj);
 
@@ -228,7 +228,7 @@ STD_CALL owner_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_
     STD_ASSERT_RV(pos != NULL, NAN_BOX_Null);
 
     item = std_lock_free_list_head_entry(pos, ownership_object_t, list);
-    owner_value = item->owner_value;
+    owner_value = item->value;
 
     ret = std_lock_free_list_del_flag(tuples, u64_key, STD_BOOL_FALSE);
     free_ownership_ownvalue(symbol, owner_value);
