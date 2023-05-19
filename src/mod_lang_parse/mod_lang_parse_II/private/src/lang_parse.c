@@ -403,7 +403,13 @@ lang_ast_t *primary_expr(lang_state_t *state)
             lang_lex_error(state, "parse error, need check\n");
         }
     } else if (lang_accept(state, TOKEN_NULL)) {
-        ast = make_lang_ast_number(state, 0x7ff0000000000000|0x0003000000000000, state->source_name, state->source_line);
+
+#define NAN_BOX_MASK_EXPONENT           0x7ff0000000000000
+#define NAN_BOX_MASK_QUIET              0x0008000000000000
+#define NAN_BOX_NaN (NAN_BOX_MASK_EXPONENT | NAN_BOX_MASK_QUIET)
+#define NAN_BOX_MASK_TYPE_NULL          0x0003000000000000
+#define NAN_BOX_Null (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_NULL)
+        ast = make_lang_ast_number(state, NAN_BOX_Null, state->source_name, state->source_line);
     }else if (lang_accept(state, '-')) {
         if (lang_accept(state, TOKEN_NUM)){
             state->value.i64 = 0 - state->value.i64;

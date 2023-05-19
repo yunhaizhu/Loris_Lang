@@ -21,7 +21,8 @@ def test_tuple_tuple()
     tmp = safe_tuple_sym{3}{0}
     os.assert(safe_tuple_sym{3}{0} == 2, "safe_tuple_sym[3][0] ==2")
     os.assert(tmp == 2, "tmp == 9")
-    os.assert(safe_tuple2{0} == null, "safe_tuple[0] == 0")
+    os.print("safe_tuple2{0}", safe_tuple2{0})
+    os.assert(safe_tuple2{0} == null, "safe_tuple[0] == null")
 
     tmp = safe_tuple_sym{4}
     os.assert(tmp == "hello string", "tmp == hello string")

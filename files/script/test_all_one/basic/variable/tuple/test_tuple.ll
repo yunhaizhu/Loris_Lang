@@ -18,6 +18,7 @@ def test_tuple1()
 
         item = safe_tuple{i}
         for (j = 0; j < compare_tuple.size(); j += 1){
+            os.print("item", item, "compare_tuple{j}", compare_tuple{j})
             if (item == compare_tuple{j}){
                 found = true
                 break

@@ -572,22 +572,33 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
         return;
     }
 
-    switch(get_owner_value_type(obj->value)){
-        case OWNER_TYPE_NULL:
-        case OWNER_TYPE_NUMBER:
-        case OWNER_TYPE_DOUBLE:
-        case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_POINTER:
-        case OWNER_TYPE_INTEGER:
-        case OWNER_TYPE_ADDRESS:
-            value = obj->value;
-            print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
+    switch(obj->type){
+        case OWNER_TYPE_OBJECT:
+            switch(get_owner_value_type(obj->value)){
+                case OWNER_TYPE_NULL:
+                case OWNER_TYPE_NUMBER:
+                case OWNER_TYPE_DOUBLE:
+                case OWNER_TYPE_BOOL:
+                case OWNER_TYPE_POINTER:
+                case OWNER_TYPE_ADDRESS:
+                case OWNER_TYPE_INTEGER:
+                    value = obj->value;
+                    print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
+                    break;
+                case OWNER_TYPE_OBJECT:
+                case OWNER_TYPE_OBJECT_SYMBOL:
+                case OWNER_TYPE_OBJECT_STRING:
+                    value = obj->value;
+                    print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
+                    break;
+                default:
+                    break;
+            }
             break;
 
-        case OWNER_TYPE_OBJECT:
         case OWNER_TYPE_OBJECT_SYMBOL:
         case OWNER_TYPE_OBJECT_STRING:
-            print_owner_value_to_buf(obj->value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
+            print_owner_value_to_buf(NAN_BOX_SIGNATURE_POINTER | (uint64_t) obj, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
             break;
         default:
             break;
@@ -604,17 +615,24 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
 {
     owner_value_t ret;
 
-    switch(get_owner_value_type(item->value)){
-        case OWNER_TYPE_NULL:
-        case OWNER_TYPE_NUMBER:
-        case OWNER_TYPE_DOUBLE:
-        case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_POINTER:
-        case OWNER_TYPE_ADDRESS:
-        case OWNER_TYPE_INTEGER:
-            ret = item->value;
-            break;
+    switch(item->type){
         case OWNER_TYPE_OBJECT:
+            switch(get_owner_value_type(item->value)){
+                case OWNER_TYPE_NULL:
+                case OWNER_TYPE_NUMBER:
+                case OWNER_TYPE_DOUBLE:
+                case OWNER_TYPE_BOOL:
+                case OWNER_TYPE_POINTER:
+                case OWNER_TYPE_ADDRESS:
+                case OWNER_TYPE_INTEGER:
+                    ret = item->value;
+                    break;
+                default:
+                    ret = item->value;
+                    break;
+            }
+            break;
+
         case OWNER_TYPE_OBJECT_SYMBOL:
         case OWNER_TYPE_OBJECT_STRING:
             ret = NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
