@@ -135,17 +135,17 @@ std_void_t create_json_function(const std_char_t *arg_name, owner_value_t value,
             *dest = json_verylong(*dest, arg_name,
                                   get_owner_value_bool(value));
             break;
-        case OWNER_TYPE_ADDRESS:
+        case OWNER_TYPE_POINTER:
             STD_LOG(INFO, "%s ADDRESS value:%p\n",
-                    arg_name, get_owner_value_address(value));
+                    arg_name, get_owner_value_pointer(value));
             *dest = json_verylong(*dest, arg_name,
-                                  (intptr_t) get_owner_value_address(value));
+                                  (intptr_t) get_owner_value_pointer(value));
             break;
-        case OWNER_TYPE_CHAR:
+        case OWNER_TYPE_INTEGER:
             STD_LOG(INFO, "%s CHAR value:%d\n",
                     arg_name, get_owner_value_number(value));
             *dest = json_verylong(*dest, arg_name,
-                                  get_owner_value_char(value));
+                                  get_owner_value_integer(value));
             break;
         case OWNER_TYPE_OBJECT:
             break;
@@ -634,7 +634,7 @@ STD_CALL std_void_t library_random_address(environment_vm_t *vm, IN std_int_t ar
 
     value = (std_64_t) (std_random_u64() % INT32_MAX);
 
-    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_address((std_void_t *) value));
+    set_VAR(ret_obj, NAN_BOX_Null, make_owner_value_pointer((std_void_t *) value));
     STD_LOG(INFO, "%s:%lu\n", __FUNCTION__, value);
 }
 
@@ -711,7 +711,7 @@ STD_CALL std_void_t library_string_to_array(environment_vm_t *vm, IN std_int_t a
 
     for (std_int_t i = 0; i < std_safe_strlen(string_buffer, sizeof(string_buffer)); i++) {
         owner_value_t owner_value;
-        owner_value = make_owner_value_char(string_buffer[i]);
+        owner_value = make_owner_value_integer(string_buffer[i]);
         set_VAR(ret_obj, i, owner_value);
     }
 }

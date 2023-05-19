@@ -56,10 +56,14 @@ STD_CALL owner_value_t get_VAR_with_var_type(IN const ownership_object_symbol_t 
     if (unlikely(index_key != NAN_BOX_Null && get_owner_value_type(value) == OWNER_TYPE_OBJECT_STRING)) {
         std_int_t index = (std_int_t)get_owner_value_number(index_key);
         const std_char_t *string = get_owner_value_object_string(value);
+        std_int_t len = (std_int_t)std_safe_strlen(string, MAX_STRING_SIZE);
         STD_ASSERT_RV_WARN(string != NULL, NAN_BOX_Null);
-        STD_ASSERT_RV_WARN(index >= 0, NAN_BOX_Null);
-        STD_ASSERT_RV_WARN(index < (std_int_t)std_safe_strlen(string, MAX_STRING_SIZE), NAN_BOX_Null);
-        value = make_owner_value_char(string[index]);
+
+        if (index < 0){
+            index = len + index;
+        }
+        STD_ASSERT_RV_WARN(index <= len , NAN_BOX_Null);
+        value = make_owner_value_integer(string[index]);
     }
 
     return value;
@@ -199,8 +203,8 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_ADDRESS:
-        case OWNER_TYPE_CHAR:
+        case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_INTEGER:
             inline_set_var(symbol, init_value);
 
 #if FAST_VAR_ENABLE
@@ -249,8 +253,8 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_ADDRESS:
-        case OWNER_TYPE_CHAR:
+        case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_INTEGER:
             inline_set_var(symbol, init_value);
 
 
