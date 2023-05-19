@@ -49,6 +49,8 @@ STD_CALL std_char_t *get_owner_value_type_string(IN owner_value_t value)
             return "OWNER_TYPE_BOOL";
         case NAN_BOX_SIGNATURE_INTEGER:
             return "OWNER_TYPE_INTEGER";
+        case NAN_BOX_SIGNATURE_ADDRESS:
+            return "OWNER_TYPE_ADDRESS";
         case NAN_BOX_SIGNATURE_POINTER: {
             object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
@@ -279,6 +281,7 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
         case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_INTEGER:
             item_value = owner_item;
             return item_value;
@@ -294,6 +297,7 @@ STD_CALL owner_value_t duplicate_ownership_value(IN const ownership_object_symbo
                 case OWNER_TYPE_DOUBLE:
                 case OWNER_TYPE_BOOL:
                 case OWNER_TYPE_POINTER:
+                case OWNER_TYPE_ADDRESS:
                 case OWNER_TYPE_INTEGER:
                     item_value = item->value;
                     break;
@@ -384,6 +388,7 @@ STD_CALL std_rv_t free_ownership_ownvalue(IN const ownership_object_symbol_t *ow
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
         case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_INTEGER:
             break;
         case OWNER_TYPE_OBJECT:
@@ -456,7 +461,7 @@ STD_CALL std_void_t print_owner_value(IN owner_value_t value, std_int_t display_
         print_owner_value(obj->value, display_type);
     }else if (get_owner_value_type(value) == OWNER_TYPE_OBJECT_STRING) {
         STD_LOG(display_type, "'%s' ", get_owner_value_object_string(value));
-    } else if (get_owner_value_type(value) == OWNER_TYPE_POINTER) {
+    } else if (get_owner_value_type(value) == OWNER_TYPE_POINTER||get_owner_value_type(value) == OWNER_TYPE_ADDRESS) {
         STD_LOG(display_type, "%p ", get_owner_value_pointer(value));
     } else if (get_owner_value_type(value) == OWNER_TYPE_INTEGER) {
         STD_LOG(display_type, "%c ", get_owner_value_integer(value));
@@ -537,7 +542,7 @@ STD_CALL std_void_t print_owner_value_to_buf(IN owner_value_t value, IN std_char
         }
     }else if (value_type == OWNER_TYPE_OBJECT_STRING) {
         snprintf(buf, buf_size, "%s", get_owner_value_object_string(value));
-    } else if (value_type == OWNER_TYPE_POINTER) {
+    } else if (value_type == OWNER_TYPE_POINTER || value_type == OWNER_TYPE_ADDRESS) {
         snprintf(buf, buf_size, "%p", get_owner_value_pointer(value));
     } else if (value_type == OWNER_TYPE_INTEGER) {
         snprintf(buf, buf_size, "%c", get_owner_value_integer(value));
@@ -574,7 +579,7 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
         case OWNER_TYPE_BOOL:
         case OWNER_TYPE_POINTER:
         case OWNER_TYPE_INTEGER:
-
+        case OWNER_TYPE_ADDRESS:
             value = obj->value;
             print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
             break;
@@ -605,6 +610,7 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
         case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_INTEGER:
             ret = item->value;
             break;
@@ -614,6 +620,7 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
             ret = NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
             break;
         default:
+            ret = NAN_BOX_Null;
             break;
     }
     return ret;

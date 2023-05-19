@@ -99,11 +99,8 @@ STD_CALL owner_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_
     STD_ASSERT_RV_WARN(count == index, NAN_BOX_Null);
     STD_ASSERT_RV_WARN(item != NULL, NAN_BOX_Null);
 
-    if (is_ownvalue){
-        return item->value;
-    }else {
-        return get_object_value(item);
-    }
+    return get_object_value(item);
+
 }
 
 /**
@@ -160,6 +157,7 @@ STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *sy
     new_value_type = get_owner_value_type(value);
     if (new_value_type == OWNER_TYPE_OBJECT_STRING || new_value_type == OWNER_TYPE_OBJECT_SYMBOL || new_value_type == OWNER_TYPE_OBJECT) {
         new_object_value = duplicate_ownership_value(symbol, value);
+        new_value_obj = get_owner_value_object(new_object_value);
     } else {
         new_value = value;
         new_object_value = make_owner_value_object(new_value);
@@ -167,8 +165,6 @@ STD_CALL std_rv_t add_VAR_with_tuple_type(IN const ownership_object_symbol_t *sy
 
         create_ownership_signature(symbol, new_value_obj);
     }
-    new_value_obj = get_owner_value_object(new_object_value);
-    new_value_obj->value = new_object_value;
 
     u64_key = build_u64key_with_object_value(new_value_obj);
 
