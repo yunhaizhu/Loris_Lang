@@ -99,6 +99,9 @@ STD_CALL owner_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_
     STD_ASSERT_RV_WARN(count == index, NAN_BOX_Null);
     STD_ASSERT_RV_WARN(item != NULL, NAN_BOX_Null);
 
+    if (is_ownvalue){
+        return NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
+    }
     return get_object_value(item);
 
 }
@@ -224,7 +227,7 @@ STD_CALL owner_value_t del_VAR_with_tuple_type(IN const ownership_object_symbol_
     STD_ASSERT_RV(pos != NULL, NAN_BOX_Null);
 
     item = std_lock_free_list_head_entry(pos, ownership_object_t, list);
-    owner_value = item->value;
+    owner_value = NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
 
     ret = std_lock_free_list_del_flag(tuples, u64_key, STD_BOOL_FALSE);
     free_ownership_ownvalue(symbol, owner_value);

@@ -69,7 +69,6 @@ typedef enum owner_value_type_s {
 #define NAN_BOX_SIGNATURE_POINTER (NAN_BOX_NaN | NAN_BOX_MASK_SIGN)
 #define NAN_BOX_SIGNATURE_ADDRESS (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_ADDRESS)
 
-
 #else
 typedef union owner_value_union {
     std_64_t i64;
@@ -357,11 +356,11 @@ STD_CALL static forced_inline owner_value_t make_owner_value_object_string(IN co
 STD_CALL static forced_inline std_64_t get_owner_value_number(IN const owner_value_t value)
 {
 #ifdef NAN_BOX
-    std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
-
-    if (value == NAN_BOX_True || value == NAN_BOX_False){
-        return value == NAN_BOX_True ? STD_BOOL_TRUE : STD_BOOL_FALSE;
-    }
+//    std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
+//
+//    if (value == NAN_BOX_True || value == NAN_BOX_False){
+//        return value == NAN_BOX_True ? STD_BOOL_TRUE : STD_BOOL_FALSE;
+//    }
 
 //    assert(isNaN != NAN_BOX_SIGNATURE_NAN);
 

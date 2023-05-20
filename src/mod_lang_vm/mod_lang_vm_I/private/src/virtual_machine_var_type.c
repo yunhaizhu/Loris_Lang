@@ -193,7 +193,7 @@ STD_CALL std_rv_t move_VAR_with_var_type(IN ownership_object_symbol_t *from_symb
  * @param   init_value
  * @return  STD_CALL std_rv_t
  */
-STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *symbol, ownership_object_t *owner_object, IN owner_value_t init_value)
+STD_CALL std_void_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *symbol, ownership_object_t *owner_object, IN owner_value_t init_value)
 {
     ownership_object_t *init_value_obj;
     owner_value_t dup_value;
@@ -203,7 +203,7 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_INTEGER:
             inline_set_var(symbol, init_value);
 
@@ -213,11 +213,17 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
             break;
         case OWNER_TYPE_OBJECT:
         case OWNER_TYPE_OBJECT_STRING:
-        case OWNER_TYPE_OBJECT_SYMBOL:
             init_value_obj = get_owner_value_object(init_value);
-            if (get_owner_value_type(init_value) != OWNER_TYPE_OBJECT_SYMBOL && create_ownership_signature(symbol, init_value_obj) != STD_BOOL_TRUE) {
+            if (create_ownership_signature(symbol, init_value_obj) != STD_BOOL_TRUE) {
                 init_value = duplicate_ownership_value(symbol, init_value);
             }
+            inline_set_var(symbol, init_value);
+
+#if FAST_VAR_ENABLE
+            owner_object->fast_value = NAN_BOX_Null;
+#endif
+            break;
+        case OWNER_TYPE_OBJECT_SYMBOL:
             dup_value = init_value;
 
             inline_set_var(symbol, dup_value);
@@ -233,7 +239,6 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
 #endif
             break;
     }
-    return STD_RV_SUC;
 }
 /**
  * declare_VAR_with_var_type
@@ -243,7 +248,7 @@ STD_CALL std_rv_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *s
  * @param   copy
  * @return  STD_CALL std_void_t
  */
-STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN owner_value_t init_value)
+STD_CALL std_void_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol, IN owner_value_t init_value)
 {
     ownership_object_t *init_value_obj;
     owner_value_t dup_value;
@@ -253,20 +258,19 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
         case OWNER_TYPE_NUMBER:
         case OWNER_TYPE_DOUBLE:
         case OWNER_TYPE_BOOL:
-        case OWNER_TYPE_POINTER:
+        case OWNER_TYPE_ADDRESS:
         case OWNER_TYPE_INTEGER:
             inline_set_var(symbol, init_value);
-
-
-
             break;
         case OWNER_TYPE_OBJECT:
         case OWNER_TYPE_OBJECT_STRING:
-        case OWNER_TYPE_OBJECT_SYMBOL:
             init_value_obj = get_owner_value_object(init_value);
-            if (get_owner_value_type(init_value) != OWNER_TYPE_OBJECT_SYMBOL && create_ownership_signature(symbol, init_value_obj) != STD_BOOL_TRUE) {
+            if (create_ownership_signature(symbol, init_value_obj) != STD_BOOL_TRUE) {
                 init_value = duplicate_ownership_value(symbol, init_value);
             }
+            inline_set_var(symbol, init_value);
+            break;
+        case OWNER_TYPE_OBJECT_SYMBOL:
             dup_value = init_value;
 
             inline_set_var(symbol, dup_value);
@@ -274,5 +278,4 @@ STD_CALL std_rv_t declare_VAR_with_var_type(IN ownership_object_symbol_t *symbol
         default:
             break;
     }
-    return STD_RV_SUC;
 }
