@@ -105,16 +105,16 @@ typedef enum {
     hash_type,
 } symbol_type_t;
 
-typedef struct  {
+typedef struct val_s {
     owner_value_t value;
 } val_t;
 
-typedef struct  {
+typedef struct array_s {
     std_int_t array_length;
     owner_value_t *array;
 } array_t;
 
-typedef struct  {
+typedef struct tuple_s {
     std_lock_free_list_head_t *tuples;
     std_u8_t key_enable;
 } tuple_t;
@@ -123,7 +123,7 @@ typedef struct hash_s {
     std_lock_free_key_hash_t *hash_head;
 } hash_t;
 
-typedef struct  {
+typedef struct env_value_s {
     symbol_type_t symbol_type;
     union {
         val_t val;
@@ -133,14 +133,14 @@ typedef struct  {
     } data;
 } env_value_t;
 
-typedef struct  {
+typedef struct ownership_object_symbol_s {
     env_value_t env_value;
 
     struct public_key_class pub;
     struct private_key_class pri;
 } ownership_object_symbol_t;
 
-typedef struct  {
+typedef struct  ownership_object_s{
     owner_value_type_t type;
     union {
         owner_value_t value;
@@ -461,12 +461,11 @@ STD_CALL static forced_inline ownership_object_t *get_owner_value_object(IN cons
 
     ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-    if (object->type == OWNER_TYPE_OBJECT ||
-        object->type == OWNER_TYPE_OBJECT_SYMBOL ||
-        object->type == OWNER_TYPE_OBJECT_STRING) {
-        return object;
-    }
-    return NULL;
+    assert(object->type == OWNER_TYPE_OBJECT ||
+           object->type == OWNER_TYPE_OBJECT_SYMBOL ||
+           object->type == OWNER_TYPE_OBJECT_STRING);
+
+    return object;
 #else
     return value.u.ptr;
 #endif
@@ -531,8 +530,6 @@ STD_CALL static forced_inline std_char_t *get_owner_value_object_string(IN const
  */
 STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_value_t value)
 {
-    std_u64_t signature = value & NAN_BOX_MASK_SIGNATURE;
-
 #if 0
     STD_LOG(INFO, "The value is: %" PRIx64 "  %lu,  signature:%" PRIx64 " \n", value, value, signature);
 
@@ -546,8 +543,8 @@ STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_v
 //    }
 #endif
 
-    switch (signature) {
-        case NAN_BOX_MASK_TYPE_NAN:
+    switch (value & NAN_BOX_MASK_SIGNATURE) {
+        case likely(NAN_BOX_MASK_TYPE_NAN):
              return OWNER_TYPE_NUMBER;
         case NAN_BOX_SIGNATURE_NAN:
             return OWNER_TYPE_DOUBLE;
@@ -558,14 +555,14 @@ STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_v
             return OWNER_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_ADDRESS:
             return OWNER_TYPE_ADDRESS;
-        case NAN_BOX_SIGNATURE_POINTER: {
+        case likely(NAN_BOX_SIGNATURE_POINTER): {
             const ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
             if (object->type == OWNER_TYPE_OBJECT) {
                 return OWNER_TYPE_OBJECT;
             } else if (object->type == OWNER_TYPE_OBJECT_STRING) {
                 return OWNER_TYPE_OBJECT_STRING;
-            }else if (object->type == OWNER_TYPE_OBJECT_SYMBOL) {
+            }else if (likely(object->type == OWNER_TYPE_OBJECT_SYMBOL)) {
                 return OWNER_TYPE_OBJECT_SYMBOL;
             }
         }
