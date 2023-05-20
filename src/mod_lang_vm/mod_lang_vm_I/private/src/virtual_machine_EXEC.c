@@ -594,7 +594,12 @@ STD_CALL static inline std_void_t inline_execute_code_AND(environment_vm_t *vm)
     owner_value_t obj_x_value = Pop(vm);
     owner_value_t ret;
 
-    ret = make_owner_value_bool(get_owner_value_number(obj_x_value) && get_owner_value_number(obj_y_value));
+    if (get_owner_value_type(obj_x_value) == OWNER_TYPE_BOOL &&
+        get_owner_value_type(obj_y_value) == OWNER_TYPE_BOOL ){
+        ret = make_owner_value_bool(get_owner_value_bool(obj_x_value) && get_owner_value_bool(obj_y_value));
+    }else {
+        ret = make_owner_value_bool(get_owner_value_number(obj_x_value) && get_owner_value_number(obj_y_value));
+    }
 
     Push(vm,  (intptr_t) ret);
 }
@@ -613,10 +618,11 @@ STD_CALL static inline std_void_t inline_execute_code_OR(environment_vm_t *vm)
     owner_value_t obj_x_value = Pop(vm);
     owner_value_t ret;
 
-    if (get_owner_value_number(obj_x_value) || get_owner_value_number(obj_y_value)) {
-        ret = make_owner_value_bool(STD_BOOL_TRUE);
-    } else {
-        ret = make_owner_value_bool(STD_BOOL_FALSE);
+    if (get_owner_value_type(obj_x_value) == OWNER_TYPE_BOOL &&
+        get_owner_value_type(obj_y_value) == OWNER_TYPE_BOOL ){
+        ret = make_owner_value_bool(get_owner_value_bool(obj_x_value) || get_owner_value_bool(obj_y_value));
+    }else {
+        ret = make_owner_value_bool(get_owner_value_number(obj_x_value) || get_owner_value_number(obj_y_value));
     }
 
     Push(vm,  (intptr_t) ret);
@@ -634,7 +640,12 @@ STD_CALL static inline std_void_t inline_execute_code_XOR(environment_vm_t *vm)
     owner_value_t obj_x_value = Pop(vm);
     owner_value_t ret;
 
-    ret = make_owner_value_number(get_owner_value_number(obj_x_value) ^ get_owner_value_number(obj_y_value));
+    if (get_owner_value_type(obj_x_value) == OWNER_TYPE_BOOL &&
+        get_owner_value_type(obj_y_value) == OWNER_TYPE_BOOL ){
+        ret = make_owner_value_bool(get_owner_value_bool(obj_x_value) ^ get_owner_value_bool(obj_y_value));
+    }else {
+        ret = make_owner_value_number(get_owner_value_number(obj_x_value) ^ get_owner_value_number(obj_y_value));
+    }
 
     Push(vm,  (intptr_t) ret);
 }
