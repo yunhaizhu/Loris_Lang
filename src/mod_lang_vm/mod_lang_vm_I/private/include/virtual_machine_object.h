@@ -55,6 +55,7 @@ typedef enum owner_value_type_s {
 #define NAN_BOX_MASK_TYPE_ZERO          0x0005000000000000
 #define NAN_BOX_MASK_TYPE_ADDRESS       0x0006000000000000
 
+
 #define NAN_BOX_NaN (NAN_BOX_MASK_EXPONENT | NAN_BOX_MASK_QUIET)
 #define NAN_BOX_Null (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_NULL)
 #define NAN_BOX_False (NAN_BOX_NaN | NAN_BOX_MASK_TYPE_FALSE)
@@ -300,7 +301,7 @@ STD_CALL static forced_inline owner_value_t make_owner_value_object_symbol()
 
     rsa_gen_keys(&object->symbol->pub, &object->symbol->pri, PRIME_SOURCE_FILE);
 
-    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) object;
+    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) object ;
 #else
     owner_value_t value;
     owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
@@ -530,7 +531,7 @@ STD_CALL static forced_inline std_char_t *get_owner_value_object_string(IN const
 STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_value_t value)
 {
 #if 0
-    STD_LOG(INFO, "The value is: %" PRIx64 "  %lu,  signature:%" PRIx64 " \n", value, value, signature);
+    STD_LOG(DISPLAY, "The value is: %" PRIx64 "  %lu,  signature:%" PRIx64 " \n", value, value, value & NAN_BOX_MASK_SIGNATURE);
 
 //    std_u64_t isNaN = NAN_BOX_SIGNATURE_NAN & value;
 //    if (isNaN != NAN_BOX_SIGNATURE_NAN) {
@@ -554,6 +555,7 @@ STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_v
             return OWNER_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_ADDRESS:
             return OWNER_TYPE_ADDRESS;
+
         case likely(NAN_BOX_SIGNATURE_POINTER): {
             const ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
