@@ -548,23 +548,22 @@ STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_v
              return OWNER_TYPE_NUMBER;
         case NAN_BOX_SIGNATURE_NAN:
             return OWNER_TYPE_DOUBLE;
-        case NAN_BOX_SIGNATURE_NULL:
+        case likely(NAN_BOX_SIGNATURE_NULL):
             return OWNER_TYPE_NULL;
         case NAN_BOX_SIGNATURE_FALSE:
         case NAN_BOX_SIGNATURE_TRUE:
             return OWNER_TYPE_BOOL;
         case NAN_BOX_SIGNATURE_ADDRESS:
             return OWNER_TYPE_ADDRESS;
-
         case likely(NAN_BOX_SIGNATURE_POINTER): {
             const ownership_object_t *object = (ownership_object_t *) (value & NAN_BOX_MASK_PAYLOAD_PTR);
 
-            if (object->type == OWNER_TYPE_OBJECT) {
-                return OWNER_TYPE_OBJECT;
-            } else if (object->type == OWNER_TYPE_OBJECT_STRING) {
-                return OWNER_TYPE_OBJECT_STRING;
-            }else if (likely(object->type == OWNER_TYPE_OBJECT_SYMBOL)) {
+            if (likely(object->type == OWNER_TYPE_OBJECT_SYMBOL)) {
                 return OWNER_TYPE_OBJECT_SYMBOL;
+            }else if (object->type == OWNER_TYPE_OBJECT) {
+                return OWNER_TYPE_OBJECT;
+            }else if (object->type == OWNER_TYPE_OBJECT_STRING) {
+                return OWNER_TYPE_OBJECT_STRING;
             }
         }
         case NAN_BOX_SIGNATURE_INTEGER:

@@ -149,8 +149,8 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
     owner_value_t obj_y = Pop(vm);
     owner_value_t obj_x = Pop(vm);
     owner_value_t ret;
-    std_64_t nx = 0;
-    std_64_t ny = 0;
+    std_64_t nx;
+    std_64_t ny;
 
     if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_INTEGER) &&
         (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_INTEGER)) {

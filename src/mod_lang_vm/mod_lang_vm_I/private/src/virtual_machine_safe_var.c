@@ -128,7 +128,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
 
                 root_value_type = get_owner_value_type(root_value);
 
-                if (unlikely(root_value_type == OWNER_TYPE_OBJECT_SYMBOL)) {
+                if (likely(root_value_type == OWNER_TYPE_OBJECT_SYMBOL)) {
                     root = root_value;
                     keep_loop = STD_BOOL_TRUE;
 

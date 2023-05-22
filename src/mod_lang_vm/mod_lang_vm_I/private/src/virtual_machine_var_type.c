@@ -196,7 +196,6 @@ STD_CALL std_rv_t move_VAR_with_var_type(IN ownership_object_symbol_t *from_symb
 STD_CALL std_void_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t *symbol, ownership_object_t *owner_object, IN owner_value_t init_value)
 {
     ownership_object_t *init_value_obj;
-    owner_value_t dup_value;
 
     switch (get_owner_value_type(init_value)) {
         case OWNER_TYPE_NULL:
@@ -224,9 +223,7 @@ STD_CALL std_void_t declare_VAR_with_fast_var_type(IN ownership_object_symbol_t 
 #endif
             break;
         case OWNER_TYPE_OBJECT_SYMBOL:
-            dup_value = init_value;
-
-            inline_set_var(symbol, dup_value);
+            inline_set_var(symbol, init_value);
 
 #if FAST_VAR_ENABLE
             owner_object->fast_value = NAN_BOX_Null;
