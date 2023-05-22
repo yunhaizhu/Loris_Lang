@@ -946,15 +946,7 @@ STD_CALL static inline std_void_t inline_execute_code_CUSTOM(environment_vm_t *v
  */
 STD_CALL static inline owner_value_t pick_owner_value_object_symbol(environment_vm_t *vm)
 {
-    for (int i = vm->symbol_head_index; i < RECURSIVE_LOOP_MAX; i++) {
-        if (vm->symbol_head[i] != NAN_BOX_Null){
-            owner_value_t ret = vm->symbol_head[i];
-            vm->symbol_head[i] = NAN_BOX_Null;
-            vm->symbol_head_index = i;
-            return ret;
-        }
-    }
-    return NAN_BOX_Null;
+    return vm->symbol_head[vm->symbol_head_index--];
 }
 
 /**
@@ -966,13 +958,7 @@ STD_CALL static inline owner_value_t pick_owner_value_object_symbol(environment_
  */
 STD_CALL static inline std_void_t return_owner_value_object_symbol(environment_vm_t *vm, owner_value_t ownvalue)
 {
-    for (int i = vm->symbol_head_index; i >= 0; i--) {
-        if (vm->symbol_head[i] == NAN_BOX_Null){
-            vm->symbol_head[i] = ownvalue;
-            vm->symbol_head_index = i;
-            return;
-        }
-    }
+    vm->symbol_head[++vm->symbol_head_index] = ownvalue;
 }
 
 /**
