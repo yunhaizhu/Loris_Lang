@@ -152,17 +152,17 @@ STD_CALL static inline std_void_t inline_execute_code_ADD_SUB_DIV_MOD(environmen
     std_64_t nx;
     std_64_t ny;
 
-    if ((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_INTEGER) &&
-        (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_INTEGER)) {
+    if (likely((get_owner_value_type(obj_x) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_x) == OWNER_TYPE_INTEGER) &&
+        (get_owner_value_type(obj_y) == OWNER_TYPE_NUMBER || get_owner_value_type(obj_y) == OWNER_TYPE_INTEGER))) {
         nx = get_owner_value_number(obj_x);
         ny = get_owner_value_number(obj_y);
         if (type == ADD || type == Inp_ADD) {
             ret = make_owner_value_number(nx + ny);
-            if (type != Inp_ADD) {
+            if (type == Inp_ADD) {
+                inline_set_obj_x_value(vm, ret, Codes, Stack, Pc, Fp);
+            }else {
                 Push(vm,  (intptr_t) ret);
-                return;
             }
-            inline_set_obj_x_value(vm, ret, Codes, Stack, Pc, Fp);
         } else if (type == SUB || type == Inp_SUB) {
             ret = make_owner_value_number(nx - ny);
             if (type != Inp_SUB) {
