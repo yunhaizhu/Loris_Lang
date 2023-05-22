@@ -597,6 +597,8 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
             break;
 
         case OWNER_TYPE_OBJECT_SYMBOL:
+            print_owner_value_to_buf(NAN_BOX_SIGNATURE_OBJECT_SYMBOL | (uint64_t) obj, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
+            break;
         case OWNER_TYPE_OBJECT_STRING:
             print_owner_value_to_buf(NAN_BOX_SIGNATURE_POINTER | (uint64_t) obj, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
             break;
@@ -634,6 +636,8 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
             break;
 
         case OWNER_TYPE_OBJECT_SYMBOL:
+            ret = NAN_BOX_SIGNATURE_OBJECT_SYMBOL | (uint64_t) item;
+            break;
         case OWNER_TYPE_OBJECT_STRING:
             ret = NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
             break;

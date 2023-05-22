@@ -100,6 +100,9 @@ STD_CALL owner_value_t get_VAR_with_tuple_type(IN const ownership_object_symbol_
     STD_ASSERT_RV_WARN(item != NULL, NAN_BOX_Null);
 
     if (is_ownvalue){
+        if (item->type == OWNER_TYPE_OBJECT_SYMBOL){
+            return NAN_BOX_SIGNATURE_OBJECT_SYMBOL | (uint64_t) item;
+        }
         return NAN_BOX_SIGNATURE_POINTER | (uint64_t) item;
     }
     return get_object_value(item);
