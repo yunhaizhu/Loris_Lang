@@ -302,7 +302,7 @@ STD_CALL static forced_inline owner_value_t make_owner_value_object_symbol()
 
     rsa_gen_keys(&object->symbol->pub, &object->symbol->pri, PRIME_SOURCE_FILE);
 
-    return NAN_BOX_SIGNATURE_OBJECT_SYMBOL | (uint64_t) object ;
+    return NAN_BOX_SIGNATURE_POINTER | (uint64_t) object ;
 #else
     owner_value_t value;
     owner_object_t *object = (owner_object_t *) CALLOC(sizeof(owner_object_t), 1);
@@ -565,6 +565,8 @@ STD_CALL static forced_inline owner_value_type_t get_owner_value_type(IN owner_v
                 return OWNER_TYPE_OBJECT;
             }else if (object->type == OWNER_TYPE_OBJECT_STRING) {
                 return OWNER_TYPE_OBJECT_STRING;
+            }else if (object->type == OWNER_TYPE_OBJECT_SYMBOL) {
+                return OWNER_TYPE_OBJECT_SYMBOL;
             }
         }
         case NAN_BOX_SIGNATURE_INTEGER:
