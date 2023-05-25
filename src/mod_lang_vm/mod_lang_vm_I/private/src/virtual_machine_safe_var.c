@@ -28,8 +28,6 @@
  */
 STD_CALL std_void_t declare_fast_VAR(ownership_object_symbol_t *symbol, ownership_object_t *owner_object, owner_value_t init_value)
 {
-    STD_ASSERT_RV(symbol != NULL, );
-
     declare_VAR_with_fast_var_type(symbol, owner_object, init_value);
 }
 

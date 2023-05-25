@@ -582,9 +582,6 @@ STD_CALL std_void_t print_object_value_to_buf(IN const ownership_object_t *obj, 
                 case OWNER_TYPE_POINTER:
                 case OWNER_TYPE_ADDRESS:
                 case OWNER_TYPE_INTEGER:
-                    value = obj->value;
-                    print_owner_value_to_buf(value, buf, KEY_NAME_SIZE, STD_BOOL_FALSE, number_value);
-                    break;
                 case OWNER_TYPE_OBJECT:
                 case OWNER_TYPE_OBJECT_SYMBOL:
                 case OWNER_TYPE_OBJECT_STRING:
