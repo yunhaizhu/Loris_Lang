@@ -988,9 +988,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_A(environment_vm_t *vm
 
     Stack[fp_index] = object;
 
-#if FAST_SYMBOL_ENABLE
-    owner_object->fast_symbol = NAN_BOX_Null;
-#endif
+
 
 }
 
@@ -1017,9 +1015,7 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm
     Stack[fp_index] = object;
     declare_fast_VAR(symbol, owner_object, NAN_BOX_Null);
 
-#if FAST_SYMBOL_ENABLE
-    owner_object->fast_symbol = NAN_BOX_Null;
-#endif
+
 }
 
 /**

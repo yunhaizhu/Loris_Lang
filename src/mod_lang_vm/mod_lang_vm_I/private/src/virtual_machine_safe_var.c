@@ -86,11 +86,7 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
     std_bool_t keep_loop;
     std_int_t loop_max = 0;
     ownership_object_symbol_t *fail_back_symbol = NULL;
-#if FAST_SYMBOL_ENABLE
-    ownership_object_t *first_object[RECURSIVE_LOOP_MAX] = {NULL};
-    owner_value_t last_symbol = NAN_BOX_Null;
-    std_bool_t jump_fast_symbol = STD_BOOL_FALSE;
-#endif
+
 
     do {
 #if FAST_VAR_ENABLE
@@ -99,16 +95,6 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
         if (fast_value_enable || owner_object->fast_value != NAN_BOX_Null){
             owner_object->fast_value = value;
         }
-#endif
-
-#if FAST_SYMBOL_ENABLE
-        first_object[loop_max] = owner_object;
-
-        if (first_object[loop_max]->fast_symbol != NAN_BOX_Null) {
-            root = first_object[loop_max]->fast_symbol;
-            jump_fast_symbol = STD_BOOL_TRUE;
-        }
-
 #endif
 
         root_symbol = get_owner_value_object_symbol(root);
@@ -138,24 +124,10 @@ STD_CALL static forced_inline std_rv_t set_VAR_internal(owner_value_t root, owne
                     }
 
                     fail_back_symbol = root_symbol;
-#if FAST_SYMBOL_ENABLE
-                    last_symbol = root;
-#endif
-
                     break;
                 } else {
                     set_VAR_with_var_type(root_symbol, value, STD_BOOL_TRUE);
                     keep_loop = STD_BOOL_FALSE;
-
-#if FAST_SYMBOL_ENABLE
-                    if (jump_fast_symbol != STD_BOOL_TRUE && last_symbol != NAN_BOX_Null){
-                        for (int i = 0; i < loop_max; ++i) {
-                            first_object[i]->fast_symbol = last_symbol;
-                        }
-
-                    }
-#endif
-
                 }
                 break;
             }
