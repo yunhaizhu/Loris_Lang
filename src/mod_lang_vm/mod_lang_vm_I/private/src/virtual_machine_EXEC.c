@@ -16,6 +16,8 @@
 #include "virtual_machine_object.h"
 #include "virtual_machine_safe_var.h"
 
+
+
 #define GET_OBJECT()                                                      \
     switch (Codes[*Pc].i_operand_ex) {                                    \
         case VAR_LINK:                                                    \
@@ -865,10 +867,10 @@ STD_CALL static inline std_void_t inline_execute_code_CALLF(environment_vm_t *vm
  * @param   x
  * @return  STD_CALL static std_int_t
  */
-STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, std_int_t *Pc, std_int_t *Fp, std_int_t *Sp, IN const std_u64_t *x)
+STD_CALL static inline std_int_t inline_execute_code_RET(environment_vm_t *vm, std_int_t *Pc, std_int_t *Fp, std_int_t *Sp, IN  std_u64_t *x)
 {
 #if FUNC_RET_SUPPORT
-    *x = Pop();
+    *x = Pop(vm);
 #endif
 
     *Sp = *Fp;
@@ -899,7 +901,7 @@ STD_CALL static inline std_void_t inline_execute_code_POPR(environment_vm_t *vm,
 {
     *Sp = (std_int_t) (*Sp + Codes[*Pc].i_operand);
 #if FUNC_RET_SUPPORT
-    Push(*x);
+    Push(vm, *x);
 #endif
 }
 

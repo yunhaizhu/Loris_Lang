@@ -841,9 +841,8 @@ std_void_t compile_return(lang_compile_environment_t *compile_env, lang_ast_t *e
    const std_int_t *envp = &compile_env->envp;
    const variable_env_t *Env = compile_env->var_env;
 
-   inline_var_arg_local_clean(compile_env, Env, envp, envp_save);
-
    compile_expr(compile_env, expr);
+   inline_var_arg_local_clean(compile_env, Env, envp, envp_save);
 
    gen_codeIUDSE(compile_env->generate_code_env,RET, 0, 0, 0, NULL, 0, expr ? expr->debug_info.line : 0);
 }
@@ -1110,8 +1109,12 @@ std_void_t compile_for(lang_compile_environment_t *compile_env, lang_ast_t *init
 std_bool_t check_call_function_assign(const lang_ast_t *ast)
 {
    if (ast && ast->op == EQ_OP && ast->left->op == SYMBOL_OP && ast->right->op == CALL_OP) {
+#if FUNC_RET_SUPPORT
+       return STD_BOOL_TRUE;
+#else
        return STD_BOOL_FALSE;
-   }
+#endif
+}
    return STD_BOOL_TRUE;
 }
 
@@ -1191,8 +1194,8 @@ std_void_t compile_expr(lang_compile_environment_t *compile_env, lang_ast_t *p)
 #endif
                compile_store_var(compile_env, get_lang_ast_symbol(p->left), p->right, p->debug_info.line);
            } else {
-               compile_error(compile_env);
                STD_LOG(ERR, "Not passed check, please check line: %d\n", p->debug_info.line);
+               compile_error(compile_env);
            }
            return;
 
