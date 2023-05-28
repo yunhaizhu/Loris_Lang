@@ -1014,8 +1014,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L(environment_vm_t *vm
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     Stack[fp_index] = object;
     declare_fast_VAR(symbol, owner_object, NAN_BOX_Null);
-
-
 }
 
 /**
@@ -1059,14 +1057,6 @@ STD_CALL static inline std_void_t inline_execute_code_VAR_L_CLEAN(environment_vm
 
     fp_index = (std_int_t) (*Fp - Codes[*Pc].i_operand_ex);
     object = Stack[fp_index];
-
-#if FAST_VAR_ENABLE1
-    const ownership_object_t *owner_object = get_owner_value_object(object);
-    if (get_owner_value_type(owner_object->fast_value) == OWNER_TYPE_NUMBER) {
-        return_owner_value_object_symbol(vm, object);
-        return;
-    }
-#endif
 
     del_VARS(object, STD_BOOL_TRUE);
     return_owner_value_object_symbol(vm, object);

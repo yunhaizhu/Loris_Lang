@@ -627,7 +627,7 @@ STD_CALL owner_value_t get_object_value(ownership_object_t *item)
                     ret = item->value;
                     break;
                 default:
-                    ret = item->value;
+                    ret = NAN_BOX_Null;
                     break;
             }
             break;

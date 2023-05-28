@@ -1108,14 +1108,14 @@ std_void_t compile_for(lang_compile_environment_t *compile_env, lang_ast_t *init
 */
 std_bool_t check_call_function_assign(const lang_ast_t *ast)
 {
-   if (ast && ast->op == EQ_OP && ast->left->op == SYMBOL_OP && ast->right->op == CALL_OP) {
 #if FUNC_RET_SUPPORT
-       return STD_BOOL_TRUE;
-#else
-       return STD_BOOL_FALSE;
-#endif
-}
    return STD_BOOL_TRUE;
+#else
+   if (ast && ast->op == EQ_OP && ast->left->op == SYMBOL_OP && ast->right->op == CALL_OP) {
+       return STD_BOOL_FALSE;
+   }
+   return STD_BOOL_TRUE;
+#endif
 }
 
 /**
